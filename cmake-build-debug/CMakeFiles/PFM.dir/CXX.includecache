@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.cc
+pfm.h
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.h
+
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.h
+string
+-
+

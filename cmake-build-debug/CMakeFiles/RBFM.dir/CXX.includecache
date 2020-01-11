@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.h
+string
+-
+
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbfm.cc
+rbfm.h
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbfm.h
+
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbfm.h
+vector
+-
+pfm.h
+/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.h
+
