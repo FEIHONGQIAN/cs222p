@@ -4,10 +4,11 @@
 #include <sys/stat.h>
 #include <cmath>
 #include <vector>
+#include <cstring>
+#include <climits>
 
 #include "pfm.h"
 #include "rbfm.h"
-
 const int success = 0;
 
 // Check whether a file exists
