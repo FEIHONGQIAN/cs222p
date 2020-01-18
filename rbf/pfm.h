@@ -34,6 +34,7 @@ public:
     unsigned writePageCounter;
     unsigned appendPageCounter;
 
+    FILE *filePointer;
     FileHandle();                                                       // Default constructor
     ~FileHandle();                                                      // Destructor
 
