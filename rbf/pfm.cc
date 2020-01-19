@@ -3,9 +3,11 @@
 #include <iostream>
 #include <unistd.h>
 #include <stdio.h>
+#include <math.h>
 
 const int success = 0;
 const int fail = -1;
+const int origin = 0;
 PagedFileManager &PagedFileManager::instance() {
     static PagedFileManager _pf_manager = PagedFileManager();
     return _pf_manager;
@@ -52,10 +54,11 @@ RC PagedFileManager::destroyFile(const std::string &fileName)
 
 RC PagedFileManager::openFile(const std::string &fileName, FileHandle &fileHandle) {
     FILE *file;
-    file = fopen(fileName.c_str(), "r+");
-    if(!file) return fail;
+    file = fopen(fileName.c_str(), "r++");
+    if(!file) return fail
 
-    if(!fileHandle.filePointer) return fail;
+    if(fileHandle.filePointer) return fail;
+
     fileHandle.filePointer = file;
     return success;
 }
@@ -80,7 +83,19 @@ FileHandle::FileHandle() {
 FileHandle::~FileHandle() = default;
 
 RC FileHandle::readPage(PageNum pageNum, void *data) {
-    return -1;
+    FILE *file = filePointer;
+    if(!file) return -1; // if the file does not exist
+
+    if(pageNum > getNumberOfPages()) return fail; //the pageNum is larger than the number of pages in the file
+
+    long int offset = pageNum * PAGE_SIZE;
+    if(fseek(file, offset, origin) != 0) return fail; //set the position indicator to the page we need to read
+    data = (char *) malloc(PAGE_SIZE * sizeof(char)); //allocate memory to contain the page we need to read
+    if(fread(data, PAGE_SIZE, 1, file) != 0) return fail; //read the page and store them in the *data
+
+    readPageCounter++;
+    rewind(file); // set the position indicator to the beginning of the file
+    return success;
 }
 
 RC FileHandle::writePage(PageNum pageNum, const void *data) {
@@ -92,7 +107,15 @@ RC FileHandle::appendPage(const void *data) {
 }
 
 unsigned FileHandle::getNumberOfPages() {
-    return -1;
+    FILE *file = filePointer;
+    if(!file) return fail;
+
+    fseek (file , 0 , SEEK_END);
+    long sizeOfFile = ftell(file);
+    unsigned num = ceil(sizeOfFile / PAGE_SIZE);
+    rewind (file);
+
+    return num;
 }
 
 RC FileHandle::collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount) {
