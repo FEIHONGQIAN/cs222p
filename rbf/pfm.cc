@@ -3,9 +3,12 @@
 #include <iostream>
 #include <unistd.h>
 #include <stdio.h>
+#include <math.h>
 
 const int success = 0;
 const int fail = -1;
+const int origin = 0;
+
 PagedFileManager &PagedFileManager::instance()
 {
     static PagedFileManager _pf_manager = PagedFileManager();
@@ -53,12 +56,30 @@ RC PagedFileManager::destroyFile(const std::string &fileName)
 
 RC PagedFileManager::openFile(const std::string &fileName, FileHandle &fileHandle)
 {
-    return -1;
+    FILE *file;
+    file = fopen(fileName.c_str(), "r++");
+    if (!file)
+        return fail;
+
+    if (fileHandle.filePointer)
+        return fail;
+
+    fileHandle.filePointer = file;
+    return success;
 }
 
 RC PagedFileManager::closeFile(FileHandle &fileHandle)
 {
-    return -1;
+    FILE *file = fileHandle.filePointer;
+    if (!file)
+        return fail;
+
+    if (fclose(file) != success)
+        return fail;
+
+    return success;
+
+    //all of the file's pages are flushed to disk when the file is closed ?
 }
 
 FileHandle::FileHandle()
@@ -66,31 +87,103 @@ FileHandle::FileHandle()
     readPageCounter = 0;
     writePageCounter = 0;
     appendPageCounter = 0;
+
+    filePointer = nullptr;
 }
 
 FileHandle::~FileHandle() = default;
 
 RC FileHandle::readPage(PageNum pageNum, void *data)
 {
-    return -1;
+    FILE *file = filePointer;
+    if (!file)
+        return -1; // if the file does not exist
+
+    if (pageNum > getNumberOfPages() - 1)
+        return fail; //the pageNum is larger than the number of pages in the file
+
+    long int offset = pageNum * PAGE_SIZE;
+    if (fseek(file, offset, origin) != success)
+        return fail; //set the position indicator to the page we need to read
+
+    if (fread(data, 1, PAGE_SIZE, file) != PAGE_SIZE)
+        return fail; //read the page and store them in the *data
+
+    readPageCounter++;
+    rewind(file); // set the position indicator to the beginning of the file
+    return success;
 }
 
 RC FileHandle::writePage(PageNum pageNum, const void *data)
 {
-    return -1;
+    FILE *pFile = filePointer;
+    if (!pFile)
+    {
+        return fail;
+    }
+    if (pageNum > getNumberOfPages() - 1)
+    {
+        return fail;
+    }
+    long offset = pageNum * PAGE_SIZE;
+
+    if (fseek(pFile, offset, origin) != 0)
+    {
+        return fail;
+    }
+    if (fwrite(data, 1, PAGE_SIZE, pFile) != PAGE_SIZE)
+    {
+        return fail;
+    }
+    fflush(pFile);
+    writePageCounter++;
+    rewind(pFile);
+    return success;
 }
 
 RC FileHandle::appendPage(const void *data)
 {
-    return -1;
+    FILE *pFile = filePointer;
+    if (!pFile)
+    {
+        return fail;
+    }
+
+    long offset = getNumberOfPages() * PAGE_SIZE;
+
+    if (fseek(pFile, offset, origin) != 0)
+    {
+        return fail;
+    }
+    if (fwrite(data, 1, PAGE_SIZE, pFile) != PAGE_SIZE)
+    {
+        return fail;
+    }
+    fflush(pFile);
+    appendPageCounter++;
+    rewind(pFile);
+    return success;
 }
 
 unsigned FileHandle::getNumberOfPages()
 {
-    return -1;
+    FILE *file = filePointer;
+    if (!file)
+        return fail;
+
+    fseek(file, 0, SEEK_END);
+    long sizeOfFile = ftell(file);
+    unsigned num = ceil(sizeOfFile / PAGE_SIZE);
+
+    rewind(file);
+    return num;
 }
 
 RC FileHandle::collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount)
 {
-    return -1;
+    readPageCount = readPageCounter;
+    writePageCount = writePageCounter;
+    appendPageCount = appendPageCounter;
+
+    return success;
 }
