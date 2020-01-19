@@ -55,7 +55,7 @@ RC PagedFileManager::destroyFile(const std::string &fileName)
 RC PagedFileManager::openFile(const std::string &fileName, FileHandle &fileHandle) {
     FILE *file;
     file = fopen(fileName.c_str(), "r++");
-    if(!file) return fail
+    if(!file) return fail;
 
     if(fileHandle.filePointer) return fail;
 
