@@ -78,6 +78,8 @@ FileHandle::FileHandle() {
     readPageCounter = 0;
     writePageCounter = 0;
     appendPageCounter = 0;
+
+    filePointer = nullptr;
 }
 
 FileHandle::~FileHandle() = default;
@@ -86,12 +88,12 @@ RC FileHandle::readPage(PageNum pageNum, void *data) {
     FILE *file = filePointer;
     if(!file) return -1; // if the file does not exist
 
-    if(pageNum > getNumberOfPages()) return fail; //the pageNum is larger than the number of pages in the file
+    if(pageNum > getNumberOfPages() - 1) return fail; //the pageNum is larger than the number of pages in the file
 
     long int offset = pageNum * PAGE_SIZE;
     if(fseek(file, offset, origin) != success) return fail; //set the position indicator to the page we need to read
-    data = (char *) malloc(PAGE_SIZE * sizeof(char)); //allocate memory to contain the page we need to read
-    if(fread(data, PAGE_SIZE, 1, file) != success) return fail; //read the page and store them in the *data
+
+    if(fread(data, 1, PAGE_SIZE, file) != PAGE_SIZE) return fail; //read the page and store them in the *data
 
     readPageCounter++;
     rewind(file); // set the position indicator to the beginning of the file
@@ -99,19 +101,44 @@ RC FileHandle::readPage(PageNum pageNum, void *data) {
 }
 
 RC FileHandle::writePage(PageNum pageNum, const void *data) {
-    return -1;
+    FILE *pFile = filePointer;
+    if (!pFile) {
+        return fail;
+    }
+    if (pageNum > getNumberOfPages() - 1) {
+        return fail;
+    }
+    long offset = pageNum * PAGE_SIZE;
+
+    if (fseek(pFile, offset, origin) != 0) {
+        return fail;
+    }
+    if (fwrite(data, 1, PAGE_SIZE, pFile) != PAGE_SIZE) {
+        return fail;
+    }
+    fflush(pFile);
+    writePageCounter++;
+    rewind(pFile);
+    return success;
 }
 
 RC FileHandle::appendPage(const void *data) {
-    FILE *file = filePointer;
-    if(!file) return -1; // if the file does not exist
-
-    int num = getNumberOfPages();
-
-    if(writePage(num + 1, data) != success){
+    FILE *pFile = filePointer;
+    if (!pFile) {
         return fail;
     }
+
+    long offset = getNumberOfPages() * PAGE_SIZE;
+
+    if (fseek(pFile, offset, origin) != 0) {
+        return fail;
+    }
+    if (fwrite(data, 1, PAGE_SIZE, pFile) != PAGE_SIZE) {
+        return fail;
+    }
+    fflush(pFile);
     appendPageCounter++;
+    rewind(pFile);
     return success;
 }
 
@@ -122,11 +149,15 @@ unsigned FileHandle::getNumberOfPages() {
     fseek (file , 0 , SEEK_END);
     long sizeOfFile = ftell(file);
     unsigned num = ceil(sizeOfFile / PAGE_SIZE);
-    rewind (file);
 
+    rewind(file);
     return num;
 }
 
 RC FileHandle::collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount) {
-    return -1;
+    readPageCount = readPageCounter;
+    writePageCount = writePageCounter;
+    appendPageCount = appendPageCounter;
+
+    return 0;
 }
