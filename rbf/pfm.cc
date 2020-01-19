@@ -67,7 +67,7 @@ RC PagedFileManager::closeFile(FileHandle &fileHandle) {
     FILE *file = fileHandle.filePointer;
     if(!file) return fail;
 
-    if(fclose(file) == -1) return fail;
+    if(fclose(file) != success) return fail;
 
     return success;
 
@@ -89,9 +89,9 @@ RC FileHandle::readPage(PageNum pageNum, void *data) {
     if(pageNum > getNumberOfPages()) return fail; //the pageNum is larger than the number of pages in the file
 
     long int offset = pageNum * PAGE_SIZE;
-    if(fseek(file, offset, origin) != 0) return fail; //set the position indicator to the page we need to read
+    if(fseek(file, offset, origin) != success) return fail; //set the position indicator to the page we need to read
     data = (char *) malloc(PAGE_SIZE * sizeof(char)); //allocate memory to contain the page we need to read
-    if(fread(data, PAGE_SIZE, 1, file) != 0) return fail; //read the page and store them in the *data
+    if(fread(data, PAGE_SIZE, 1, file) != success) return fail; //read the page and store them in the *data
 
     readPageCounter++;
     rewind(file); // set the position indicator to the beginning of the file
@@ -103,7 +103,16 @@ RC FileHandle::writePage(PageNum pageNum, const void *data) {
 }
 
 RC FileHandle::appendPage(const void *data) {
-    return -1;
+    FILE *file = filePointer;
+    if(!file) return -1; // if the file does not exist
+
+    int num = getNumberOfPages();
+
+    if(writePage(num + 1, data) != success){
+        return fail;
+    }
+    appendPageCounter++;
+    return success;
 }
 
 unsigned FileHandle::getNumberOfPages() {
