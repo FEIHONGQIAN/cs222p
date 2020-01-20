@@ -60,7 +60,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
     fileHandle.readPage(pageCount, currentPage);                // Put the page content to currentPage
     int freeSpace = getFreeSpaceOfCurrentPage(currentPage);
     int costByThisRecord = recordSize + RID_OFFSET_SIZE + RID_RECORD_LENGTH;
-//    int costByThisRecord = 3000;
+
     if (costByThisRecord > freeSpace)  // Current page has no enough space
     {
         // Append a new page
@@ -72,11 +72,8 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
     }
     else                // Add the record to the current page
     {
-//        std::cout << "here" << std::endl;
-
         int offset = PAGE_SIZE - freeSpace - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);
         UpdateSlots(currentPage, fileHandle, record, offset, recordSize, pageCount);
-//        std::cout << "here" << std::endl;
         rid.pageNum = pageCount;
         rid.slotNum = getSlotNumber(currentPage);
         free(currentPage);
@@ -91,17 +88,12 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
 RC RecordBasedFileManager::UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize)
 {
     memcpy((char *)currentPage, (char *)record, recordSize);
-    //std::cout << *(short *)((char *) currentPage + 4) << std :: endl;
     *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = PAGE_SIZE - recordSize - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
-//    std::cout << *(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE) << std :: endl;
     *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = 1;
 
     int insertPos = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
-//    std::cout << insertPos << std::endl;
     *((short *)((char *)currentPage + insertPos)) = (short)(recordSize);
-//    std::cout << *((short *)((char *)currentPage + insertPos)) << std::endl;
     *((short *)((char *)currentPage + insertPos + sizeof(short))) = (short)0;
-//    std::cout << *((short *)((char *)currentPage + insertPos + sizeof(short))) << std::endl;
     fileHandle.appendPage(currentPage);
 
     return 0;
@@ -115,7 +107,6 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
     int insertPos = PAGE_SIZE - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);// - 2 * sizeof(short);
     *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
     short startPos = *((short *) ((char *) currentPage + insertPos + 2 * sizeof(short))) + *((short *)((char *) currentPage + insertPos + 3 * sizeof(short) ));
-//    memcpy((char *)currentPage + startPos, (char *)record, recordSize);
 
     *((short *)((char *)currentPage + insertPos + sizeof(short))) = (short) startPos;
 
@@ -131,35 +122,22 @@ RC RecordBasedFileManager::getSlotNumber(void *currentPage)
 RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                       const RID &rid, void *data)
 {
-    // return -1;
 
     void *currentPage = malloc(PAGE_SIZE);
     fileHandle.readPage(rid.pageNum, currentPage);
-    std::cout << "page number: " << rid.pageNum << std::endl;
-//    std::cout << *(short *)((char *) currentPage + 2) << std::endl;
     int pos = rid.slotNum;
-    std::cout << "page slot number: " << pos << std::endl;
-//    int pos = 0;
     int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - pos * 2 * sizeof(short);
-    std::cout << offset << "offset is" << std::endl;
     int len = *((short *)((char *)currentPage + offset));
-//    printf("k\n");
-//    std::cout << len << std::endl;
+
     int start = *((short *)((char *) currentPage + offset + sizeof(short)));
-//    std::cout << start << std::endl;
+
     void *contentOfRecords = malloc(PAGE_SIZE);
-//    std::cout << "before memcpy" << std::endl;
-    std::cout << "start is " << start << "   " << "len is" << len << std::endl;
-    std::cout << "next element for start" << *((short *)((char *) currentPage + offset - 2 * sizeof(short))) << "with value" << *((short *)((char *) currentPage + offset - 1 * sizeof(short))) << std::endl;
     memcpy((char *)contentOfRecords, (char *)currentPage + start, len);
-//    std::cout << "after memcpy" << std::endl;
-//    std::cout << *(short *)((char *) contentOfRecords + 6) << std::endl;
-//    std::cout << "before prepare" << std::endl;
+
     prepareRecord(data,  recordDescriptor, contentOfRecords, len);
-//    std::cout << "after prepare" << std::endl;
+
     free(currentPage);
     free(contentOfRecords);
-//    std :: cout << *(short *)((char *) data + 5) << std::endl;
     return 0;
 }
 
@@ -169,22 +147,11 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
     auto *nullFieldsIndicator = (unsigned char *) malloc(ceil((double) fieldCount / 8));
     memset(nullFieldsIndicator, 0, ceil((double) fieldCount / 8));
 
-    // Beginning of the actual data
-    // Note that the left-most bit represents the first field. Thus, the offset is 7 from right, not 0.
-    // e.g., if a record consists of four fields and they are all nulls, then the bit representation will be: [11110000]
-
-    // Is the name field not-NULL?
     int i = sizeof(short);
     std::vector<short> offsetOfField;
 
-//    short ccc = *(short *) ((char *)contentOfRecords);
-//    std::cout << ccc << std::endl;
-
-
     for (int j = 0; j < fieldCount; j++) {
-//        std::cout << j << std::endl;
         offsetOfField.push_back(*(short *) ((char *)contentOfRecords + i));
-//        std::cout << ccc << std::endl;
         i += 2;
     }
     int startAddress = (offsetOfField.size() + 1) * sizeof(short);
@@ -194,14 +161,10 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
         }
     }
     int offset = 0;
-    // Null-indicators
-//    *(int *) ((char *) buffer + offset) = fieldCount;
-//    offset += sizeof(int);
-    // Null-indicator for the fields
+
     memcpy((char *) buffer + offset, nullFieldsIndicator, ceil((double) fieldCount / 8));
     offset += ceil((double) fieldCount / 8);
-    // void *recordAddress = malloc(PAGE_SIZE);
-    // int recordOffset = 0;
+
     for (int i = 0; i < fieldCount; i++) {
         if (offsetOfField[i] == -1) {
 
@@ -221,12 +184,9 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
                     break;
                 case TypeVarChar:
                     *(int *) ((char *) buffer + offset) = offsetOfField[i] - startAddress;
-
                     offset += sizeof(int);
-//                    printf("2\n");
                     memcpy((char *) buffer + offset, (char *) contentOfRecords + startAddress,
                            offsetOfField[i] - startAddress);
-//                    printf("2\n");
                     offset += offsetOfField[i] - startAddress;
                     startAddress = offsetOfField[i];
                     break;
@@ -279,7 +239,6 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
                     end = offsetInFormattedData[i + 1];
                     memcpy((char *)actualContent + recordLen, (int *) buffer, sizeof(int));
                     recordLen += sizeof(int);
-//                    std::cout << attr.name << ": " << (*(int *) buffer) << "\t";
                     break;
                 case TypeReal:
                     buffer = malloc(sizeof(float));
@@ -319,28 +278,15 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
         }
         leftShift--;
     }
-//    for (int i = 0; i <= fieldCount; i++) {
-//        std::cout << offsetInFormattedData[i] << std::endl;
-//    }
+
     *((short *) ((char *) record))  = fieldCount;
-//    std::cout << *(short *) (char *)record << std:: endl;
     int index = sizeof(short);
 
     for(int i = 1; i <= fieldCount; i++){
         *((short *) ((char *) record + index)) = offsetInFormattedData[i];
-//        std :: cout << *((short *) ((char *) record + index))<< std::endl;
-//        printf("abad\n");
         index += sizeof(short);
     }
     memcpy((char *) record + index, actualContent, recordLen);
-
-//    for (int i = 0; i < 8; i++) {
-//        std::cout << *((char *)record + index + i ) << std :: endl;
-//    }
-//    std::cout << *(short *) ((char *) record + 4) << std::endl;
-//    std::cout << *(float *) ((char *) record + 22) << std::endl;
-//    std::cout << *(int *) ((char *) record + 26) << std::endl;
-//    std::cout << *(record + index + 8) << std::endl;
     free(actualContent);
     return recordLen + index;
 }
