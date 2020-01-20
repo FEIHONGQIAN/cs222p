@@ -131,7 +131,7 @@ RC FileHandle::readPage(PageNum pageNum, void *data) {
     FILE *file = filePointer;
     if(!file) return -1; // if the file does not exist
 
-    if(pageNum > getNumberOfPages()) return fail; //the pageNum is larger than the number of pages in the file
+    if(pageNum > getNumberOfPages() - 1) return fail; //the pageNum is larger than the number of pages in the file
 
     long int offset = (pageNum + 1) * PAGE_SIZE;
     if(fseek(file, offset, origin) != success) return fail; //set the position indicator to the page we need to read
