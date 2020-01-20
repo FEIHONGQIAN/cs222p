@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 const int SLOT_NUMBER_SPACE_SIZE = 4;
 const int FREE_SPACE_SIZE = 4;
