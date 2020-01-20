@@ -4,9 +4,8 @@
 #include <vector>
 #include <math.h>
 #include <climits>
+#include <vector>
 #include <iostream>
-#include <string.h>
-#include <stdio.h>
 #include "pfm.h"
 
 // Record ID
@@ -134,6 +133,18 @@ public:
             const std::vector<std::string> &attributeNames, // a list of projected attributes
             RBFM_ScanIterator &rbfm_ScanIterator);
     RC  getActualByteForNullsIndicator(int fieldCount);
+    //transform the input data to the traditional formatted data, return the length of the formatted data
+    RC transformData(const std::vector<Attribute> &recordDescriptor, const void *data, void *record);
+
+    RC getSlotNumber(void *currentPage);
+
+    RC getFreeSpaceOfCurrentPage(void* currentPage);
+
+    RC UpdateSlots(void *currentPage, FileHandle &fileHandle, void *record, int offset, int recordSize, int pageCount);
+
+    RC UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize);
+
+    void prepareRecord(void *buffer, const std::vector<Attribute> &recordDescriptor, void *contentOfRecords, int len);
             
 
 protected:
