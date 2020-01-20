@@ -2,6 +2,10 @@
 #define _rbfm_h_
 
 #include <vector>
+#include <math.h>
+#include <climits>
+#include <vector>
+#include <iostream>
 #include "pfm.h"
 
 // Record ID
@@ -105,11 +109,6 @@ public:
     //        age: NULL  height: 7.5  salary: 7500)
     RC printRecord(const std::vector<Attribute> &recordDescriptor, const void *data);
 
-    RC getActualByteForNullsIndicator(int fieldCount);
-
-    //transform the input data to the traditional formatted data, return the length of the formatted data
-    int transformData(const std::vector<Attribute> &recordDescriptor, const void *data, void *record);
-
     /*****************************************************************************************************
     * IMPORTANT, PLEASE READ: All methods below this comment (other than the constructor and destructor) *
     * are NOT required to be implemented for Project 1                                                   *
@@ -133,6 +132,20 @@ public:
             const void *value,                    // used in the comparison
             const std::vector<std::string> &attributeNames, // a list of projected attributes
             RBFM_ScanIterator &rbfm_ScanIterator);
+    RC  getActualByteForNullsIndicator(int fieldCount);
+    //transform the input data to the traditional formatted data, return the length of the formatted data
+    RC transformData(const std::vector<Attribute> &recordDescriptor, const void *data, void *record);
+
+    RC getSlotNumber(void *currentPage);
+
+    RC getFreeSpaceOfCurrentPage(void* currentPage);
+
+    RC UpdateSlots(void *currentPage, FileHandle &fileHandle, void *record, int offset, int recordSize, int pageCount);
+
+    RC UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize);
+
+    void prepareRecord(void *buffer, const std::vector<Attribute> &recordDescriptor, void *contentOfRecords, int len);
+
 
 protected:
     RecordBasedFileManager();                                                   // Prevent construction
