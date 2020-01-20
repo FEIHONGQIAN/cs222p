@@ -105,6 +105,11 @@ public:
     //        age: NULL  height: 7.5  salary: 7500)
     RC printRecord(const std::vector<Attribute> &recordDescriptor, const void *data);
 
+    RC getActualByteForNullsIndicator(int fieldCount);
+
+    //transform the input data to the traditional formatted data, return the length of the formatted data
+    int transformData(const std::vector<Attribute> &recordDescriptor, const void *data, void *record);
+
     /*****************************************************************************************************
     * IMPORTANT, PLEASE READ: All methods below this comment (other than the constructor and destructor) *
     * are NOT required to be implemented for Project 1                                                   *
