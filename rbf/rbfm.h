@@ -2,6 +2,11 @@
 #define _rbfm_h_
 
 #include <vector>
+#include <math.h>
+#include <climits>
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
 #include "pfm.h"
 
 // Record ID
@@ -128,6 +133,8 @@ public:
             const void *value,                    // used in the comparison
             const std::vector<std::string> &attributeNames, // a list of projected attributes
             RBFM_ScanIterator &rbfm_ScanIterator);
+    RC  getActualByteForNullsIndicator(int fieldCount);
+            
 
 protected:
     RecordBasedFileManager();                                                   // Prevent construction

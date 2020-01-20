@@ -58,10 +58,12 @@ RC PagedFileManager::openFile(const std::string &fileName, FileHandle &fileHandl
 {
     FILE *file;
     file = fopen(fileName.c_str(), "r++");
-    if (!file)
-        return fail;
 
-    if (fileHandle.filePointer)
+    if (!file) {
+        return fail;
+    }
+
+    if (fileHandle.filePointer != nullptr)
         return fail;
 
     fileHandle.filePointer = file;
@@ -106,7 +108,7 @@ RC FileHandle::readPage(PageNum pageNum, void *data)
     if (fseek(file, offset, origin) != success)
         return fail; //set the position indicator to the page we need to read
 
-    if (fread(data, 1, PAGE_SIZE, file) != PAGE_SIZE)
+    if (fread(data, sizeof(char), PAGE_SIZE, file) != PAGE_SIZE)
         return fail; //read the page and store them in the *data
 
     readPageCounter++;
@@ -150,12 +152,12 @@ RC FileHandle::appendPage(const void *data)
     }
 
     long offset = getNumberOfPages() * PAGE_SIZE;
-
+    // std::cout << offset << std::endl;
     if (fseek(pFile, offset, origin) != 0)
     {
         return fail;
     }
-    if (fwrite(data, 1, PAGE_SIZE, pFile) != PAGE_SIZE)
+    if (fwrite(data, sizeof(char), PAGE_SIZE, pFile) != PAGE_SIZE)
     {
         return fail;
     }
