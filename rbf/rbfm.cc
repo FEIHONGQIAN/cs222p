@@ -57,28 +57,27 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
         free(currentPage);
         return 0;
     }
-    fileHandle.readPage(pageCount, currentPage);                // Put the page content to currentPage
-    int freeSpace = getFreeSpaceOfCurrentPage(currentPage);
-    int costByThisRecord = recordSize + RID_OFFSET_SIZE + RID_RECORD_LENGTH;
+    for(int i = pageCount; i >= 0; i--){
+        fileHandle.readPage(i, currentPage);                // Put the page content to currentPage
+        int freeSpace = getFreeSpaceOfCurrentPage(currentPage);
+        int costByThisRecord = recordSize + RID_OFFSET_SIZE + RID_RECORD_LENGTH;
 
-    if (costByThisRecord > freeSpace)  // Current page has no enough space
-    {
+        if (costByThisRecord <= freeSpace)  // Current page has enough space
+        {
+            int offset = PAGE_SIZE - freeSpace - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);
+            UpdateSlots(currentPage, fileHandle, record, offset, recordSize, i);
+            rid.pageNum = i;
+            rid.slotNum = getSlotNumber(currentPage);
+            free(currentPage);
+            return 0;
+        }
+        memset(currentPage, 0, PAGE_SIZE);
+    }
         // Append a new page
-        UpdateFirstSlots(currentPage, fileHandle, record, recordSize);
-        rid.pageNum = pageCount + 1;
-        rid.slotNum = getSlotNumber(currentPage);
-        free(currentPage);
-        // return -1;
-    }
-    else                // Add the record to the current page
-    {
-        int offset = PAGE_SIZE - freeSpace - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);
-        UpdateSlots(currentPage, fileHandle, record, offset, recordSize, pageCount);
-        rid.pageNum = pageCount;
-        rid.slotNum = getSlotNumber(currentPage);
-        free(currentPage);
-        return 0;
-    }
+    UpdateFirstSlots(currentPage, fileHandle, record, recordSize);
+    rid.pageNum = pageCount + 1;
+    rid.slotNum = getSlotNumber(currentPage);
+    free(currentPage);
     return 0;
 }
 ;RC RecordBasedFileManager::getFreeSpaceOfCurrentPage(void *currentPage)
