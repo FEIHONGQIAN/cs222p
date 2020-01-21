@@ -55,6 +55,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
         rid.slotNum = getSlotNumber(currentPage);
 
         free(currentPage);
+        free(record);
         return 0;
     }
     for(int i = pageCount; i >= 0; i--){
@@ -69,15 +70,17 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
             rid.pageNum = i;
             rid.slotNum = getSlotNumber(currentPage);
             free(currentPage);
+            free(record);
             return 0;
         }
         memset(currentPage, 0, PAGE_SIZE);
     }
-        // Append a new page
+    // Append a new page
     UpdateFirstSlots(currentPage, fileHandle, record, recordSize);
     rid.pageNum = pageCount + 1;
     rid.slotNum = getSlotNumber(currentPage);
     free(currentPage);
+    free(record);
     return 0;
 }
 ;RC RecordBasedFileManager::getFreeSpaceOfCurrentPage(void *currentPage)
@@ -195,6 +198,7 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
 
         }
     }
+    free(nullFieldsIndicator);
 }
 // Calculate actual bytes for nulls-indicator for the given field counts
 RC RecordBasedFileManager::getActualByteForNullsIndicator(int fieldCount) {
@@ -207,7 +211,7 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
     int nullFieldsIndicatorActualSize = getActualByteForNullsIndicator(fieldCount);
     //A类型 词条个数 + 每个词条的偏移量 + 所有词条
     int recordLen = 0; //记录formatted data（A类型）的长度
-    void *actualContent = (char *)malloc(4096);
+    void *actualContent = (char *)malloc(PAGE_SIZE);
 
     int offset = 0; //B类型的指针
 
@@ -287,6 +291,8 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
     }
     memcpy((char *) record + index, actualContent, recordLen);
     free(actualContent);
+    free(nullFieldsIndicator);
+    delete []offsetInFormattedData;
     return recordLen + index;
 }
 RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescriptor, const void *data) {
@@ -305,7 +311,7 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
         Attribute attr = recordDescriptor[i];
 
         if (nullFieldsIndicator[i / 8] & ((unsigned) 1 << (unsigned) leftShift)) {
-            std::cout << attr.name << ": NULL" << "\t";
+            std::cout << attr.name <<": NULL" << " ";
         } else {
             void *buffer;
             switch (attr.type) {
@@ -313,13 +319,13 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
                     buffer = malloc(sizeof(int));
                     memcpy(buffer, (char *) data + offset, sizeof(int));
                     offset += sizeof(int);
-                    std::cout << attr.name << ": " << (*(int *) buffer) << "\t";
+                    std::cout << attr.name << ": " << (*(int *) buffer) << " ";
                     break;
                 case TypeReal:
                     buffer = malloc(sizeof(float));
                     memcpy(buffer, (char *) data + offset, sizeof(float));
                     offset += sizeof(float);
-                    std::cout << attr.name << ": " << (*(float *) buffer) << "\t";
+                    std::cout << attr.name << ": " << (*(float *) buffer) << " ";
                     break;
                 case TypeVarChar:
                     buffer = malloc(sizeof(int));
@@ -337,7 +343,7 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
                         std :: cout << *tempPointer;
                         tempPointer++;
                     }
-                    std :: cout << "\t";
+                    std :: cout << " ";
                     break;
             }
             free(buffer);
@@ -346,8 +352,9 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
             leftShift += 8;
         }
         leftShift--;
-        std::cout << std :: endl;
     }
+    std::cout << std::endl;
+    free(nullFieldsIndicator);
     return 0;
 }
 RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
@@ -365,5 +372,6 @@ RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attrib
                                 const std::vector<std::string> &attributeNames, RBFM_ScanIterator &rbfm_ScanIterator) {
     return -1;
 }
+
 
 

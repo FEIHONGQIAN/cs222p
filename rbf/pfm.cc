@@ -46,6 +46,7 @@ RC PagedFileManager::createFile(const std::string &fileName)
     *(int *)((char *) hiddenPageData + offset) = 0;
 
     if (fwrite(hiddenPageData, 1, PAGE_SIZE, pFile) != PAGE_SIZE) {
+        free(hiddenPageData);
         return fail;
     }
     fflush(pFile);
@@ -78,7 +79,10 @@ RC PagedFileManager::openFile(const std::string &fileName, FileHandle &fileHandl
 
     void* hiddenPageData = malloc(PAGE_SIZE);
     int size = fread (hiddenPageData, sizeof(int), 3, file);
-    if(size != 3) return fail;
+    if(size != 3) {
+        free(hiddenPageData);
+        return fail;
+    }
 
     int offset = 0;
     fileHandle.readPageCounter = *(int *)((char *) hiddenPageData + offset);
@@ -106,6 +110,7 @@ RC PagedFileManager::closeFile(FileHandle &fileHandle) {
     *(int *)((char *) hiddenPageData + offset) = fileHandle.appendPageCounter;
 
     if (fwrite(hiddenPageData, sizeof(int), 3, file) != 3) {
+        free(hiddenPageData);
         return fail;
     }
     free(hiddenPageData);
