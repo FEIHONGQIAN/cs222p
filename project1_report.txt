@@ -9,31 +9,45 @@ Student 2 Name (if applicable): Feihong Qian
 
 2. Internal Record Format
 - Show your record format design and describe how your design satisfies O(1) field access.
-
+2.1 Record format design
+    the number of fields + a list of offsets + a list of fields
+2.2 Each offset is the address of the end of each field. There are three scenarios:
+    - if the current offset is -1, then the current field is null.
+    - if the current offset is the same as the previous one, then the current field is empty.
+    - if the current offset is larger than the previous (not null)one, then the length of this field is
+    the current offset - the previous (not null)offset. And this field starts from the end of the previous (not null)field.
+    Now, we can easily access the content of this field in O(1) by using 'memcpy' function to copy this field to a buffer.
 
 
 - Describe how you store a VarChar field.
-
+    if this VarChar field is null, the corresponding offset is -1. And we will not store this field.
+    Otherwise, the corresponding offset of this field is 'the previous (not null)offset + the length of this field'.
+    And each character is stored in one byte, one by one.
 
 
 3. Page Format
 - Show your page format design
-
+  a list of records + (free space) + a list of (offset + length of each field) + the number of fields + free space value
 
 
 4. Page Management
 - Show your algorithm of finding next available-space page when inserting a record.
-
-
+     We first check the available free space in the last page, if the free space is enough, then insert the record to this page.
+     Otherwise, we use a for loop to check backwards to find the first page with sufficient space available. If none exists, we
+     append a new page and insert this record to this newly appended page.
 
 - Show your hidden page format design if applicable
-
-
+    Our hidden page (at the beginning of the file)is used to store the the readPageCounter, writePageCounter and appendPageCounter.
+    We simple use three (four bytes) to store this three values.
 
 5. Implementation Detail
 - Other implementation details goes here.
-
-
+    - We call our record format as A and the input data format(in the test case) as B.
+    - When we need to insert a type B record(from the input), we first use a 'transfromData' function to format type B record
+    into type A record. Find the first page with sufficient free space to store this type A record. Then Fill in the corresponding Rid.
+    - When we need to read the record with Rid, we first use Rid to find the place of this record. Copy this record to a temporary
+    buffer. We use a 'prepareRecord' function transform this type A record into type B record as the input data format.
+    - Print the transformed type B record with the input record to check the integrity of it.
 
 6. Other (optional)
 - Freely use this section to tell us about things that are related to the project 1, but not related to the other sections (optional)
