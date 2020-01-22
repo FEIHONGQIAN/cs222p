@@ -1,0 +1,1991 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="cs222p_winter20"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_create_tables">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_create_tables" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_create_tables"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_create_tables/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_create_tables" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_create_tables/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_14">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_14" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_14"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_14/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_14" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_14/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_13b">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_13b" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_13b"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_13b/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_13b" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_13b/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_11">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_11" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_11"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_11/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_11" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_11/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_09">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_09" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_09"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_09/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_09" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_09/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_12">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_12" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_12"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_12/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_12" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_12/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_07">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_07" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_07"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_07/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_07" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_07/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_05">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_05" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_05"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_05/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_05" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_05/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_extra_2">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_extra_2" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_extra_2"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_extra_2/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_extra_2" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_extra_2/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_15">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_15" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_15"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_15/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_15" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_15/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_03">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_03" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_03"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_03/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_03" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_03/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_01">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_01" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_01"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_01/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_01" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_01/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_00">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_00" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_00"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_00/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_00" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_00/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_delete">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_delete" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_delete"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_delete/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_delete" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_delete/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_06">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_06" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_06"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_06/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_06" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_06/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_01">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_01" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_01"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_01/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_01" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_01/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_hanroro">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_hanroro" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_hanroro"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_hanroro/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_hanroro" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_hanroro/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_10">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_10" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_10"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_10/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_10" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_10/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_12">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_12" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_12"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_12/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_12" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_12/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_10">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_10" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_10"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_10/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_10" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_10/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_09">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_09" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_09"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_09/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_09" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_09/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_02">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_02" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_02"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_02/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_02" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_02/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_08b">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_08b" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_08b"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_08b/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_08b" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_08b/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_07">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_07" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_07"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_07/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_07" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_07/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_update">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_update" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_update"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_update/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_update" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_update/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_04">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_04" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_04"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_04/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_04" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_04/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_04">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_04" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_04"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_04/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_04" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_04/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_06">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_06" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_06"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_06/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_06" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_06/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="RBFM">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/libRBFM.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 RBFM"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="RBFM/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/libRBFM.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 RBFM/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_05">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_05" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_05"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_05/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_05" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_05/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_extra_1">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_extra_1" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_extra_1"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_extra_1/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_extra_1" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_extra_1/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_13">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_13" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_13"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_13/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_13" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_13/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_03">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_03" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_03"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_03/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_03" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_03/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_08">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_08" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_08"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_08/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_08" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_08/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_02">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_02" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_02"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_02/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_02" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_02/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_08">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_08" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_08"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_08/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_08" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_08/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="RM">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/libRM.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 RM"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="RM/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/libRM.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 RM/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_delete_tables">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_delete_tables" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_delete_tables"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rmtest_delete_tables/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rmtest_delete_tables" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rmtest_delete_tables/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clean-all">
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean-all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_jsad">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_jsad" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_jsad"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_jsad/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_jsad" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_jsad/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PFM">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/libPFM.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 PFM"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PFM/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/libPFM.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 PFM/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_11">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_11" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_11"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rbftest_11/fast">
+				<Option output="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/rbftest_11" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add option="-DDEBUG=1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 rbftest_11/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.cc">
+			<Option target="PFM"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/pfm.h">
+			<Option target="PFM"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbfm.cc">
+			<Option target="RBFM"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbfm.h">
+			<Option target="RBFM"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_01.cc">
+			<Option target="rbftest_01"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_02.cc">
+			<Option target="rbftest_02"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_03.cc">
+			<Option target="rbftest_03"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_04.cc">
+			<Option target="rbftest_04"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_05.cc">
+			<Option target="rbftest_05"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_06.cc">
+			<Option target="rbftest_06"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_07.cc">
+			<Option target="rbftest_07"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_08.cc">
+			<Option target="rbftest_08"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_08b.cc">
+			<Option target="rbftest_08b"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_09.cc">
+			<Option target="rbftest_09"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_10.cc">
+			<Option target="rbftest_10"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_11.cc">
+			<Option target="rbftest_11"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_12.cc">
+			<Option target="rbftest_12"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_delete.cc">
+			<Option target="rbftest_delete"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_hanroro.cc">
+			<Option target="rbftest_hanroro"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_jsad.cc">
+			<Option target="rbftest_jsad"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rbf/rbftest_update.cc">
+			<Option target="rbftest_update"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rm.cc">
+			<Option target="RM"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rm.h">
+			<Option target="RM"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_00.cc">
+			<Option target="rmtest_00"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_01.cc">
+			<Option target="rmtest_01"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_02.cc">
+			<Option target="rmtest_02"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_03.cc">
+			<Option target="rmtest_03"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_04.cc">
+			<Option target="rmtest_04"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_05.cc">
+			<Option target="rmtest_05"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_06.cc">
+			<Option target="rmtest_06"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_07.cc">
+			<Option target="rmtest_07"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_08.cc">
+			<Option target="rmtest_08"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_09.cc">
+			<Option target="rmtest_09"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_10.cc">
+			<Option target="rmtest_10"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_11.cc">
+			<Option target="rmtest_11"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_12.cc">
+			<Option target="rmtest_12"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_13.cc">
+			<Option target="rmtest_13"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_13b.cc">
+			<Option target="rmtest_13b"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_14.cc">
+			<Option target="rmtest_14"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_15.cc">
+			<Option target="rmtest_15"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_create_tables.cc">
+			<Option target="rmtest_create_tables"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_delete_tables.cc">
+			<Option target="rmtest_delete_tables"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_extra_1.cc">
+			<Option target="rmtest_extra_1"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/rm/rmtest_extra_2.cc">
+			<Option target="rmtest_extra_2"/>
+		</Unit>
+		<Unit filename="/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

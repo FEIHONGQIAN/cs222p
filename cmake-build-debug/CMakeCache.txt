@@ -151,7 +151,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=cs222_fall19
+CMAKE_PROJECT_NAME:STATIC=cs222p_winter20
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/ranlib
@@ -220,6 +220,12 @@ cs222_fall19_BINARY_DIR:STATIC=/Users/qianfeihong/CLionProjects/cs222p-winter20-
 
 //Value Computed by CMake
 cs222_fall19_SOURCE_DIR:STATIC=/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6
+
+//Value Computed by CMake
+cs222p_winter20_BINARY_DIR:STATIC=/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6/cmake-build-debug
+
+//Value Computed by CMake
+cs222p_winter20_SOURCE_DIR:STATIC=/Users/qianfeihong/CLionProjects/cs222p-winter20-team-6
 
 
 ########################

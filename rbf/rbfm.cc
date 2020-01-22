@@ -134,7 +134,9 @@ RC RecordBasedFileManager::getSlotNumber(void *currentPage)
 {
     return *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE));
 }
+RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor, const RID &rid){
 
+}
 RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                       const RID &rid, void *data)
 {
@@ -375,7 +377,6 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
                                         const void *data, const RID &rid) {
     return -1;
 }
-
 RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                          const RID &rid, const std::string &attributeName, void *data) {
     return -1;
