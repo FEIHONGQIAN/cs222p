@@ -180,9 +180,9 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
 RC RecordBasedFileManager::updateSlotDirectory(void * currentPage, int len){
     int slotNums = getSlotNumber(currentPage);
     for(int i = 2; i <= slotNums; i++){
-        int os = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE -
+        int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE -
                  i * 2 * sizeof(short);
-        *((short *) ((char *) currentPage + os + sizeof(short))) = *((short *) ((char *) currentPage + os + sizeof(short))) - len; //update the start pos of the rest of the record
+        *((short *) ((char *) currentPage + offset + sizeof(short))) = *((short *) ((char *) currentPage + offset + sizeof(short))) - len; //update the start pos of the rest of the record
     }
     return 0;
 }
@@ -214,7 +214,10 @@ RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<
     int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - pos * 2 * sizeof(short); //get the record directory with rid
     int len = *((short *)((char *)currentPage + offset)); //get the length of record
     int start = *((short *)((char *) currentPage + offset + sizeof(short))); //get the start pos of the record
-    if(start == -1) return -1;
+    if(start == -1) {
+        free(currentPage);
+        return -1;
+    }
     void *contentOfRecords = malloc(PAGE_SIZE);
     memcpy((char *)contentOfRecords, (char *)currentPage + start, len);
 
