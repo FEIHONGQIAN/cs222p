@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libRM.a  CMakeFiles/RM.dir/rm/rm.cc.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libRM.a

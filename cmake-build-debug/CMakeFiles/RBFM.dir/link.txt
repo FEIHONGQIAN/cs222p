@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libRBFM.a  CMakeFiles/RBFM.dir/rbf/rbfm.cc.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libRBFM.a
