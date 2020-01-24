@@ -179,7 +179,7 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
 }
 RC RecordBasedFileManager::updateSlotDirectory(void * currentPage, int start_num, int len, int end){
     int slotNums = getSlotNumber(currentPage);
-    for(int i = start_num; i <= slotNums; i++){
+    for(int i = 1; i <= slotNums; i++){
         int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE -
                  i * 2 * sizeof(short);
         if(*((short *) ((char *) currentPage + offset + sizeof(short))) >= end){
