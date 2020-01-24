@@ -164,9 +164,9 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
     *((short *) ((char *) currentPage + offset)) = -1; //set the length of record to -1;
 
     //update the directory of slots that are not deleted
-    updateSlotDirectory(currentPage,len);
+    updateSlotDirectory(currentPage, pos + 1, len, start + len);
     //shift the content to the left (free space saved by the deleted record)
-    shiftContentToLeft(currentPage, len, start);
+    shiftContentToLeft(currentPage, len, start, 0);
 
     //decrease the slot number by 1
     *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) - 1;
@@ -177,16 +177,19 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
 
     return 0;
 }
-RC RecordBasedFileManager::updateSlotDirectory(void * currentPage, int len){
+RC RecordBasedFileManager::updateSlotDirectory(void * currentPage, int start_num, int len, int end){
     int slotNums = getSlotNumber(currentPage);
-    for(int i = 2; i <= slotNums; i++){
+    for(int i = start_num; i <= slotNums; i++){
         int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE -
                  i * 2 * sizeof(short);
-        *((short *) ((char *) currentPage + offset + sizeof(short))) = *((short *) ((char *) currentPage + offset + sizeof(short))) - len; //update the start pos of the rest of the record
+        if(*((short *) ((char *) currentPage + offset + sizeof(short))) >= end){
+            *((short *) ((char *) currentPage + offset + sizeof(short))) = *((short *) ((char *) currentPage + offset + sizeof(short))) - len; //update the start pos of the rest of the record
+        }
     }
     return 0;
 }
-RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int start){
+RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int start, int recordSize){
+    //if recordSize is 0, it is used in deletion. Otherwise, it is used in update..-
     int left = len + start; //the left end of the content that needed to be removed
     int right = 0; //the right end of the content that needed to be removed
 
@@ -198,11 +201,12 @@ RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int st
     void *content = malloc(PAGE_SIZE);
     //start...(len)...left...right
     memcpy((char *)content, (char *)currentPage + left, right - left);
-    memcpy((char *)currentPage + start, content, right - left);
+    memcpy((char *)currentPage + start + recordSize, content, right - left);
     free(content);
 
     return 0;
 }
+
 RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                       const RID &rid, void *data)
 {
@@ -442,7 +446,28 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
 }
 RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                         const void *data, const RID &rid) {
-    return -1;
+    int slotNum = rid.slotNum;
+    int pageNum = rid.pageNum;
+    void* currentPage = malloc(PAGE_SIZE);
+    void* record = malloc(PAGE_SIZE); //used to store the type A record;
+    fileHandle.readPage(pageNum, currentPage);
+
+    int len_dic = PAGE_SIZE - 2 * sizeof(int) - slotNum * sizeof(short) * 2;
+    int start_dic = len_dic + sizeof(short);
+    int len = *(short *)((char *)currentPage + len_dic);//length of the record to be updated
+    int pos = *(short *)((char *)currentPage + start_dic); //start pos of the record to be updated;
+
+    //transform type B data into type A data
+    int recordSize = transformData(recordDescriptor, data, record); //return the transformed type A data's recordSize;
+    if(recordSize <= len){ //1.update the record in place, 2.shift the rest of the data to the left, 3.update the slot directory
+        memcpy((char *)currentPage + pos, record, recordSize); //1. update the record in place
+        shiftContentToLeft(currentPage, len, pos, recordSize); //2.shift the res of the date to the left.
+
+        *(short *)((char *)currentPage + len_dic) = recordSize; //update the udpated slot directory;
+        updateSlotDirectory(currentPage, slotNum + 1, len - recordSize, len + pos); //update the rest of slot directory
+        return 0;
+    }
+    //
 }
 RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                          const RID &rid, const std::string &attributeName, void *data) {
