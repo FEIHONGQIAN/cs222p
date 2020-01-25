@@ -144,7 +144,7 @@ public:
 
     RC UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize); //used in the insertion
 
-    RC updateSlotDirectory(void * currentPage, int slotNum, int len, int end); //used in the deletion, update the directory of slots that are not deleted
+    RC updateSlotDirectory(void * currentPage, int len, int end); //used in the deletion, update the directory of slots that are not deleted
 
     RC shiftContentToLeft(void *currentPage, int len, int start, int recordSize); //used in the deletion, update, shift the content to the left to save space
 

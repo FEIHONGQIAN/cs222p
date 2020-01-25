@@ -121,7 +121,7 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
     int insertPos = -1;
     //check whether there is previous deleted slot
     for(int i = 1; i < getSlotNumber(currentPage); i++){
-        if(*(short *)((char *) currentPage + end) == -1){ //find one, use this slot
+        if(*(short *)((char *) currentPage + end) == 0){ //find one, use this slot
             insertPos = end;
             rid.slotNum = i;
             break;
@@ -155,33 +155,59 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
     fileHandle.readPage(rid.pageNum, currentPage);
 
     int pos = rid.slotNum;
+    int pageNum = rid.pageNum;
     int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE -
                  pos * 2 * sizeof(short); //get the record directory with rid
     int len = *((short *) ((char *) currentPage + offset)); //get the length of record
     int start = *((short *) ((char *) currentPage + offset + sizeof(short))); //get the start pos of the record
 
+    if(start == -1 && len == 0) {
+        free(currentPage);
+        return -1;
+    }
+    while(len < 0){ //this slot is just a pointer, point to a different page. len: -slotNum, start: -pageNum
+        //free all the pointers because the record in the end will be deleted.
+        *((short *) ((char *) currentPage + offset)) = 0;
+        *((short *) ((char *) currentPage + offset + sizeof(short))) = -1;
+        fileHandle.writePage(pageNum, currentPage);
+
+        //get the page which the pointer points at
+        memset(currentPage, 0, PAGE_SIZE);
+        pageNum = 0 - start;
+        fileHandle.readPage(pageNum, currentPage);
+        offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - (0 - len) * 2 * sizeof(short);
+        len = *((short *)((char *)currentPage + offset));
+        start = *((short *)((char *) currentPage + offset + sizeof(short)));
+
+        if(start == -1 && len == 0) {
+            free(currentPage);
+            return -1;
+        }
+    }
+
     *((short *) ((char *) currentPage + offset + sizeof(short))) = -1; //delete this record, set the start pos to -1;
-    *((short *) ((char *) currentPage + offset)) = -1; //set the length of record to -1;
+    *((short *) ((char *) currentPage + offset)) = 0; //set the length of record to 0;
 
     //update the directory of slots that are not deleted
-    updateSlotDirectory(currentPage, pos + 1, len, start + len);
+    updateSlotDirectory(currentPage, len, start + len);
     //shift the content to the left (free space saved by the deleted record)
     shiftContentToLeft(currentPage, len, start, 0);
-
     //decrease the slot number by 1
     *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) - 1;
-
+    //update the free space
+    *(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE) += len;
     //write back to the file
-    fileHandle.writePage(rid.pageNum, currentPage);
+    fileHandle.writePage(pageNum, currentPage);
     free(currentPage);
 
     return 0;
 }
-RC RecordBasedFileManager::updateSlotDirectory(void * currentPage, int start_num, int len, int end){
+RC RecordBasedFileManager::updateSlotDirectory(void * currentPage, int len, int end){
     int slotNums = getSlotNumber(currentPage);
     for(int i = 1; i <= slotNums; i++){
         int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE -
                  i * 2 * sizeof(short);
+        //add the slot that comes after 'end' should be updated (mistake: change slot directory according to the RID is wrong)
         if(*((short *) ((char *) currentPage + offset + sizeof(short))) >= end){
             *((short *) ((char *) currentPage + offset + sizeof(short))) = *((short *) ((char *) currentPage + offset + sizeof(short))) - len; //update the start pos of the rest of the record
         }
@@ -194,10 +220,14 @@ RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int st
     int right = 0; //the right end of the content that needed to be removed
 
     int last_offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);
+
     int len2 = *((short *) ((char *) currentPage + last_offset));
     int start2 = *((short *) ((char *) currentPage + last_offset + sizeof(short)));
 
     right = start2 + len2;
+    if(right <= left){
+        return 0;
+    }
     void *content = malloc(PAGE_SIZE);
     //start...(len)...left...right
     memcpy((char *)content, (char *)currentPage + left, right - left);
@@ -216,12 +246,26 @@ RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<
     int pos = rid.slotNum;
 
     int offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - pos * 2 * sizeof(short); //get the record directory with rid
-    int len = *((short *)((char *)currentPage + offset)); //get the length of record
-    int start = *((short *)((char *) currentPage + offset + sizeof(short))); //get the start pos of the record
-    if(start == -1) {
+    short len = *((short *)((char *)currentPage + offset)); //get the length of record
+    short start = *((short *)((char *) currentPage + offset + sizeof(short))); //get the start pos of the record
+    if(start == -1 && len == 0) { //no such record
         free(currentPage);
         return -1;
     }
+    while(len < 0){ //this slot is just a pointer, point to a different page. len: -slotNum, start: -pageNum
+        memset(currentPage, 0, PAGE_SIZE);
+        fileHandle.readPage(0 - start, currentPage);
+        offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - (0 - len) * 2 * sizeof(short);
+        len = *((short *)((char *)currentPage + offset)); //get the length of record
+        start = *((short *)((char *) currentPage + offset + sizeof(short))); //get the start pos of the record
+
+
+        if(start == -1 && len == 0){
+            free(currentPage);
+            return -1;
+        }
+    }
+
     void *contentOfRecords = malloc(PAGE_SIZE);
     memcpy((char *)contentOfRecords, (char *)currentPage + start, len);
 
@@ -459,15 +503,75 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
 
     //transform type B data into type A data
     int recordSize = transformData(recordDescriptor, data, record); //return the transformed type A data's recordSize;
-    if(recordSize <= len){ //1.update the record in place, 2.shift the rest of the data to the left, 3.update the slot directory
+    //case1: type A data fits in place
+    if(recordSize <= len){
+        //1.update the record in place, 2.shift the rest of the data to the left, 3.update the slot directory, 4.update space
         memcpy((char *)currentPage + pos, record, recordSize); //1. update the record in place
         shiftContentToLeft(currentPage, len, pos, recordSize); //2.shift the res of the date to the left.
 
-        *(short *)((char *)currentPage + len_dic) = recordSize; //update the udpated slot directory;
-        updateSlotDirectory(currentPage, slotNum + 1, len - recordSize, len + pos); //update the rest of slot directory
+        *(short *)((char *)currentPage + len_dic) = recordSize; //3. update the udpated slot directory;
+        updateSlotDirectory(currentPage, len - recordSize, len + pos); //update the rest of slot directory
+
+        //4.update space
+        *(int *)((char *)currentPage + PAGE_SIZE - sizeof(int)) += len - recordSize;
+
+        //5.write back
+        fileHandle.writePage(rid.pageNum, currentPage);
+        free(currentPage);
+        free(record);
         return 0;
     }
-    //
+    //recordSize > len
+    //case2: type A data fits in the same page, but needs to move its place;
+    if(recordSize - len <= getFreeSpaceOfCurrentPage(currentPage)){
+        int last_slot_len_dic = PAGE_SIZE - 2 * sizeof(int) - getSlotNumber(currentPage) * sizeof(short) * 2;
+        int last_slot_start_dic = last_slot_len_dic + sizeof(short);
+        int last_slot_len = *(short *)((char *)currentPage + last_slot_len_dic);
+        int last_slot_start_pos = *(short *)((char *)currentPage + last_slot_start_dic);
+        //1.shift content to the left(delete the previous one)
+        shiftContentToLeft(currentPage, len, pos, 0);
+        //2.append the updated record at the end
+        memcpy((char *)currentPage + last_slot_start_pos + last_slot_len - len, record, recordSize);
+
+        //3.update the slot directory
+        updateSlotDirectory(currentPage, len, len + pos);
+        *(short *)((char *)currentPage + len_dic) = recordSize;
+        *(short *)((char *)currentPage + start_dic) = last_slot_start_pos + last_slot_len - len;
+
+        //4.update the free space
+        *(int *)((char *)currentPage + PAGE_SIZE - sizeof(int)) -= recordSize - len;
+
+        //5.write back
+        fileHandle.writePage(rid.pageNum, currentPage);
+        free(currentPage);
+        free(record);
+        return 0;
+    }
+
+    //case3: type A data cannot fit in the same page, needs to find another page which has free space;
+    //recordSize - len > getFreeSpaceOfCurrentPage(currentPage) the first step is just like deletion, delete this record from this page
+    //1.shift content to the left (free space saved by the deleted record)
+    shiftContentToLeft(currentPage, len, pos, 0);
+    //2.updateSlotDirectory
+    updateSlotDirectory(currentPage, len, pos + len);
+    //3.decrease the slot number by 1
+    *(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE) = getSlotNumber(currentPage) - 1;
+    //4.update the free space
+    *(int *)((char *)currentPage + PAGE_SIZE - sizeof(int)) += len;
+    //now, we still need to update the slot directory of the deleted record, find a new place for it.
+    //5.find a new place for it. rid2 is the new place for rid.
+    RID rid2;
+    insertRecord(fileHandle, recordDescriptor, data, rid2);
+    //6.update the slot directory
+    *(short *)((char *)currentPage + len_dic) = 0 - rid2.slotNum;
+    *(short *)((char *)currentPage + start_dic) = 0 - rid2.pageNum;
+
+    //7.write back to the file
+    fileHandle.writePage(rid.pageNum, currentPage);
+    free(currentPage);
+    free(record);
+
+    return 0;
 }
 RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                          const RID &rid, const std::string &attributeName, void *data) {
