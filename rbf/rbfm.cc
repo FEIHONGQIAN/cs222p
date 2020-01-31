@@ -635,7 +635,55 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
 RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                          const RID &rid, const std::string &attributeName, void *data)
 {
-    return -1;
+    void *currentPage = malloc(PAGE_SIZE);
+    void *record = malloc(PAGE_SIZE);
+    int pageNum = rid.pageNum;
+    int slotNum = rid.slotNum;
+    fileHandle.readPage(pageNum, currentPage);
+
+    int len_dic = PAGE_SIZE - 2 * sizeof(int) - slotNum * sizeof(short) * 2;
+    int start_dic = len_dic + sizeof(short);
+    int len = *(short *)((char *)currentPage + len_dic);//length of the record
+    int start_pos = *(short *)((char *)currentPage + start_dic); //start pos of the record
+
+    if(len == 0 && start_pos == -1){ //no such record
+        free(currentPage);
+        free(record);
+        return -1;
+    }
+
+    memcpy((char *)record, (char *)currentPage + start_pos, len);
+
+    int attribute_id = -1;
+    for(int i = 0; i < recordDescriptor.size(); i++){
+        if(recordDescriptor[i].name.compare(attributeName) == 0){
+            attribute_id = i + 1;
+            break;
+        }
+    }
+
+    if(attribute_id == -1){ //no such attribute name
+        free(currentPage);
+        free(record);
+        return -1;
+    }
+
+
+    int fieldCount = *(short *)((char *)currentPage);
+    int start = -1; //the start pos of the record
+    if(attribute_id == 1){
+        start = fieldCount * sizeof(short);
+    }else{
+        start = *(short *)((char *)currentPage + (attribute_id - 1) * sizeof(short));
+    }
+    int end = *(short *)((char *)currentPage + attribute_id * sizeof(short)); //the end pos of the record
+
+    memcpy((char *) data, (char *)currentPage + start, end - start);
+
+
+    free(currentPage);
+    free(record);
+    return 0;
 }
 
 RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,

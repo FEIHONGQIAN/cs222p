@@ -99,7 +99,6 @@ int RBFTest_Update(RecordBasedFileManager &rbfm) {
     // Insert long record
     insertRecord(rbfm, rid, longStr);
 
-    // update short record
     updateRecord(rbfm, shortRID, midString);
 
     //read updated short record and verify its content
@@ -109,6 +108,7 @@ int RBFTest_Update(RecordBasedFileManager &rbfm) {
     insertRecord(rbfm, rid, longStr);
     insertRecord(rbfm, rid, longStr);
 
+
     // read mid record and verify its content
     readRecord(rbfm, midRID, midString);
 
@@ -117,13 +117,10 @@ int RBFTest_Update(RecordBasedFileManager &rbfm) {
 
     // read the short record and verify its content
     readRecord(rbfm, shortRID, longStr);
-
     // delete the short record
     rbfm.deleteRecord(fileHandle, recordDescriptor, shortRID);
-
     // verify the short record has been deleted
     rc = rbfm.readRecord(fileHandle, recordDescriptor, shortRID, returnedData);
-
     assert(rc != success && "Read a deleted record should not success.");
 
     rc = rbfm.closeFile(fileHandle);

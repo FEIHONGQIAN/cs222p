@@ -92,7 +92,6 @@ int RBFTest_Delete(RecordBasedFileManager &rbfm) {
 
     std::cout << std::endl << "Returned Data:" << std::endl;
     rbfm.printRecord(recordDescriptor, returnedData);
-
     // Compare whether the two memory blocks are the same
     if (memcmp(record, returnedData, recordSize) != 0) {
         std::cout << "[FAIL] Test Case Delete Failed!" << std::endl << std::endl;
@@ -105,11 +104,9 @@ int RBFTest_Delete(RecordBasedFileManager &rbfm) {
     rc = rbfm.insertRecord(fileHandle, recordDescriptor, record, rid);
     assert(rc == success && "Inserting a record should not fail.");
     assert(rid.slotNum == rid0.slotNum && "Inserted record should use previous deleted slot.");
-
     // Given the rid, read the record from file
     rc = rbfm.readRecord(fileHandle, recordDescriptor, rid, returnedData);
     assert(rc == success && "Reading a record should not fail.");
-
     std::cout << std::endl << "Returned Data:" << std::endl;
     rbfm.printRecord(recordDescriptor, returnedData);
 
