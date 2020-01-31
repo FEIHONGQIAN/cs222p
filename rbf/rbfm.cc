@@ -331,8 +331,8 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
     }
     int offset = 0;
 
-    memcpy((char *)buffer + offset, nullFieldsIndicator, ceil((double)fieldCount / 8));
-    offset += ceil((double)fieldCount / 8);
+    memcpy((char *)buffer + offset, nullFieldsIndicator, ceil((double)fieldCount / CHAR_BIT));
+    offset += ceil((double)fieldCount / CHAR_BIT);
 
     for (int i = 0; i < fieldCount; i++)
     {
@@ -341,6 +341,7 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
         }
         else
         {
+            int varCharLen;
             switch (recordDescriptor[i].type)
             {
                 case TypeInt:
@@ -356,7 +357,8 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
                     startAddress = offsetOfField[i];
                     break;
                 case TypeVarChar:
-                    *(int *)((char *)buffer + offset) = offsetOfField[i] - startAddress;
+                    varCharLen = offsetOfField[i] - startAddress;
+                    memcpy(buffer + offset, &varCharLen, sizeof(int));
                     offset += sizeof(int);
                     memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
                            offsetOfField[i] - startAddress);
