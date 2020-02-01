@@ -242,16 +242,11 @@ RC RecordBasedFileManager::updateSlotDirectory(void *currentPage, int len, int e
 }
 RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int start, int recordSize)
 {
-    //if recordSize is 0, it is used in deletion. Otherwise, it is used in update..-
+    //if recordSize is 0, it is used in deletion. Otherwise, it is used in update...
     int left = len + start; //the left end of the content that needed to be removed
-    int right = 0;          //the right end of the content that needed to be removed
+    int right = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short) - getFreeSpaceOfCurrentPage(currentPage);          //the right end of the content that needed to be removed
 
-    int last_offset = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);
 
-    int len2 = *((short *)((char *)currentPage + last_offset));
-    int start2 = *((short *)((char *)currentPage + last_offset + sizeof(short)));
-
-    right = start2 + len2;
     if (right <= left)
     {
         return 0;
