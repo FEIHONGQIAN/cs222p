@@ -132,7 +132,7 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
     int end = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
     int insertPos = -1;
     //check whether there is previous deleted slot
-    for (int i = 1; i < getSlotNumber(currentPage); i++)
+    for (int i = 1; i <= getSlotNumber(currentPage); i++)
     {
         if (*(short *)((char *)currentPage + end) == 0)
         { //find one, use this slot
@@ -215,8 +215,8 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
     updateSlotDirectory(currentPage, len, start + len);
     //shift the content to the left (free space saved by the deleted record)
     shiftContentToLeft(currentPage, len, start, 0);
-    //decrease the slot number by 1
-    *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) - 1;
+    //the slotNum should remain the same;
+    //*((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) - 1;
     //update the free space
     *(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE) += len;
     //write back to the file
@@ -358,7 +358,7 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
                     break;
                 case TypeVarChar:
                     varCharLen = offsetOfField[i] - startAddress;
-                    memcpy(buffer + offset, &varCharLen, sizeof(int));
+                    memcpy((char *)buffer + offset, &varCharLen, sizeof(int));
                     offset += sizeof(int);
                     memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
                            offsetOfField[i] - startAddress);
@@ -615,8 +615,8 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
     shiftContentToLeft(currentPage, len, pos, 0);
     //2.updateSlotDirectory
     updateSlotDirectory(currentPage, len, pos + len);
-    //3.decrease the slot number by 1
-    *(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE) = getSlotNumber(currentPage) - 1;
+    //3.the slot number of current page should remain the same
+    //*(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE) = getSlotNumber(currentPage) - 1;
     //4.update the free space
     *(int *)((char *)currentPage + PAGE_SIZE - sizeof(int)) += len;
     //now, we still need to update the slot directory of the deleted record, find a new place for it.
