@@ -70,6 +70,8 @@ public:
             const std::string &column_name, const int column_type, const int column_length, const int column_position, const int table_version, void *buffer, int *recordSize);
 
     RC deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle, std::vector<Attribute> descriptor);
+    RC appendString(std::string &s, const void * record, int start_pos, int len);
+    RC filterAttributeFromColumnRecord(const void * column, std::vector<Attribute> &attrs);
 
 // Extra credit work (10 points)
     RC addAttribute(const std::string &tableName, const Attribute &attr);
