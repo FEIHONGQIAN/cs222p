@@ -10,7 +10,7 @@
 const int success = 0;
 const int fail = -1;
 const int origin = 0;
-const int counterCount = 3;
+const int counterCount = 4;
 PagedFileManager &PagedFileManager::instance()
 {
     static PagedFileManager _pf_manager = PagedFileManager();
