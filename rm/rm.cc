@@ -160,9 +160,14 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
             memcpy((char *) table_name, (char *)table + start, len);
 
             std::string s;
-            for (int k = 0; k < len; k++) {
-                s += *((char *) table_name + k);
+            rc = appendString(s, table_name, start, len);
+            if(rc == fail){
+                free(currentPage);
+                free(table);
+                free(table_name);
+                return fail;
             }
+
 
             if(s == tableName){
                 rc = rbfm -> deleteRecord(fileHandle, descriptor, rid);
@@ -280,23 +285,65 @@ RC RelationManager::appendString(std::string &s, const void * record, int start_
     return success;
 }
 RC RelationManager::insertTuple(const std::string &tableName, const void *data, RID &rid) {
-    return -1;
+    FileHandle fileHandle;
+    int rc = 0;
+    rc = rbfm ->openFile(tableName, fileHandle);
+    if(rc == fail) return fail;
+    std::vector<Attribute> recordDescriptor;
+    getAttributes(tableName, recordDescriptor);
+    rc = rbfm ->insertRecord(fileHandle, recordDescriptor, data, rid);
+    if(rc == fail) return fail;
+    rc = rbfm ->closeFile(fileHandle);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid) {
-    return -1;
+    FileHandle fileHandle;
+    int rc = 0;
+    rc = rbfm ->openFile(tableName, fileHandle);
+    if(rc == fail) return fail;
+    std::vector<Attribute> recordDescriptor;
+    getAttributes(tableName, recordDescriptor);
+    rc = rbfm ->deleteRecord(fileHandle, recordDescriptor, rid);
+    if(rc == fail) return fail;
+    rc = rbfm ->closeFile(fileHandle);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC RelationManager::updateTuple(const std::string &tableName, const void *data, const RID &rid) {
-    return -1;
+    FileHandle fileHandle;
+    int rc = 0;
+    rc = rbfm ->openFile(tableName, fileHandle);
+    if(rc == fail) return fail;
+    std::vector<Attribute> recordDescriptor;
+    getAttributes(tableName, recordDescriptor);
+    rc = rbfm ->updateRecord(fileHandle, recordDescriptor, data, rid);
+    if(rc == fail) return fail;
+    rc = rbfm ->closeFile(fileHandle);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC RelationManager::readTuple(const std::string &tableName, const RID &rid, void *data) {
-    return -1;
+    FileHandle fileHandle;
+    int rc = 0;
+    rc = rbfm ->openFile(tableName, fileHandle);
+    if(rc == fail) return fail;
+    std::vector<Attribute> recordDescriptor;
+    getAttributes(tableName, recordDescriptor);
+    rc = rbfm ->readRecord(fileHandle, recordDescriptor, rid, data);
+    if(rc == fail) return fail;
+    rc = rbfm ->closeFile(fileHandle);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC RelationManager::printTuple(const std::vector<Attribute> &attrs, const void *data) {
-    return -1;
+    int rc = rbfm -> printRecord(attrs, data);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC RelationManager::readAttribute(const std::string &tableName, const RID &rid, const std::string &attributeName,
