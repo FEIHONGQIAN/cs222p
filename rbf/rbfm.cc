@@ -51,6 +51,8 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
     void *record = malloc(PAGE_SIZE);
     int recordSize = transformData(recordDescriptor, data, record); // Get record and recordSize
 
+    fileHandle.slotCounter += 1;
+
     void *currentPage = malloc(PAGE_SIZE); // Create a new page to cache the content of the page
     int pageCount = fileHandle.getNumberOfPages() - 1;
     if (pageCount == -1) // If there is no page

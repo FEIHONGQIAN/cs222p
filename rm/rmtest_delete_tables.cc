@@ -4,12 +4,11 @@ int main() {
 
     // By executing this script, the following tables including the system tables will be removed.
     std::cout << std::endl << "***** RM TEST - Deleting the Catalog and User tables *****" << std::endl;
-
     RC rc = rm.deleteTable("tbl_employee");
     if (rc != 0) {
         std::cout << "Deleting tbl_employee failed." << std::endl;
     }
-
+    printf("a");
     rc = rm.deleteTable("tbl_employee2");
     if (rc != 0) {
         std::cout << "Deleting tbl_employee2 failed." << std::endl;

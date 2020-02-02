@@ -11,6 +11,7 @@ int main() {
     RC rc = rm.deleteCatalog();
 
     rc = rm.createCatalog();
+
     assert (rc == success && "Creating the Catalog should not fail.");
 
     // Delete the actual file and create Table tbl_employee

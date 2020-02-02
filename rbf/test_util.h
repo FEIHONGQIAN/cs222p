@@ -159,7 +159,6 @@ void createRecordDescriptor(std::vector<Attribute> &recordDescriptor) {
     attr.type = TypeInt;
     attr.length = (AttrLength) 4;
     recordDescriptor.push_back(attr);
-
 }
 
 void createLargeRecordDescriptor(std::vector<Attribute> &recordDescriptor) {

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 #include "../rbf/rbfm.h"
 
 # define RM_EOF (-1)  // end of a scan operator
@@ -59,10 +60,24 @@ public:
             const std::vector<std::string> &attributeNames, // a list of projected attributes
             RM_ScanIterator &rm_ScanIterator);
 
+    void addTableOfTables(FileHandle &fileHandle, const int table_counter, const std::string &tableName);
+    void addTableOfColumns(FileHandle &fileHandle, const int table_counter, const std::string &tableName, const std::vector<Attribute> &attrs);
+    RC createTableDescriptor(std::vector<Attribute> &descriptor);
+    RC createColumnDescriptor(std::vector<Attribute> &descriptor);
+    void prepareTableRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int table_name_length, const std::string &table_name,
+                       const int file_name_length, const std::string &file_name, const int table_version, void *buffer, int *recordSize);
+    void prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int table_name_length, const std::string &table_name, const int column_name_length,
+            const std::string &column_name, const int column_type, const int column_length, const int column_position, const int table_version, void *buffer, int *recordSize);
+
+    RC deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle, std::vector<Attribute> descriptor);
+
 // Extra credit work (10 points)
     RC addAttribute(const std::string &tableName, const Attribute &attr);
 
     RC dropAttribute(const std::string &tableName, const std::string &attributeName);
+
+private:
+    RecordBasedFileManager *rbfm;
 
 protected:
     RelationManager();                                                  // Prevent construction

@@ -48,6 +48,8 @@ RC PagedFileManager::createFile(const std::string &fileName)
     *(int *)((char *)hiddenPageData + offset) = 1; //Create the file will write counter to the hidden page, hence write counter starts with 1
     offset += sizeof(int);
     *(int *)((char *)hiddenPageData + offset) = 0;
+    offset += sizeof(int);
+    *(int *)((char *)hiddenPageData + offset) = 0;//used to count how many slots in the file
 
     if (fwrite(hiddenPageData, 1, PAGE_SIZE, pFile) != PAGE_SIZE)
     {
@@ -106,6 +108,8 @@ RC PagedFileManager::openFile(const std::string &fileName, FileHandle &fileHandl
     fileHandle.writePageCounter = *(int *)((char *)hiddenPageData + offset);
     offset += sizeof(int);
     fileHandle.appendPageCounter = *(int *)((char *)hiddenPageData + offset);
+    offset += sizeof(int);
+    fileHandle.slotCounter = *(int *)((char *)hiddenPageData + offset);
 
     fileHandle.filePointer = file;
 
@@ -129,6 +133,8 @@ RC PagedFileManager::closeFile(FileHandle &fileHandle)
     *(int *)((char *)hiddenPageData + offset) = fileHandle.writePageCounter + 1; // Write to hidden page, hence increase by 1
     offset += sizeof(int);
     *(int *)((char *)hiddenPageData + offset) = fileHandle.appendPageCounter;
+    offset += sizeof(int);
+    *(int *)((char *)hiddenPageData + offset) = fileHandle.slotCounter;
 
     if (fwrite(hiddenPageData, sizeof(int), counterCount, file) != counterCount)
     {
@@ -152,6 +158,7 @@ FileHandle::FileHandle()
     readPageCounter = 0;
     writePageCounter = 0;
     appendPageCounter = 0;
+    slotCounter = 0;
 
     filePointer = nullptr;
 }
