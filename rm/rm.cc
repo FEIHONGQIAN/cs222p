@@ -1,6 +1,6 @@
 #include "rm.h"
 #include<stdio.h>
-#include<string>
+#include<string.h>
 const int success = 0;
 const int fail = -1;
 RelationManager &RelationManager::instance() {
