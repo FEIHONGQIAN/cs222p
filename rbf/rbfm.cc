@@ -154,15 +154,14 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
         rid.slotNum = getSlotNumber(currentPage) + 1;
         *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
         *((short *)((char *)currentPage + insertPos + sizeof(short))) = offset;
-
         *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) + 1; //update slot number
-
         *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = getFreeSpaceOfCurrentPage(currentPage) - recordSize - 2 * sizeof(short);
     }
     else
     { //use the previous deleted slot, and there is no need to update the slot number
         *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
         *((short *)((char *)currentPage + insertPos + sizeof(short))) = offset;
+        *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = getFreeSpaceOfCurrentPage(currentPage) - recordSize;
     }
 
     fileHandle.writePage(pageCount, currentPage);
