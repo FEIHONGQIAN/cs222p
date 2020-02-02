@@ -148,6 +148,16 @@ public:
 
     RC shiftContentToLeft(void *currentPage, int len, int start, int recordSize); //used in the deletion, update, shift the content to the left to save space
 
+    RC countOffsetForNewRecord(void * page);
+
+    RC updateFreeSpace(void * page, int space);
+
+    RC updateSlotNum(void * page, int num);
+
+    RC updateSlotDirectoryForOneSlot(void * page, int offset, int len, int start);
+
+    RC findInsertPos(void * page, RID &rid); //used in insertion
+
     void prepareRecord(void *buffer, const std::vector<Attribute> &recordDescriptor, void *contentOfRecords, int len);
 
 

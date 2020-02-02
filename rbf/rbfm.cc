@@ -89,11 +89,10 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
         }
         memset(currentPage, 0, PAGE_SIZE);
     }
-    if (pageIndex != -1)
+    if (pageIndex != -1) //insert into page with enough space
     {
         fileHandle.readPage(pageIndex, currentPage); // Put the page content to currentPage
-        int freeSpace = getFreeSpaceOfCurrentPage(currentPage);
-        int offset = PAGE_SIZE - freeSpace - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short);
+        int offset = countOffsetForNewRecord(currentPage);
         UpdateSlots(currentPage, fileHandle, record, offset, recordSize, pageIndex, rid);
         free(currentPage);
         free(record);
@@ -109,19 +108,44 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
     }
     return 0;
 };
+RC RecordBasedFileManager::countOffsetForNewRecord(void * page){
+    int offset = PAGE_SIZE - getFreeSpaceOfCurrentPage(page) - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(page) * 2 * sizeof(short);
+    return offset;
+}
+RC RecordBasedFileManager::updateFreeSpace(void * page, int space){
+    *((int *)((char *)page + PAGE_SIZE - FREE_SPACE_SIZE)) = space;
+    return 0;
+}
 RC RecordBasedFileManager::getFreeSpaceOfCurrentPage(void *currentPage)
 {
     return *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE));
 }
+RC RecordBasedFileManager::updateSlotNum(void * page, int num){
+    *((int *)((char *)page + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = num;
+    return 0;
+}
+RC RecordBasedFileManager::updateSlotDirectoryForOneSlot(void * page, int offset, int len, int start){
+    *((short *)((char *)page + offset)) = (short)len;
+    *((short *)((char *)page + offset + sizeof(short))) = (short)start;
+    return 0;
+}
 RC RecordBasedFileManager::UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize)
 {
+    //1.insert record
     memcpy((char *)currentPage, (char *)record, recordSize);
-    *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = PAGE_SIZE - recordSize - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
-    *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = 1;
 
+    //2.update free space
+    int space = PAGE_SIZE - recordSize - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
+    updateFreeSpace(currentPage, space);
+
+    //3.update slot number
+    int slotNum = 1;
+    updateSlotNum(currentPage, slotNum);
+
+    //4.update slot directory
     int insertPos = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
-    *((short *)((char *)currentPage + insertPos)) = (short)(recordSize);
-    *((short *)((char *)currentPage + insertPos + sizeof(short))) = (short)0;
+    updateSlotDirectoryForOneSlot(currentPage, insertPos, recordSize, 0);
+
     fileHandle.appendPage(currentPage);
 
     return 0;
@@ -129,15 +153,47 @@ RC RecordBasedFileManager::UpdateFirstSlots(void *currentPage, FileHandle &fileH
 
 RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle, void *record, int offset, int recordSize, int pageCount, RID &rid)
 {
+    //1.insert record
     memcpy((char *)currentPage + offset, (char *)record, recordSize);
-    //*((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = getFreeSpaceOfCurrentPage(currentPage) - recordSize - 2 * sizeof(short);
-    //*((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) + 1;
+
+    int insertPos = findInsertPos(currentPage, rid);
+    if (insertPos == -1)
+    { //no previous deleted slot
+        //2.update rid
+        rid.slotNum = getSlotNumber(currentPage) + 1;
+
+        //3.update slot directory
+        insertPos = PAGE_SIZE - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - (getSlotNumber(currentPage) + 1) * 2 * sizeof(short);
+        *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
+        *((short *)((char *)currentPage + insertPos + sizeof(short))) = offset;
+
+        //4.update free space and slot number
+        int slotNum = getSlotNumber(currentPage) + 1;
+        int space = getFreeSpaceOfCurrentPage(currentPage) - recordSize - 2 * sizeof(short);
+        updateFreeSpace(currentPage, space);
+        updateSlotNum(currentPage, slotNum);
+    }
+    else
+    { //use the previous deleted slot, and there is no need to update the slot number
+        //2. update slot directory
+        *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
+        *((short *)((char *)currentPage + insertPos + sizeof(short))) = offset;
+        //3. update free space
+        int space = getFreeSpaceOfCurrentPage(currentPage) - recordSize;
+        updateFreeSpace(currentPage, space);
+    }
+
+    fileHandle.writePage(pageCount, currentPage);
+    rid.pageNum = pageCount;
+    return 0;
+}
+RC RecordBasedFileManager::findInsertPos(void * page, RID &rid){
     int end = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
     int insertPos = -1;
     //check whether there is previous deleted slot
-    for (int i = 1; i <= getSlotNumber(currentPage); i++)
+    for (int i = 1; i <= getSlotNumber(page); i++)
     {
-        if (*(short *)((char *)currentPage + end) == 0)
+        if (*(short *)((char *)page + end) == 0)
         { //find one, use this slot
             insertPos = end;
             rid.slotNum = i;
@@ -148,27 +204,8 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
             end -= 2 * sizeof(short);
         }
     }
-    if (insertPos == -1)
-    { //no previous deleted slot
-        insertPos = PAGE_SIZE - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - (getSlotNumber(currentPage) + 1) * 2 * sizeof(short);
-        rid.slotNum = getSlotNumber(currentPage) + 1;
-        *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
-        *((short *)((char *)currentPage + insertPos + sizeof(short))) = offset;
-        *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = getSlotNumber(currentPage) + 1; //update slot number
-        *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = getFreeSpaceOfCurrentPage(currentPage) - recordSize - 2 * sizeof(short);
-    }
-    else
-    { //use the previous deleted slot, and there is no need to update the slot number
-        *((short *)((char *)currentPage + insertPos)) = (short)recordSize;
-        *((short *)((char *)currentPage + insertPos + sizeof(short))) = offset;
-        *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE)) = getFreeSpaceOfCurrentPage(currentPage) - recordSize;
-    }
-
-    fileHandle.writePage(pageCount, currentPage);
-    rid.pageNum = pageCount;
-    return 0;
+    return insertPos;
 }
-
 RC RecordBasedFileManager::getSlotNumber(void *currentPage)
 {
     return *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE));
@@ -627,7 +664,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
     //2.updateSlotDirectory
     updateSlotDirectory(currentPage, len, pos + len);
     //3.the slot number of current page should remain the same
-    //*(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE) = getSlotNumber(currentPage) - 1;
+    //*(int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE) = getSlotNumber(currentPage);
     //4.update the free space
     *(int *)((char *)currentPage + PAGE_SIZE - sizeof(int)) += len;
     //now, we still need to update the slot directory of the deleted record, find a new place for it.
