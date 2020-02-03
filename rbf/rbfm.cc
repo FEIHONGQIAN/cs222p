@@ -696,10 +696,20 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
     int len = *(short *)((char *)currentPage + len_dic);//length of the record
     int start_pos = *(short *)((char *)currentPage + start_dic); //start pos of the record
 
-    if(len == 0 && start_pos == -1){ //no such record
-        free(currentPage);
-        free(record);
-        return -1;
+    while (len < 0)
+    { //this slot is just a pointer, point to a different page. len: -slotNum, start: -pageNum
+        memset(currentPage, 0, PAGE_SIZE);
+        fileHandle.readPage(0 - start_pos, currentPage);
+        len_dic = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - (0 - len) * 2 * sizeof(short);
+        len = *((short *)((char *)currentPage + len_dic));                   //get the length of record
+        start_pos = *((short *)((char *)currentPage + len_dic + sizeof(short))); //get the start pos of the record
+
+        if (start_pos == -1 && len == 0)
+        {
+            free(record);
+            free(currentPage);
+            return -1;
+        }
     }
 
     memcpy((char *)record, (char *)currentPage + start_pos, len);
@@ -718,21 +728,34 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
         return -1;
     }
 
+    auto *nullFieldsIndicator = (unsigned char *)malloc(ceil((double)1 / CHAR_BIT));
+    memset(nullFieldsIndicator, 0, ceil((double)1 / CHAR_BIT));
 
-    int fieldCount = *(short *)((char *)currentPage);
+    int fieldCount = *(short *)((char *)record);
     int start = -1; //the start pos of the record
     if(attribute_id == 1){
-        start = fieldCount * sizeof(short);
+        start = (fieldCount + 1) * sizeof(short);
     }else{
-        start = *(short *)((char *)currentPage + (attribute_id - 1) * sizeof(short));
+        for(int i = 2; i <= attribute_id; i++){
+            int pos = *(short *)((char *)record + (i - 1) * sizeof(short));;
+            if(pos == -1) continue;
+            start = pos;
+        }
+        if(start == -1){
+            start = (fieldCount + 1) * sizeof(short);
+        }
     }
-    int end = *(short *)((char *)currentPage + attribute_id * sizeof(short)); //the end pos of the record
 
-    memcpy((char *) data, (char *)currentPage + start, end - start);
+    int end = *(short *)((char *)record + attribute_id * sizeof(short)); //the end pos of the record
+    if(end == -1){
+        *(nullFieldsIndicator + 0 / 8) |= (unsigned)1 << (unsigned)(7 - (0 % 8));
+    }
 
-
+    memcpy((char *) data, nullFieldsIndicator, 1);
+    memcpy((char *) data + 1, (char *)record + start, end - start);
     free(currentPage);
     free(record);
+    free(nullFieldsIndicator);
     return 0;
 }
 
