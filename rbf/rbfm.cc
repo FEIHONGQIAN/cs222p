@@ -617,7 +617,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
     //case1: type A data fits in place
     if (recordSize <= len)
     {
-        //1.update the record in place, 2.shift the rest of the data to the left, 3.update the slot directory, 4.update space
+        //1.update the record in place, 2.shift the rest of the data to the left, 3.update the slot directory, 4.update space 5.write back to the file
         memcpy((char *)currentPage + pos, record, recordSize); //1. update the record in place
         shiftContentToLeft(currentPage, len, pos, recordSize); //2.shift the res of the date to the left.
 

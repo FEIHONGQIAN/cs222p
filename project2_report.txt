@@ -1,41 +1,121 @@
 1. Basic information
-Team #:
-Github Repo Link:
-Student 1 UCI NetID:
-Student 1 Name:
-Student 2 UCI NetID (if applicable):
-Student 2 Name (if applicable):
+Team #: 6
+Github Repo Link: https://github.com/UCI-Chenli-teaching/cs222p-winter20-team-6
+Student 1 UCI NetID: songh9
+Student 1 Name: Han Song
+Student 2 UCI NetID (if applicable): feihongq
+Student 2 Name (if applicable): Feihong Qian
 
 
 2. Meta-data
 - Show your meta-data design (Tables and Columns table) and information about each column.
-
+    - Tables (table_id:int, table_name:varchar(50), file_name:varchar(50), table_version:int)
+    - Columns(table_id:int, table_name:varchar(50), column_name:varchar(50), column_type:int, column_length:int, column_position:int, table_version:int)
+    - In 'Tables', all the required attributes are not modified. 'table_version' is newly added for advanced requirements(ff addAttribute and dropAttribute functions are not implemented, the version
+    is always 1).
+    - In 'Columns', all the required attributes are not modified. 'table_name' and 'table_version' are newly added.
+    - table_version is used to keep track of all versions of schemas which might be updated by users.
 
 3. Internal Record Format
 - Show your record format design and describe how your design satisfies O(1) field access. If not, just mention that your team hasn't implemented this feature.
 
+We think the internal record format is the same as that in Project 1. We don't modify the way how to insert, delete, update and read tuples(records) which is implemented in Project1.
+In Project 2, when insert, delete, update and read functions are called, we first use the parameter 'tableName' and call the getAttributes function in Project 2 to create the 'recordDescriptor'.
+Then, we call the same functions in Project 1 to insert, delete, update and read tuples(records).
+
+3.1 Record format design
+    the number of fields + a list of offsets + a list of fields
+3.2 Each offset is the address of the end of each field. There are three scenarios:
+    - if the current offset is -1, then the current field is null.
+    - if the current offset is the same as the previous one, then the current field is empty.
+    - if the current offset is larger than the previous (not null)one, then the length of this field is
+    the current offset - the previous (not null)offset. And this field starts from the end of the previous (not null)field.
+    Now, we can easily access the content of this field in O(1) by using 'memcpy' function to copy this field to a buffer.
+
 - Describe how you store a VarChar field.
+    if this VarChar field is null, the corresponding offset is -1. And we will not store this field.
+    Otherwise, the corresponding offset of this field is 'the previous (not null)offset + the length of this field'.
+    And each character is stored in one byte, one by one.
 
 
 4. Page Format
-- Show your page format design.
-
+- Show your page format design
+  It is the same as that in Project 1. Reasons are explained in section 3.
+  a list of records + (free space) + a list of (offset + length of each field) + the number of fields + free space value
 
 5. File Format
 - Show your file format design
+The format: Hidden Page + Pages that are used to record actual data
 
+Explain: Our hidden page (at the beginning of the file)is used to store the the readPageCounter, writePageCounter and appendPageCounter and slotCounter.
+We simply use four (four bytes) to store these four values. 'slotCounter' is used to count the number of total slots(tuples or records) in all pages(except the hidden page).
+We need this parameter because we need to assign a new table ID quickly by O(1) when inserting a new table into the catalog 'Tables' and 'Columns' files. When each new table
+is inserted into the catalog files, a new table ID will be assigned quickly and the slotCounter will increment by 1.
 
 6. Describe the following operation logic.
 - Update a record
+First, use the given RID to locate the record to be updated. If the given RID is just a pointer that points at another page, then follow the pointers until the actual record is found.
+Second, transform the given data into the record format explained in section 3.
+Third, update the record. There are three cases:
+    case1: the new record's size is smaller than the old record
+            1.update the record in place
+            2.shift the rest of the data to the left
+            3.update the slot directory
+            4.update the free space
+            5.write back to the file
+    case2: the new record's size is larger than the old record, but still fits in the same page
+            1.shift content to the left(delete the old one)
+            2.append the updated record at the end
+            3.update the slot directory
+            4.update the free space
+            5.write back to the file
+    case3: the new record cannot fit in the same page, needs to find another page which has free space;
+            1.shift content to the left (delete the old one, free space automatically saved by the deleted record)
+            2.update the slot directory
+            3.update the free space
+            4.find a new place for the new record(call the insertRecord function)
+            5.update the old RID because a new RID will be returned in step 4.
+            6.write back to the file
 
 - Delete a record
+First, use the given RID to locate the record to be updated. If the given RID is just a pointer that points at another page, then follow the pointers until the actual record is found.
+Second, transform the given data into the record format explained in section 3.
+Third, delete the record.
+            1.shift content to the left(delete the old one)
+            2.update the slot directory
+            3.update the free space
+            4.write back to the file
 
 - Scan
 
 
 7. Implementation Detail
 - Other implementation details goes here.
+7.1 For insertTuple, deleteTuple, updateTuple, readTuple and printTuple functions, etc in Project2, there is only one parameter different from that in Project 1.
+    In order to implement these functions in Project2, we simply use the parameter 'tableName' and call the getAttributes function in Project 2 to create the 'recordDescriptor'.
+    Then, the corresponding functions in Project1 will be called. It is basically the same logic.
 
+7.2 In the slot directory, there are two attributes of each slot director. 'len': the length of the record, 'start': the start position of the record in the page.
+    But each slot director can be a pointer pointing at the record in the same page, or pointing at another slot director which points at the record in a different page, or empty(because the record is deleted).
+    We use the value of 'len' to differentiate these three different kinds of slot directors.
+
+case 1: len > 0, the slot director is a pointer pointing at the record in the same page.len = 0, the slot director is empty because the record has been deleted.
+case 2: len = 0, the slot director is empty because the record has been deleted.
+case 3: len < 0, the slot director keeps track of a new RID which helps find a new slot director in a different page.
+
+Explanation:
+    case1: len = the length of the record (len > 0)
+           start = the start position of the record in the page  (start >= 0)
+    case2: len = 0, start = -1.
+            It means the record is deleted.
+    case3: len = - RID.slotNum (len < 0)
+           start = - RID.pageNum (start <= 0)
+           Now, we can negate len and start to get a new RID. Then we use this new RID to get a new slot director. In this new slot director,
+           if len is 0, it means the record has been deleted, just like case2. If len is positive, then we can get the actual record, just like case1. If len is negative, then we are
+           still in case3, continue this process until we are in case1 or case2.
+
+7.3 When we delete a record, if the slot director got by the given RID is a (case 3) director explained in section 7.2, we change
+    all (case 3) directors to (case 2) directors through the process of finding the actual data so that these slot directors can be reused in inserting a new record.
 
 8. Other (optional)
 - Freely use this section to tell us about things that are related to the project 2, but not related to the other sections (optional)           
