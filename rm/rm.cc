@@ -388,7 +388,16 @@ RC RelationManager::scan(const std::string &tableName,
                          const void *value,
                          const std::vector<std::string> &attributeNames,
                          RM_ScanIterator &rm_ScanIterator) {
-    return -1;
+    FileHandle fileHandle;
+    int rc = 0;
+    rc = rbfm -> openFile(tableName, fileHandle);
+    if(rc == fail) return fail;
+    std::vector<Attribute> recordDescriptor;
+    getAttributes(tableName, recordDescriptor);
+
+    rc = rbfm -> scan(fileHandle, recordDescriptor, conditionAttribute, compOp, value, attributeNames, rm_ScanIterator.rbfmScanIterator);
+    if(rc == fail) return fail;
+    return success;
 }
 
 // Extra credit work

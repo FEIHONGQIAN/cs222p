@@ -12,6 +12,7 @@
 // RM_ScanIterator is an iterator to go through tuples
 class RM_ScanIterator {
 public:
+    RBFM_ScanIterator rbfmScanIterator;
     RM_ScanIterator() = default;
 
     ~RM_ScanIterator() = default;
