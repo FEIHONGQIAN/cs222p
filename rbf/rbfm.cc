@@ -10,6 +10,8 @@ const int SLOT_NUMBER_SPACE_SIZE = 4;
 const int FREE_SPACE_SIZE = 4;
 const int RID_OFFSET_SIZE = 2;
 const int RID_RECORD_LENGTH = 2;
+const int success = 0;
+const int fail = -1;
 
 RecordBasedFileManager &RecordBasedFileManager::instance()
 {
@@ -48,7 +50,6 @@ RC RecordBasedFileManager::closeFile(FileHandle &fileHandle)
 RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                         const void *data, RID &rid)
 {
-    // return -1;
     void *record = malloc(PAGE_SIZE);
     int recordSize = transformData(recordDescriptor, data, record); // Get record and recordSize
 
@@ -64,7 +65,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
 
         free(currentPage);
         free(record);
-        return 0;
+        return success;
     }
     int pageIndex = -1;
     int minFreeSpace = 4096;
@@ -106,7 +107,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
         free(currentPage);
         free(record);
     }
-    return 0;
+    return success;
 };
 RC RecordBasedFileManager::countOffsetForNewRecord(void * page){
     int offset = PAGE_SIZE - getFreeSpaceOfCurrentPage(page) - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(page) * 2 * sizeof(short);
@@ -114,7 +115,7 @@ RC RecordBasedFileManager::countOffsetForNewRecord(void * page){
 }
 RC RecordBasedFileManager::updateFreeSpace(void * page, int space){
     *((int *)((char *)page + PAGE_SIZE - FREE_SPACE_SIZE)) = space;
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::getFreeSpaceOfCurrentPage(void *currentPage)
 {
@@ -122,12 +123,12 @@ RC RecordBasedFileManager::getFreeSpaceOfCurrentPage(void *currentPage)
 }
 RC RecordBasedFileManager::updateSlotNum(void * page, int num){
     *((int *)((char *)page + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = num;
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::updateSlotDirectoryForOneSlot(void * page, int offset, int len, int start){
     *((short *)((char *)page + offset)) = (short)len;
     *((short *)((char *)page + offset + sizeof(short))) = (short)start;
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize)
 {
@@ -148,7 +149,7 @@ RC RecordBasedFileManager::UpdateFirstSlots(void *currentPage, FileHandle &fileH
 
     fileHandle.appendPage(currentPage);
 
-    return 0;
+    return success;
 }
 
 RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle, void *record, int offset, int recordSize, int pageCount, RID &rid)
@@ -185,7 +186,7 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
 
     fileHandle.writePage(pageCount, currentPage);
     rid.pageNum = pageCount;
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::findInsertPos(void * page, RID &rid){
     int end = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
@@ -226,7 +227,7 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
     if (start == -1 && len == 0)
     {
         free(currentPage);
-        return -1;
+        return fail;
     }
     while (len < 0)
     { //this slot is just a pointer, point to a different page. len: -slotNum, start: -pageNum
@@ -246,7 +247,7 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
         if (start == -1 && len == 0)
         {
             free(currentPage);
-            return -1;
+            return fail;
         }
     }
 
@@ -265,7 +266,7 @@ RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vecto
     fileHandle.writePage(pageNum, currentPage);
     free(currentPage);
 
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::updateSlotDirectory(void *currentPage, int len, int end)
 {
@@ -280,7 +281,7 @@ RC RecordBasedFileManager::updateSlotDirectory(void *currentPage, int len, int e
             *((short *)((char *)currentPage + offset + sizeof(short))) = *((short *)((char *)currentPage + offset + sizeof(short))) - len; //update the start pos of the rest of the record
         }
     }
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int start, int recordSize)
 {
@@ -291,7 +292,7 @@ RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int st
 
     if (right <= left)
     {
-        return 0;
+        return success;
     }
     void *content = malloc(PAGE_SIZE);
     //start...(len)...left...right
@@ -299,7 +300,7 @@ RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int st
     memcpy((char *)currentPage + start + recordSize, content, right - left);
     free(content);
 
-    return 0;
+    return success;
 }
 
 RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
@@ -316,7 +317,7 @@ RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<
     if (start == -1 && len == 0)
     { //no such record
         free(currentPage);
-        return -1;
+        return fail;
     }
     while (len < 0)
     { //this slot is just a pointer, point to a different page. len: -slotNum, start: -pageNum
@@ -329,7 +330,7 @@ RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<
         if (start == -1 && len == 0)
         {
             free(currentPage);
-            return -1;
+            return fail;
         }
     }
 
@@ -340,7 +341,7 @@ RC RecordBasedFileManager::readRecord(FileHandle &fileHandle, const std::vector<
 
     free(currentPage);
     free(contentOfRecords);
-    return 0;
+    return success;
 }
 
 void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attribute> &recordDescriptor, void *contentOfRecords, int len)
@@ -581,7 +582,7 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
     }
     std::cout << std::endl;
     free(nullFieldsIndicator);
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                         const void *data, const RID &rid)
@@ -608,7 +609,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
         if (pos == -1 && len == 0)
         {
             free(currentPage);
-            return -1;
+            return fail;
         }
     }
 
@@ -631,7 +632,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
         fileHandle.writePage(rid.pageNum, currentPage);
         free(currentPage);
         free(record);
-        return 0;
+        return success;
     }
     //recordSize > len
     //case2: type A data fits in the same page, but needs to move its place;
@@ -655,7 +656,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
         fileHandle.writePage(rid.pageNum, currentPage);
         free(currentPage);
         free(record);
-        return 0;
+        return success;
     }
     //case3: type A data cannot fit in the same page, needs to find another page which has free space;
     //recordSize - len > getFreeSpaceOfCurrentPage(currentPage) the first step is just like deletion, delete this record from this page
@@ -680,7 +681,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
     free(currentPage);
     free(record);
 
-    return 0;
+    return success;
 }
 RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
                                          const RID &rid, const std::string &attributeName, void *data)
@@ -708,7 +709,7 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
         {
             free(record);
             free(currentPage);
-            return -1;
+            return fail;
         }
     }
 
@@ -725,7 +726,7 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
     if(attribute_id == -1){ //no such attribute name
         free(currentPage);
         free(record);
-        return -1;
+        return fail;
     }
 
     auto *nullFieldsIndicator = (unsigned char *)malloc(ceil((double)1 / CHAR_BIT));
@@ -756,7 +757,7 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
     free(currentPage);
     free(record);
     free(nullFieldsIndicator);
-    return 0;
+    return success;
 }
 
 RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,

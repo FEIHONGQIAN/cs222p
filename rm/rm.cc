@@ -26,6 +26,12 @@ RC RelationManager::createCatalog() {
     rc = rbfm->createFile("Columns");
     if (rc == fail) return fail;
 
+    std::string table = "Tables";
+    std::string column = "Columns";
+    rc = createCatalogTables(table);
+    if (rc == fail) return fail;
+    rc = createCatalogColumns(column);
+    if (rc == fail) return fail;
     return success;
 }
 
@@ -45,8 +51,10 @@ RC RelationManager::createTable(const std::string &tableName, const std::vector<
     int rc = rbfm->openFile("Tables", fileHandle);
     if (rc == fail) return fail;
 
-    rc = rbfm->createFile(tableName);
-    if (rc == fail) return fail;
+    if(tableName != "Tables" && tableName != "Columns"){
+        rc = rbfm->createFile(tableName);
+        if (rc == fail) return fail;
+    }
 
     int table_counter = fileHandle.slotCounter;
 
@@ -475,6 +483,52 @@ RC RelationManager::createColumnDescriptor(std::vector<Attribute> &descriptor) {
     descriptor.push_back(attr);
 
     return success;
+}
+
+RC RelationManager::createCatalogTables(std::string &tableName){
+    std::vector<Attribute> attrs;
+    Attribute attr;
+    attr.name = "table_id";
+    attr.type = TypeInt;
+    attr.length = 4;
+    attrs.push_back(attr);
+
+    attr.name = "table_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength) 50;
+    attrs.push_back(attr);
+
+    attr.name = "file_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength) 50;
+    attrs.push_back(attr);
+
+    return createTable(tableName, attrs);
+}
+RC RelationManager::createCatalogColumns(std::string &tableName){
+    std::vector<Attribute> attrs;
+    Attribute attr;
+    attr.name = "column_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength) 50;
+    attrs.push_back(attr);
+
+    attr.name = "column_type";
+    attr.type = TypeInt;
+    attr.length = 4;
+    attrs.push_back(attr);
+
+    attr.name = "column_length";
+    attr.type = TypeInt;
+    attr.length = 4;
+    attrs.push_back(attr);
+
+    attr.name = "column_position";
+    attr.type = TypeInt;
+    attr.length = 4;
+    attrs.push_back(attr);
+
+    return createTable(tableName, attrs);
 }
 
 void RelationManager::prepareTableRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id,

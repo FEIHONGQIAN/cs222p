@@ -32,6 +32,10 @@ public:
 
     RC deleteCatalog();
 
+    RC createCatalogTables(std::string &tableName);
+
+    RC createCatalogColumns(std::string &tableName);
+
     RC createTable(const std::string &tableName, const std::vector<Attribute> &attrs);
 
     RC deleteTable(const std::string &tableName);
