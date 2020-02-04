@@ -981,6 +981,7 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
         {
             std::cout << "It's already the last slot for the last page, reset is needed" << std::endl;
             currentPageNum = 0;
+            currentSlotNum = 1;
             return -1;
         }
         currentSlotNum = 1;
@@ -1075,13 +1076,14 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
             }
 
             int rc = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
+
+
+            RetrieveProjectedAttributes(rid, data);
             if (rc == -1) {
-                rbfm->closeFile(fileHandle);
+//                rbfm->closeFile(fileHandle);
 
                 return RBFM_EOF;
             }
-
-            RetrieveProjectedAttributes(rid, data);
             return 0;
         }
         free(currentpageData);
@@ -1090,6 +1092,6 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
     currentPageNum = 0;
     currentSlotNum = 1;
 
-    rbfm->closeFile(fileHandle);
+//    rbfm->closeFile(fileHandle);
     return RBFM_EOF;
 }

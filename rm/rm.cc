@@ -408,7 +408,7 @@ RC RelationManager::scan(const std::string &tableName,
                          RM_ScanIterator &rm_ScanIterator) {
     FileHandle fileHandle;
     int rc = 0;
-    rc = rbfm -> openFile(tableName, fileHandle);
+    rc = rbfm -> openFile(tableName, rm_ScanIterator.fileHandle);
     if(rc == fail) return fail;
     std::vector<Attribute> recordDescriptor;
     getAttributes(tableName, recordDescriptor);
@@ -432,6 +432,17 @@ RC RelationManager::addAttribute(const std::string &tableName, const Attribute &
  RC RM_ScanIterator::getNextTuple(RID &rid, void *data) {
      return rbfmScanIterator.getNextRecord(rid, data);
  }
+RM_ScanIterator::RM_ScanIterator() {
+    rbfm = &RecordBasedFileManager::instance();
+
+}
+
+ RC RM_ScanIterator::close()
+{
+    rbfmScanIterator.close();
+    rbfm->closeFile(fileHandle);
+    return 0;
+}
 
 RC RelationManager::createTableDescriptor(std::vector<Attribute> &descriptor) {
 

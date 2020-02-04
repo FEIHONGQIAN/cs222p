@@ -13,14 +13,16 @@
 class RM_ScanIterator {
 public:
     RBFM_ScanIterator rbfmScanIterator;
-    RM_ScanIterator() = default;
+    FileHandle fileHandle;
+    RecordBasedFileManager *rbfm;
+     RM_ScanIterator();
 
     ~RM_ScanIterator() = default;
 
     // "data" follows the same format as RelationManager::insertTuple()
     RC getNextTuple(RID &rid, void *data);
 
-    RC close() { return -1; };
+    RC close();
 };
 
 // Relation Manager
