@@ -287,7 +287,12 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
     //get the type of the attribute
     start_pos += len;
     len = sizeof(int);
-    int type_enum = *(AttrType *) ((char *) column + start_pos);
+//    int type_enum = *(AttrType *) ((char *) column + start_pos);
+    void *type_enum_address = malloc(sizeof(AttrType));
+    memcpy((char *)type_enum_address, (char *) column + start_pos, sizeof(AttrType));
+    int type_enum = *(AttrType *)((char *)type_enum_address);
+    free(type_enum_address);
+
     switch (type_enum) {
         case 0:
             attr.type = TypeInt;
@@ -301,7 +306,12 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
 
     //get the length of the attribute
     start_pos += len;
-    attr.length = *(AttrLength *) ((char *) column + start_pos);
+//    attr.length = *(AttrLength *) ((char *) column + start_pos);
+
+    auto *attr_length_addr = malloc(sizeof(AttrLength));
+    memcpy((char *)attr_length_addr, (char *) column + start_pos, sizeof(AttrLength));
+    attr.length = *(AttrLength *)((char *)attr_length_addr);
+    free(attr_length_addr);
 
     attrs.push_back(attr);
     return success;
@@ -403,6 +413,7 @@ RC RelationManager::scan(const std::string &tableName,
     std::vector<Attribute> recordDescriptor;
     getAttributes(tableName, recordDescriptor);
 
+//    std::cout << "Should be able to open the file" << std::endl;
     rc = rbfm -> scan(fileHandle, recordDescriptor, conditionAttribute, compOp, value, attributeNames, rm_ScanIterator.rbfmScanIterator);
     if(rc == fail) return fail;
     return success;
@@ -417,6 +428,10 @@ RC RelationManager::dropAttribute(const std::string &tableName, const std::strin
 RC RelationManager::addAttribute(const std::string &tableName, const Attribute &attr) {
     return -1;
 }
+
+ RC RM_ScanIterator::getNextTuple(RID &rid, void *data) {
+     return rbfmScanIterator.getNextRecord(rid, data);
+ }
 
 RC RelationManager::createTableDescriptor(std::vector<Attribute> &descriptor) {
 

@@ -53,19 +53,49 @@ typedef enum {
 //    process the data;
 //  }
 //  rbfmScanIterator.close();
-
+class RecordBasedFileManager;
 class RBFM_ScanIterator {
 public:
-    RBFM_ScanIterator() = default;;
+    RBFM_ScanIterator();
+    ;
 
-    ~RBFM_ScanIterator() = default;;
+    ~RBFM_ScanIterator() = default;
+    ;
 
     // Never keep the results in the memory. When getNextRecord() is called,
     // a satisfying record needs to be fetched from the file.
     // "data" follows the same format as RecordBasedFileManager::insertRecord().
-    RC getNextRecord(RID &rid, void *data) { return RBFM_EOF; };
+    RC getNextRecord(RID &rid, void *data);
+    friend class RecordBasedFileManager;
+    FileHandle fileHandle;
+    std::vector<Attribute> recordDescriptor;
+    std::string conditionAttribute;
+    AttrType conditionAttributeType;
+    int conditionAttributePos;
+
+    CompOp compOp;
+    const void *value;
+    std::vector<std::string> attributeNames;
+    std::vector<AttrType> attributeTypes;
+
+    int currentPageNum = 0;
+    int currentSlotNum = 1;
+
+
+//    RecordBasedFileManager rbfm  = RecordBasedFileManager::instance();
+
+    bool processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType);
+    bool processWithTypeInt(int valueOfRecord, CompOp compOp,const  void *value);
+    bool processWithTypeReal(float valueOfRecord, CompOp compOp, const void *value);
+    bool processWithTypeVarChar(std::string valueOfRecord, CompOp compOp, const void *value);
+    RC UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberForCurrentPage, int totalPage);
+    RC RetrieveProjectedAttributes(RID &rid, void *data);
+
 
     RC close() { return -1; };
+
+private:
+    RecordBasedFileManager *rbfm;
 };
 
 class RecordBasedFileManager {
@@ -79,6 +109,8 @@ public:
     RC openFile(const std::string &fileName, FileHandle &fileHandle);   // Open a record-based file
 
     RC closeFile(FileHandle &fileHandle);                               // Close a record-based file
+
+    friend class RBFM_ScanIterator;
 
     //  Format of the data passed into the function is the following:
     //  [n byte-null-indicators for y fields] [actual value for the first field] [actual value for the second field] ...
@@ -159,6 +191,10 @@ public:
     RC findInsertPos(void * page, RID &rid); //used in insertion
 
     void prepareRecord(void *buffer, const std::vector<Attribute> &recordDescriptor, void *contentOfRecords, int len);
+
+    RC getOffsetForRecord(void *currentPage, int i);
+
+    RC getLengthForRecord(void *currentPage, int i);
 
 
 protected:
