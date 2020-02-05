@@ -447,7 +447,7 @@ RM_ScanIterator::RM_ScanIterator() {
 RC RelationManager::createTableDescriptor(std::vector<Attribute> &descriptor) {
 
     Attribute attr;
-    attr.name = "table_id";
+    attr.name = "table-id";
     attr.type = TypeInt;
     attr.length = (AttrLength) 4;
     descriptor.push_back(attr);
@@ -514,17 +514,17 @@ RC RelationManager::createColumnDescriptor(std::vector<Attribute> &descriptor) {
 RC RelationManager::createCatalogTables(std::string &tableName){
     std::vector<Attribute> attrs;
     Attribute attr;
-    attr.name = "table_id";
+    attr.name = "table-id";
     attr.type = TypeInt;
     attr.length = 4;
     attrs.push_back(attr);
 
-    attr.name = "table_name";
+    attr.name = "table-name";
     attr.type = TypeVarChar;
     attr.length = (AttrLength) 50;
     attrs.push_back(attr);
 
-    attr.name = "file_name";
+    attr.name = "file-name";
     attr.type = TypeVarChar;
     attr.length = (AttrLength) 50;
     attrs.push_back(attr);
@@ -534,22 +534,28 @@ RC RelationManager::createCatalogTables(std::string &tableName){
 RC RelationManager::createCatalogColumns(std::string &tableName){
     std::vector<Attribute> attrs;
     Attribute attr;
-    attr.name = "column_name";
+
+    attr.name = "table-id";
+    attr.type = TypeInt;
+    attr.length = (AttrLength) 4;
+    attrs.push_back(attr);
+
+    attr.name = "column-name";
     attr.type = TypeVarChar;
     attr.length = (AttrLength) 50;
     attrs.push_back(attr);
 
-    attr.name = "column_type";
+    attr.name = "column-type";
     attr.type = TypeInt;
     attr.length = 4;
     attrs.push_back(attr);
 
-    attr.name = "column_length";
+    attr.name = "column-length";
     attr.type = TypeInt;
     attr.length = 4;
     attrs.push_back(attr);
 
-    attr.name = "column_position";
+    attr.name = "column-position";
     attr.type = TypeInt;
     attr.length = 4;
     attrs.push_back(attr);
