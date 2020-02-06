@@ -82,6 +82,10 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
             {
                 pageIndex = i;
                 minFreeSpace = freeSpace;
+                if (i == pageCount)
+                {
+                    break;
+                }
             }
             else if (minFreeSpace > freeSpace)
             {
@@ -110,11 +114,13 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
     }
     return success;
 };
-RC RecordBasedFileManager::countOffsetForNewRecord(void * page){
+RC RecordBasedFileManager::countOffsetForNewRecord(void *page)
+{
     int offset = PAGE_SIZE - getFreeSpaceOfCurrentPage(page) - SLOT_NUMBER_SPACE_SIZE - FREE_SPACE_SIZE - getSlotNumber(page) * 2 * sizeof(short);
     return offset;
 }
-RC RecordBasedFileManager::updateFreeSpace(void * page, int space){
+RC RecordBasedFileManager::updateFreeSpace(void *page, int space)
+{
     *((int *)((char *)page + PAGE_SIZE - FREE_SPACE_SIZE)) = space;
     return success;
 }
@@ -122,11 +128,13 @@ RC RecordBasedFileManager::getFreeSpaceOfCurrentPage(void *currentPage)
 {
     return *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE));
 }
-RC RecordBasedFileManager::updateSlotNum(void * page, int num){
+RC RecordBasedFileManager::updateSlotNum(void *page, int num)
+{
     *((int *)((char *)page + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE)) = num;
     return success;
 }
-RC RecordBasedFileManager::updateSlotDirectoryForOneSlot(void * page, int offset, int len, int start){
+RC RecordBasedFileManager::updateSlotDirectoryForOneSlot(void *page, int offset, int len, int start)
+{
     *((short *)((char *)page + offset)) = (short)len;
     *((short *)((char *)page + offset + sizeof(short))) = (short)start;
     return success;
@@ -189,7 +197,8 @@ RC RecordBasedFileManager::UpdateSlots(void *currentPage, FileHandle &fileHandle
     rid.pageNum = pageCount;
     return success;
 }
-RC RecordBasedFileManager::findInsertPos(void * page, RID &rid){
+RC RecordBasedFileManager::findInsertPos(void *page, RID &rid)
+{
     int end = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - 2 * sizeof(short);
     int insertPos = -1;
     //check whether there is previous deleted slot
@@ -287,9 +296,8 @@ RC RecordBasedFileManager::updateSlotDirectory(void *currentPage, int len, int e
 RC RecordBasedFileManager::shiftContentToLeft(void *currentPage, int len, int start, int recordSize)
 {
     //if recordSize is 0, it is used in deletion. Otherwise, it is used in update...
-    int left = len + start; //the left end of the content that needed to be removed
-    int right = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short) - getFreeSpaceOfCurrentPage(currentPage);          //the right end of the content that needed to be removed
-
+    int left = len + start;                                                                                                                                     //the left end of the content that needed to be removed
+    int right = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - getSlotNumber(currentPage) * 2 * sizeof(short) - getFreeSpaceOfCurrentPage(currentPage); //the right end of the content that needed to be removed
 
     if (right <= left)
     {
@@ -383,29 +391,29 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
             int varCharLen;
             switch (recordDescriptor[i].type)
             {
-                case TypeInt:
-                    memcpy((int *)((char *)buffer + offset), (int *)((char *)contentOfRecords + startAddress),
-                           offsetOfField[i] - startAddress);
-                    offset += sizeof(int);
-                    startAddress = offsetOfField[i];
-                    break;
-                case TypeReal:
-                    memcpy((float *)((char *)buffer + offset), (float *)((char *)contentOfRecords + startAddress),
-                           offsetOfField[i] - startAddress);
-                    offset += sizeof(float);
-                    startAddress = offsetOfField[i];
-                    break;
-                case TypeVarChar:
-                    varCharLen = offsetOfField[i] - startAddress;
-                    memcpy((char *)buffer + offset, &varCharLen, sizeof(int));
-                    offset += sizeof(int);
-                    memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
-                           offsetOfField[i] - startAddress);
-                    offset += offsetOfField[i] - startAddress;
-                    startAddress = offsetOfField[i];
-                    break;
-                default:
-                    break;
+            case TypeInt:
+                memcpy((int *)((char *)buffer + offset), (int *)((char *)contentOfRecords + startAddress),
+                       offsetOfField[i] - startAddress);
+                offset += sizeof(int);
+                startAddress = offsetOfField[i];
+                break;
+            case TypeReal:
+                memcpy((float *)((char *)buffer + offset), (float *)((char *)contentOfRecords + startAddress),
+                       offsetOfField[i] - startAddress);
+                offset += sizeof(float);
+                startAddress = offsetOfField[i];
+                break;
+            case TypeVarChar:
+                varCharLen = offsetOfField[i] - startAddress;
+                memcpy((char *)buffer + offset, &varCharLen, sizeof(int));
+                offset += sizeof(int);
+                memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
+                       offsetOfField[i] - startAddress);
+                offset += offsetOfField[i] - startAddress;
+                startAddress = offsetOfField[i];
+                break;
+            default:
+                break;
             }
         }
     }
@@ -449,47 +457,47 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
             void *buffer;
             switch (attr.type)
             {
-                case TypeInt:
-                    buffer = malloc(sizeof(int));
-                    memcpy(buffer, (char *)data + offset, sizeof(int));
-                    offset += sizeof(int);
+            case TypeInt:
+                buffer = malloc(sizeof(int));
+                memcpy(buffer, (char *)data + offset, sizeof(int));
+                offset += sizeof(int);
 
-                    offsetInFormattedData[i + 1] = end + sizeof(int);
-                    end = offsetInFormattedData[i + 1];
-                    memcpy((char *)actualContent + recordLen, (int *)buffer, sizeof(int));
-                    recordLen += sizeof(int);
-                    break;
-                case TypeReal:
-                    buffer = malloc(sizeof(float));
-                    memcpy(buffer, (char *)data + offset, sizeof(float));
-                    offset += sizeof(float);
+                offsetInFormattedData[i + 1] = end + sizeof(int);
+                end = offsetInFormattedData[i + 1];
+                memcpy((char *)actualContent + recordLen, (int *)buffer, sizeof(int));
+                recordLen += sizeof(int);
+                break;
+            case TypeReal:
+                buffer = malloc(sizeof(float));
+                memcpy(buffer, (char *)data + offset, sizeof(float));
+                offset += sizeof(float);
 
-                    offsetInFormattedData[i + 1] = end + sizeof(float);
-                    end = offsetInFormattedData[i + 1];
-                    memcpy((char *)actualContent + recordLen, (float *)buffer, sizeof(float));
-                    recordLen += sizeof(float);
-                    break;
-                case TypeVarChar:
-                    buffer = malloc(sizeof(int));
-                    memcpy(buffer, (char *)data + offset, sizeof(int));
-                    int varCharLen = *(int *)buffer;
-                    offset += sizeof(int);
-                    free(buffer);
-                    buffer = malloc(varCharLen);
-                    memcpy((char *)buffer, (char *)data + offset, varCharLen);
-                    offset += varCharLen;
+                offsetInFormattedData[i + 1] = end + sizeof(float);
+                end = offsetInFormattedData[i + 1];
+                memcpy((char *)actualContent + recordLen, (float *)buffer, sizeof(float));
+                recordLen += sizeof(float);
+                break;
+            case TypeVarChar:
+                buffer = malloc(sizeof(int));
+                memcpy(buffer, (char *)data + offset, sizeof(int));
+                int varCharLen = *(int *)buffer;
+                offset += sizeof(int);
+                free(buffer);
+                buffer = malloc(varCharLen);
+                memcpy((char *)buffer, (char *)data + offset, varCharLen);
+                offset += varCharLen;
 
-                    offsetInFormattedData[i + 1] = end + varCharLen;
-                    end = offsetInFormattedData[i + 1];
+                offsetInFormattedData[i + 1] = end + varCharLen;
+                end = offsetInFormattedData[i + 1];
 
-                    auto *tempPointer = (char *)buffer;
-                    for (int i = 0; i < varCharLen; i++)
-                    {
-                        memcpy((char *)actualContent + recordLen, tempPointer, 1);
-                        tempPointer++;
-                        recordLen++;
-                    }
-                    break;
+                auto *tempPointer = (char *)buffer;
+                for (int i = 0; i < varCharLen; i++)
+                {
+                    memcpy((char *)actualContent + recordLen, tempPointer, 1);
+                    tempPointer++;
+                    recordLen++;
+                }
+                break;
             }
             free(buffer);
         }
@@ -541,37 +549,37 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
             void *buffer;
             switch (attr.type)
             {
-                case TypeInt:
-                    buffer = malloc(sizeof(int));
-                    memcpy(buffer, (char *)data + offset, sizeof(int));
-                    offset += sizeof(int);
-                    std::cout << attr.name << ": " << (*(int *)buffer) << " ";
-                    break;
-                case TypeReal:
-                    buffer = malloc(sizeof(float));
-                    memcpy(buffer, (char *)data + offset, sizeof(float));
-                    offset += sizeof(float);
-                    std::cout << attr.name << ": " << (*(float *)buffer) << " ";
-                    break;
-                case TypeVarChar:
-                    buffer = malloc(sizeof(int));
-                    memcpy(buffer, (char *)data + offset, sizeof(int));
-                    int varCharLen = *(int *)buffer;
-                    offset += sizeof(int);
-                    free(buffer);
-                    buffer = malloc(varCharLen);
-                    memcpy((char *)buffer, (char *)data + offset, varCharLen);
-                    offset += varCharLen;
+            case TypeInt:
+                buffer = malloc(sizeof(int));
+                memcpy(buffer, (char *)data + offset, sizeof(int));
+                offset += sizeof(int);
+                std::cout << attr.name << ": " << (*(int *)buffer) << " ";
+                break;
+            case TypeReal:
+                buffer = malloc(sizeof(float));
+                memcpy(buffer, (char *)data + offset, sizeof(float));
+                offset += sizeof(float);
+                std::cout << attr.name << ": " << (*(float *)buffer) << " ";
+                break;
+            case TypeVarChar:
+                buffer = malloc(sizeof(int));
+                memcpy(buffer, (char *)data + offset, sizeof(int));
+                int varCharLen = *(int *)buffer;
+                offset += sizeof(int);
+                free(buffer);
+                buffer = malloc(varCharLen);
+                memcpy((char *)buffer, (char *)data + offset, varCharLen);
+                offset += varCharLen;
 
-                    std::cout << attr.name << ": ";
-                    auto *tempPointer = (char *)buffer;
-                    for (int i = 0; i < varCharLen; i++)
-                    {
-                        std::cout << *tempPointer;
-                        tempPointer++;
-                    }
-                    std ::cout << " ";
-                    break;
+                std::cout << attr.name << ": ";
+                auto *tempPointer = (char *)buffer;
+                for (int i = 0; i < varCharLen; i++)
+                {
+                    std::cout << *tempPointer;
+                    tempPointer++;
+                }
+                std ::cout << " ";
+                break;
             }
             free(buffer);
         }
@@ -604,7 +612,7 @@ RC RecordBasedFileManager::updateRecord(FileHandle &fileHandle, const std::vecto
         memset(currentPage, 0, PAGE_SIZE);
         fileHandle.readPage(0 - pos, currentPage);
         len_dic = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - (0 - len) * 2 * sizeof(short);
-        len = *((short *)((char *)currentPage + len_dic));                   //get the length of record
+        len = *((short *)((char *)currentPage + len_dic));                 //get the length of record
         pos = *((short *)((char *)currentPage + len_dic + sizeof(short))); //get the start pos of the record
 
         if (pos == -1 && len == 0)
@@ -695,7 +703,7 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
 
     int len_dic = PAGE_SIZE - 2 * sizeof(int) - slotNum * sizeof(short) * 2;
     int start_dic = len_dic + sizeof(short);
-    int len = *(short *)((char *)currentPage + len_dic);//length of the record
+    int len = *(short *)((char *)currentPage + len_dic);         //length of the record
     int start_pos = *(short *)((char *)currentPage + start_dic); //start pos of the record
 
     while (len < 0)
@@ -703,7 +711,7 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
         memset(currentPage, 0, PAGE_SIZE);
         fileHandle.readPage(0 - start_pos, currentPage);
         len_dic = PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - (0 - len) * 2 * sizeof(short);
-        len = *((short *)((char *)currentPage + len_dic));                   //get the length of record
+        len = *((short *)((char *)currentPage + len_dic));                       //get the length of record
         start_pos = *((short *)((char *)currentPage + len_dic + sizeof(short))); //get the start pos of the record
 
         if (start_pos == -1 && len == 0)
@@ -716,17 +724,28 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
 
     memcpy((char *)record, (char *)currentPage + start_pos, len);
 
+    bool isVarChar = false;
     int attribute_id = -1;
-    for(int i = 0; i < recordDescriptor.size(); i++){
-        if(recordDescriptor[i].name.compare(attributeName) == 0){
+    for (int i = 0; i < recordDescriptor.size(); i++)
+    {
+        if (recordDescriptor[i].name.compare(attributeName) == 0)
+        {
             attribute_id = i + 1;
+            if (recordDescriptor[i].type == TypeVarChar)
+            {
+                isVarChar = true;
+            }
             break;
         }
     }
 
-    if(attribute_id == -1){ //no such attribute name
+    if (attribute_id == -1)
+    { //no such attribute name
         free(currentPage);
         free(record);
+        if (attributeName == "")
+        {
+        }
         return fail;
     }
 
@@ -735,29 +754,52 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
 
     int fieldCount = *(short *)((char *)record);
     int start = -1; //the start pos of the record
-    if(attribute_id == 1){
+    if (attribute_id == 1)
+    {
         start = (fieldCount + 1) * sizeof(short);
-    }else{
-        for(int i = 2; i <= attribute_id; i++){
-            int pos = *(short *)((char *)record + (i - 1) * sizeof(short));;
-            if(pos == -1) continue;
+    }
+    else
+    {
+        for (int i = 2; i <= attribute_id; i++)
+        {
+            int pos = *(short *)((char *)record + (i - 1) * sizeof(short));
+            ;
+            if (pos == -1)
+                continue;
             start = pos;
         }
-        if(start == -1){
+        if (start == -1)
+        {
             start = (fieldCount + 1) * sizeof(short);
         }
     }
 
     int end = *(short *)((char *)record + attribute_id * sizeof(short)); //the end pos of the record
-    if(end == -1){
+    if (end == -1)
+    {
         *(nullFieldsIndicator + 0 / 8) |= (unsigned)1 << (unsigned)(7 - (0 % 8));
     }
 
-    memcpy((char *) data, nullFieldsIndicator, 1);
-    memcpy((char *) data + 1, (char *)record + start, end - start);
+    memcpy((char *)data, nullFieldsIndicator, 1);
+    int stringLen = end - start;
+    if (!isVarChar)
+    {
+        memcpy((char *)data + 1, (char *)record + start, end - start);
+    }
+    else
+    {
+        memcpy((char *)data + 1, &stringLen, sizeof(int));
+        memcpy((char *)data + 1 + sizeof(int), (char *)record + start, end - start);
+    }
+
+    //    if (end - start != 4) {
+    //        for (int j = 0; j < end - start; j++)
+    //        std::cout << "the length of the string is:" <<  *(char *) ((char *)data + 1 + j) << std::endl;
+    //    }
     free(currentPage);
     free(record);
     free(nullFieldsIndicator);
+    //    std::cout << "exit successfully" << "length is: " << end - start << std::endl;
     return success;
 }
 
@@ -816,35 +858,36 @@ RC RecordBasedFileManager::getLengthForRecord(void *currentPage, int slotNum)
     return *(short *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - slotNum * 2 * sizeof(short));
 }
 
-RBFM_ScanIterator::RBFM_ScanIterator() {
+RBFM_ScanIterator::RBFM_ScanIterator()
+{
     rbfm = &RecordBasedFileManager::instance();
 }
-bool RBFM_ScanIterator::processWithTypeInt(int valueOfRecord, CompOp compOp,const void *value)
+bool RBFM_ScanIterator::processWithTypeInt(int valueOfRecord, CompOp compOp, const void *value)
 {
     int valueToCompare = *(int *)((char *)value);
     switch (compOp)
     {
-        case EQ_OP:
-            return valueOfRecord == valueToCompare;
-            break;
-        case LT_OP:
-            return valueOfRecord < valueToCompare;
-            break;
-        case LE_OP:
-            return valueOfRecord <= valueToCompare;
-            break;
-        case GT_OP:
-            return valueOfRecord > valueToCompare;
-            break;
-        case GE_OP:
-            return valueOfRecord >= valueToCompare;
-            break;
-        case NE_OP:
-            return valueOfRecord != valueToCompare;
-            break;
-        default:
-            std::cout << "TypeInt should not enter this statement" << std::endl;
-            break;
+    case EQ_OP:
+        return valueOfRecord == valueToCompare;
+        break;
+    case LT_OP:
+        return valueOfRecord < valueToCompare;
+        break;
+    case LE_OP:
+        return valueOfRecord <= valueToCompare;
+        break;
+    case GT_OP:
+        return valueOfRecord > valueToCompare;
+        break;
+    case GE_OP:
+        return valueOfRecord >= valueToCompare;
+        break;
+    case NE_OP:
+        return valueOfRecord != valueToCompare;
+        break;
+    default:
+        std::cout << "TypeInt should not enter this statement" << std::endl;
+        break;
     }
     return false;
 }
@@ -854,27 +897,27 @@ bool RBFM_ScanIterator::processWithTypeReal(float valueOfRecord, CompOp compOp, 
     float valueToCompare = *(float *)((char *)value);
     switch (compOp)
     {
-        case EQ_OP:
-            return valueOfRecord == valueToCompare;
-            break;
-        case LT_OP:
-            return valueOfRecord < valueToCompare;
-            break;
-        case LE_OP:
-            return valueOfRecord <= valueToCompare;
-            break;
-        case GT_OP:
-            return valueOfRecord > valueToCompare;
-            break;
-        case GE_OP:
-            return valueOfRecord >= valueToCompare;
-            break;
-        case NE_OP:
-            return valueOfRecord != valueToCompare;
-            break;
-        default:
-            std::cout << "TypeReal should not enter this statement" << std::endl;
-            break;
+    case EQ_OP:
+        return valueOfRecord == valueToCompare;
+        break;
+    case LT_OP:
+        return valueOfRecord < valueToCompare;
+        break;
+    case LE_OP:
+        return valueOfRecord <= valueToCompare;
+        break;
+    case GT_OP:
+        return valueOfRecord > valueToCompare;
+        break;
+    case GE_OP:
+        return valueOfRecord >= valueToCompare;
+        break;
+    case NE_OP:
+        return valueOfRecord != valueToCompare;
+        break;
+    default:
+        std::cout << "TypeReal should not enter this statement" << std::endl;
+        break;
     }
     return false;
 }
@@ -888,32 +931,36 @@ bool RBFM_ScanIterator::processWithTypeVarChar(std::string valueOfRecord, CompOp
     }
     switch (compOp)
     {
-        case EQ_OP:
-            return valueOfRecord == valueToCompare;
-            break;
-        case LT_OP:
-            return valueOfRecord < valueToCompare;
-            break;
-        case LE_OP:
-            return valueOfRecord <= valueToCompare;
-            break;
-        case GT_OP:
-            return valueOfRecord > valueToCompare;
-            break;
-        case GE_OP:
-            return valueOfRecord >= valueToCompare;
-            break;
-        case NE_OP:
-            return valueOfRecord != valueToCompare;
-            break;
-        default:
-            std::cout << "TypeVarChar should not enter this statement" << std::endl;
-            break;
+    case EQ_OP:
+        return valueOfRecord == valueToCompare;
+        break;
+    case LT_OP:
+        return valueOfRecord < valueToCompare;
+        break;
+    case LE_OP:
+        return valueOfRecord <= valueToCompare;
+        break;
+    case GT_OP:
+        return valueOfRecord > valueToCompare;
+        break;
+    case GE_OP:
+        return valueOfRecord >= valueToCompare;
+        break;
+    case NE_OP:
+        return valueOfRecord != valueToCompare;
+        break;
+    default:
+        std::cout << "TypeVarChar should not enter this statement" << std::endl;
+        break;
     }
     return false;
 }
-bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType)
+bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType, int isValidAttribute)
 {
+    if (isValidAttribute != 0)
+    {
+        return true;
+    }
     auto *nullFieldIndicator = malloc(1);
     int offset = 1;
     memcpy(nullFieldIndicator, recordDataOfGivenAttribute, 1);
@@ -943,32 +990,32 @@ bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttri
     std::string valueOfRecordVarChar = "";
     switch (conditionAttributeType)
     {
-        case TypeInt:
-             valueOfRecord = *(int *)((char *)recordDataOfGivenAttribute + offset);
-            isSatisfiedRecord = processWithTypeInt(valueOfRecord, compOp, value);
-            break;
-        case TypeReal:
-             valueOfRecordFloat = *(float *)((char *)recordDataOfGivenAttribute + offset);
-            isSatisfiedRecord = processWithTypeReal(valueOfRecordFloat, compOp, value);
-            break;
-        case TypeVarChar:
-            stringLen = *(int *)((char *)recordDataOfGivenAttribute + offset);
-            offset += sizeof(int);
-            valueOfRecordVarChar = "";
-            for (int kk = 0; kk < stringLen; kk++)
-            {
-                valueOfRecordVarChar += *((char *)recordDataOfGivenAttribute + offset + kk);
-            }
-            isSatisfiedRecord = processWithTypeVarChar(valueOfRecordVarChar, compOp, value);
-            // *(int *)((char *)buffer + offset) = offsetOfField[i] - startAddress;
-            // offset += sizeof(int);
-            // memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
-            //        offsetOfField[i] - startAddress);
-            // offset += offsetOfField[i] - startAddress;
-            // startAddress = offsetOfField[i];
-            break;
-        default:
-            break;
+    case TypeInt:
+        valueOfRecord = *(int *)((char *)recordDataOfGivenAttribute + offset);
+        isSatisfiedRecord = processWithTypeInt(valueOfRecord, compOp, value);
+        break;
+    case TypeReal:
+        valueOfRecordFloat = *(float *)((char *)recordDataOfGivenAttribute + offset);
+        isSatisfiedRecord = processWithTypeReal(valueOfRecordFloat, compOp, value);
+        break;
+    case TypeVarChar:
+        stringLen = *(int *)((char *)recordDataOfGivenAttribute + offset);
+        offset += sizeof(int);
+        valueOfRecordVarChar = "";
+        for (int kk = 0; kk < stringLen; kk++)
+        {
+            valueOfRecordVarChar += *((char *)recordDataOfGivenAttribute + offset + kk);
+        }
+        isSatisfiedRecord = processWithTypeVarChar(valueOfRecordVarChar, compOp, value);
+        // *(int *)((char *)buffer + offset) = offsetOfField[i] - startAddress;
+        // offset += sizeof(int);
+        // memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
+        //        offsetOfField[i] - startAddress);
+        // offset += offsetOfField[i] - startAddress;
+        // startAddress = offsetOfField[i];
+        break;
+    default:
+        break;
     }
 }
 
@@ -977,13 +1024,13 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
     if (j == totalSlotNumberForCurrentPage)
     {
         currentPageNum++;
-        if (currentPageNum == totalPage)
-        {
-            std::cout << "It's already the last slot for the last page, reset is needed" << std::endl;
-            currentPageNum = 0;
-            currentSlotNum = 1;
-            return -1;
-        }
+        //        if (currentPageNum == totalPage)
+        //        {
+        //            std::cout << "It's already the last slot for the last page, reset is needed" << std::endl;
+        //            currentPageNum = 0;
+        //            currentSlotNum = 1;
+        //            return -1;
+        //        }
         currentSlotNum = 1;
     }
     else
@@ -996,6 +1043,7 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
 RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
 {
     int fieldCount = attributeNames.size();
+//    std::cout << "fieldcount is" << fieldCount << std::endl;
     int nullFieldsIndicatorActualSize = rbfm->getActualByteForNullsIndicator(fieldCount);
     memset(data, 0, nullFieldsIndicatorActualSize);
     int offset = nullFieldsIndicatorActualSize;
@@ -1003,32 +1051,47 @@ RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
     for (int i = 0; i < fieldCount; i++)
     {
         auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
-        rbfm->readAttribute(fileHandle, recordDescriptor, rid, attributeNames[i], recordDataOfGivenAttribute);
+//        std::cout << "attributesName is: " << attributeTypes[i] << std::endl;
+        int rc = rbfm->readAttribute(fileHandle, recordDescriptor, rid, attributeNames[i], recordDataOfGivenAttribute);
+        if (rc != success)
+        {
+            std::cout << "no such attribute!!" << std::endl;
+        }
         bool isAttributeNull = *((char *)recordDataOfGivenAttribute) & ((unsigned)1 << (unsigned)7);
         if (isAttributeNull)
         {
-            *((char *)data + i / 8) |= (unsigned)1 << (unsigned)(7 - (i % 8));
+            *((char *)data + i / 8) |= ((unsigned)1 << (unsigned)(7 - (i % 8)));
             continue;
         }
+        else
+        {
+            //            std::cout << "here comes" << std::endl;
+        }
         int stringLen = 0;
+//        std::cout << *(float *)((char *)recordDataOfGivenAttribute + 1) << std::endl;
         switch (attributeTypes[i])
         {
-            case TypeInt:
-                memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(int));
-                offset += sizeof(int);
-                break;
-            case TypeReal:
-                memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(float));
-                offset += sizeof(float);
-                break;
-            case TypeVarChar:
-                stringLen = *(int *)((char *)recordDataOfGivenAttribute + 1);
-                memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(int) + stringLen);
-                offset += sizeof(int) + stringLen;
-                break;
-            default:
-                std::cout << "No matching attribute found, function in RetrieveProjectedAttributes must be wrong" << std::endl;
+        case TypeInt:
+//            std::cout << "aaa" << std::endl;
+            memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(int));
+            offset += sizeof(int);
+            break;
+        case TypeReal:
+//            std::cout << "bbb" << std::endl;
+            memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(float));
+            offset += sizeof(float);
+            break;
+        case TypeVarChar:
+//            std::cout << "ccc" << std::endl;
+            stringLen = *(int *)((char *)recordDataOfGivenAttribute + 1);
+//            std::cout << "the sring has length: " << stringLen << std::endl;
+            memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(int) + stringLen);
+            offset += sizeof(int) + stringLen;
+            break;
+        default:
+            std::cout << "No matching attribute found, function in RetrieveProjectedAttributes must be wrong" << std::endl;
         }
+        free(recordDataOfGivenAttribute);
     }
     return 0;
 }
@@ -1038,10 +1101,9 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
     // Iterative for each page, for each slot of the page, we change the format of the
 
     int totalPage = fileHandle.getNumberOfPages();
-
     int pageNum = currentPageNum;
     int slotNum = currentSlotNum;
-
+    //
     for (int i = pageNum; i < totalPage; i++)
     {
         auto *currentpageData = malloc(PAGE_SIZE);
@@ -1064,26 +1126,36 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
                 continue;
             }
             rid.slotNum = j;
-
+            //
+            //            std::cout << "going to slot number" << std::endl;
             auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
-            rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
-
-            bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, conditionAttributeType);
+            //            rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
+            //
+            int isValidAttribute = rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
+            //
+            bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, conditionAttributeType, isValidAttribute);
             free(recordDataOfGivenAttribute);
+            //            std::cout << "after given record" << std::endl;
             if (!isValidRecord)
             {
                 continue;
             }
-
-            int rc = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
-
-
-            RetrieveProjectedAttributes(rid, data);
-            if (rc == -1) {
-//                rbfm->closeFile(fileHandle);
-
-                return RBFM_EOF;
+            else
+            {
+                //                std::cout << "hhhhh" << std::endl;
             }
+            //
+            int rc = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
+            //            std::cout << "update finished" << std::endl;
+            //
+            RetrieveProjectedAttributes(rid, data);
+            //            std::cout << "Last step " << std::endl;
+            ////            if (rc == -1) {
+            ////                rbfm->closeFile(fileHandle);
+            ////
+            ////                return RBFM_EOF;
+            ////            }
+            free(currentpageData);
             return 0;
         }
         free(currentpageData);
@@ -1092,6 +1164,6 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
     currentPageNum = 0;
     currentSlotNum = 1;
 
-//    rbfm->closeFile(fileHandle);
+    //    rbfm->closeFile(fileHandle);
     return RBFM_EOF;
 }

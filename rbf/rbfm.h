@@ -84,7 +84,7 @@ public:
 
 //    RecordBasedFileManager rbfm  = RecordBasedFileManager::instance();
 
-    bool processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType);
+    bool processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType, int isValidAttribute);
     bool processWithTypeInt(int valueOfRecord, CompOp compOp,const  void *value);
     bool processWithTypeReal(float valueOfRecord, CompOp compOp, const void *value);
     bool processWithTypeVarChar(std::string valueOfRecord, CompOp compOp, const void *value);
@@ -92,7 +92,7 @@ public:
     RC RetrieveProjectedAttributes(RID &rid, void *data);
 
 
-    RC close() { return -1; };
+    RC close() { return 0; };
 
 private:
     RecordBasedFileManager *rbfm;
