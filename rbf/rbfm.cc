@@ -1023,7 +1023,7 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
 {
     if (j == totalSlotNumberForCurrentPage)
     {
-        currentPageNum++;
+        currentPageNum = i + 1;
         //        if (currentPageNum == totalPage)
         //        {
         //            std::cout << "It's already the last slot for the last page, reset is needed" << std::endl;
@@ -1035,7 +1035,7 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
     }
     else
     {
-        currentSlotNum++;
+        currentSlotNum = j + 1;
     }
     return 0;
 }
@@ -1099,7 +1099,6 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
 {
 
     // Iterative for each page, for each slot of the page, we change the format of the
-
     int totalPage = fileHandle.getNumberOfPages();
     int pageNum = currentPageNum;
     int slotNum = currentSlotNum;
@@ -1120,14 +1119,15 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
             int len = rbfm->getLengthForRecord(currentpageData, j);
             int start = rbfm->getOffsetForRecord(currentpageData, j);
 
+            rid.slotNum = j;
+
             // If this slot is a deleted record or updated record, jump to next iteration
             if (start + len < 0)
             {
+//                std::cout << "page number: " << rid.pageNum << "slot number: " << rid.slotNum << std::endl;
                 continue;
             }
-            rid.slotNum = j;
             //
-            //            std::cout << "going to slot number" << std::endl;
             auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
             //            rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
             //

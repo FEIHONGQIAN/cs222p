@@ -13,7 +13,7 @@ typedef struct {
     unsigned pageNum;    // page number
     unsigned short slotNum;    // slot number in the page
 } RID;
-
+static int aa = 0;
 // Attribute
 typedef enum {
     TypeInt = 0, TypeReal, TypeVarChar
