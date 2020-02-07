@@ -18,7 +18,7 @@ public:
      RM_ScanIterator();
 
     ~RM_ScanIterator() = default;
-
+    RC getTotalslot(const std::string &tableName);
     // "data" follows the same format as RelationManager::insertTuple()
     RC getNextTuple(RID &rid, void *data);
 
@@ -85,7 +85,7 @@ public:
 
     RC dropAttribute(const std::string &tableName, const std::string &attributeName);
 
-    RC getTotalslot(const std::string &tableName);
+
 
 private:
     RecordBasedFileManager *rbfm;

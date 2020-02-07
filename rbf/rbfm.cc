@@ -110,7 +110,6 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
         free(currentPage);
         free(record);
     }
-    std::cout << "insert done" << std::endl;
     return success;
 };
 RC RecordBasedFileManager::countOffsetForNewRecord(void *page)
@@ -457,7 +456,6 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
             switch (attr.type)
             {
             case TypeInt:
-                std::cout << "int type" << std::endl;
                 buffer = malloc(sizeof(int));
                 memcpy(buffer, (char *)data + offset, sizeof(int));
                 offset += sizeof(int);
@@ -468,7 +466,6 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
                 recordLen += sizeof(int);
                 break;
             case TypeReal:
-                std::cout << "real type" << std::endl;
                 buffer = malloc(sizeof(float));
                 memcpy(buffer, (char *)data + offset, sizeof(float));
                 offset += sizeof(float);
@@ -479,7 +476,6 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
                 recordLen += sizeof(float);
                 break;
             case TypeVarChar:
-                std::cout << "var char type" << std::endl;
                 buffer = malloc(sizeof(int));
                 memcpy(buffer, (char *)data + offset, sizeof(int));
                 int varCharLen = *(int *)buffer;
@@ -522,7 +518,6 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
     free(actualContent);
     free(nullFieldsIndicator);
     delete[] offsetInFormattedData;
-    std::cout << "finish the transforming" << std::endl;
     return recordLen + index;
 }
 RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescriptor, const void *data) // Based on recordDescriptor, print data pointed by *data
@@ -784,15 +779,18 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
     }
 
     memcpy((char *)data, nullFieldsIndicator, 1);
-    int stringLen = end - start;
-    if (!isVarChar)
+    if (end != -1)
     {
-        memcpy((char *)data + 1, (char *)record + start, end - start);
-    }
-    else
-    {
-        memcpy((char *)data + 1, &stringLen, sizeof(int));
-        memcpy((char *)data + 1 + sizeof(int), (char *)record + start, end - start);
+        int stringLen = end - start;
+        if (!isVarChar)
+        {
+            memcpy((char *)data + 1, (char *)record + start, end - start);
+        }
+        else
+        {
+            memcpy((char *)data + 1, &stringLen, sizeof(int));
+            memcpy((char *)data + 1 + sizeof(int), (char *)record + start, end - start);
+        }
     }
 
     //    if (end - start != 4) {
@@ -849,36 +847,48 @@ RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attrib
 
     return 0;
 }
-RC RecordBasedFileManager::getTotalSlotNumber(FileHandle &fileHandle) {
+RC RBFM_ScanIterator::getTotalSlotNumber(FileHandle &fileHandle)
+{
     int totalPage = fileHandle.getNumberOfPages();
 
-    std::cout << "total Page is: " << totalPage << std::endl;
-    int aa = 0;
-    for (int i = 0; i < totalPage; i++) {
+    //    std::cout << "total Page is: " << totalPage << std::endl;
+    //    int aa = 0;
+    int pageNum = currentPageNum;
+    int slotNum = currentSlotNum;
+    for (int i = pageNum; i < totalPage; i++)
+    {
         auto *currentpageData = malloc(PAGE_SIZE);
-        if (fileHandle.readPage(i, currentpageData) != 0) {
+        if (fileHandle.readPage(pageNum, currentpageData) != 0)
+        {
             free(currentpageData);
             return -1;
         }
-        int totalSlotNumberForCurrentPage = getSlotNumber(currentpageData);
+        int totalSlotNumberForCurrentPage = rbfm->getSlotNumber(currentpageData);
 
-        for (int j = 1; j <= totalSlotNumberForCurrentPage; j++) {
-            int len = getLengthForRecord(currentpageData, j);
-            int start = getOffsetForRecord(currentpageData, j);
-            if (len + start < 0) {
-
+        for (int j = slotNum; j <= totalSlotNumberForCurrentPage; j++)
+        {
+            int len = rbfm->getLengthForRecord(currentpageData, slotNum);
+            int start = rbfm->getOffsetForRecord(currentpageData, slotNum);
+            if (len + start < 0)
+            {
+                // std::cout << "invalid string" << std::endl;
+                UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
             }
-            else {
-               aa++;
+            else
+            {
+                UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
+                free(currentpageData);
+                return 0;
             }
         }
         free(currentpageData);
     }
-    return aa;
+    currentPageNum = 0;
+    currentSlotNum = 1;
+    return -12;
 }
 RC RecordBasedFileManager::getOffsetForRecord(void *currentPage, int slotNum)
 {
-
     return *(short *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE - slotNum * 2 * sizeof(short) + sizeof(short));
 }
 
@@ -1001,6 +1011,7 @@ bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttri
     }
     if (isNullForThisField)
     {
+        std::cout << "No value" << std::endl;
         if (compOp == EQ_OP && value == NULL)
         {
             return true;
@@ -1046,24 +1057,35 @@ bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttri
     default:
         break;
     }
+    return isSatisfiedRecord;
 }
 
 RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberForCurrentPage, int totalPage)
 {
     if (j == totalSlotNumberForCurrentPage)
     {
-        currentPageNum = i + 1;
-        //        if (currentPageNum == totalPage)
-        //        {
-        //            std::cout << "It's already the last slot for the last page, reset is needed" << std::endl;
-        //            currentPageNum = 0;
-        //            currentSlotNum = 1;
-        //            return -1;
+        if (currentPageNum != totalPage - 1)
+        {
+            currentPageNum++;
+            currentSlotNum = 1;
+        }
+        //        else {
+        ////            currentSlotNum++;
         //        }
-        currentSlotNum = 1;
+        //        currentPageNum = i + 1;
+        //        //        if (currentPageNum == totalPage)
+        //        //        {
+        //        //            std::cout << "It's already the last slot for the last page, reset is needed" << std::endl;
+        //        //            currentPageNum = 0;
+        //        //            currentSlotNum = 1;
+        //        //            return -1;
+        //        //        }
+        ////        if (i == totalPage)
+        //            currentSlotNum = 1;
     }
     else
     {
+        //        currentPageNum = i;
         currentSlotNum = j + 1;
     }
     return 0;
@@ -1072,7 +1094,7 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
 RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
 {
     int fieldCount = attributeNames.size();
-//    std::cout << "fieldcount is" << fieldCount << std::endl;
+    //    std::cout << "fieldcount is" << fieldCount << std::endl;
     int nullFieldsIndicatorActualSize = rbfm->getActualByteForNullsIndicator(fieldCount);
     memset(data, 0, nullFieldsIndicatorActualSize);
     int offset = nullFieldsIndicatorActualSize;
@@ -1080,7 +1102,7 @@ RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
     for (int i = 0; i < fieldCount; i++)
     {
         auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
-//        std::cout << "attributesName is: " << attributeTypes[i] << std::endl;
+        //        std::cout << "attributesName is: " << attributeTypes[i] << std::endl;
         int rc = rbfm->readAttribute(fileHandle, recordDescriptor, rid, attributeNames[i], recordDataOfGivenAttribute);
         if (rc != success)
         {
@@ -1097,23 +1119,23 @@ RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
             //            std::cout << "here comes" << std::endl;
         }
         int stringLen = 0;
-//        std::cout << *(float *)((char *)recordDataOfGivenAttribute + 1) << std::endl;
+        //        std::cout << *(float *)((char *)recordDataOfGivenAttribute + 1) << std::endl;
         switch (attributeTypes[i])
         {
         case TypeInt:
-//            std::cout << "aaa" << std::endl;
+            //            std::cout << "aaa" << std::endl;
             memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(int));
             offset += sizeof(int);
             break;
         case TypeReal:
-//            std::cout << "bbb" << std::endl;
+            //            std::cout << "bbb" << std::endl;
             memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(float));
             offset += sizeof(float);
             break;
         case TypeVarChar:
-//            std::cout << "ccc" << std::endl;
+            //            std::cout << "ccc" << std::endl;
             stringLen = *(int *)((char *)recordDataOfGivenAttribute + 1);
-//            std::cout << "the sring has length: " << stringLen << std::endl;
+            //            std::cout << "the sring has length: " << stringLen << std::endl;
             memcpy((char *)data + offset, (char *)recordDataOfGivenAttribute + 1, sizeof(int) + stringLen);
             offset += sizeof(int) + stringLen;
             break;
@@ -1145,47 +1167,43 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
 
         for (int j = slotNum; j <= totalSlotNumberForCurrentPage; j++)
         {
+            rid.slotNum = j;
+
             int len = rbfm->getLengthForRecord(currentpageData, j);
             int start = rbfm->getOffsetForRecord(currentpageData, j);
-
-            rid.slotNum = j;
 
             // If this slot is a deleted record or updated record, jump to next iteration
             if (start + len < 0)
             {
-//                std::cout << "page number: " << rid.pageNum << "slot number: " << rid.slotNum << std::endl;
-                continue;
+                int aa = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
             }
-            //
-            auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
-            //            rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
-            //
-            int isValidAttribute = rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
-            //
-            bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, conditionAttributeType, isValidAttribute);
-            free(recordDataOfGivenAttribute);
-            //            std::cout << "after given record" << std::endl;
-            if (!isValidRecord)
-            {
-                continue;
-            }
+
             else
             {
-                //                std::cout << "hhhhh" << std::endl;
+                auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
+                //            rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
+                //
+                //                std::cout << "before read attributes" << std::endl;
+                int isValidAttribute = rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
+                //
+                //                std::cout << "after read attributes, before process valid" << std::endl;
+                bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, conditionAttributeType, isValidAttribute);
+                free(recordDataOfGivenAttribute);
+                if (!isValidRecord)
+                {
+                    //                    std::cout << "rbfm cc, invalud record" << std::endl;
+                    int bb = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
+                }
+                else
+                {
+                    int rc = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
+                    //                    std::cout << "before retrieve attributes" << std::endl;
+                    RetrieveProjectedAttributes(rid, data);
+                    free(currentpageData);
+                    return 0;
+                }
+                //
             }
-            //
-            int rc = UpdatePageNumAndSLotNum(i, j, totalSlotNumberForCurrentPage, totalPage);
-            //            std::cout << "update finished" << std::endl;
-            //
-            RetrieveProjectedAttributes(rid, data);
-            //            std::cout << "Last step " << std::endl;
-            ////            if (rc == -1) {
-            ////                rbfm->closeFile(fileHandle);
-            ////
-            ////                return RBFM_EOF;
-            ////            }
-            free(currentpageData);
-            return 0;
         }
         free(currentpageData);
     }

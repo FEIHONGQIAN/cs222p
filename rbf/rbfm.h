@@ -90,8 +90,14 @@ public:
     RC UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberForCurrentPage, int totalPage);
     RC RetrieveProjectedAttributes(RID &rid, void *data);
 
+    RC getTotalSlotNumber( FileHandle &fileHandle);
 
-    RC close() { return 0; };
+
+
+    RC close() {
+//        currentPageNum = 0;
+//        currentSlotNum = 1;
+        return 0; };
 
 private:
     RecordBasedFileManager *rbfm;
@@ -194,7 +200,6 @@ public:
     RC getOffsetForRecord(void *currentPage, int i);
 
     RC getLengthForRecord(void *currentPage, int i);
-    RC getTotalSlotNumber( FileHandle &fileHandle);
 
 
 
