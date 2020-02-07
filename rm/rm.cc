@@ -216,7 +216,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandleForTable);
     if (rc == fail) return fail;
-    rbfm->closeFile(fileHandleForTable);
+    //rbfm->closeFile(fileHandleForTable);
 
     void *currentPage = malloc(PAGE_SIZE);
     void *column = malloc(PAGE_SIZE);
@@ -245,7 +245,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
                 free(currentPage);
                 free(column);
                 free(table_name);
-                rbfm->closeFile(fileHandle);
+                //rbfm->closeFile(fileHandle);
                 return fail;
             }
             //Format: fieldCount + offset + table_id, table_name, column_name, column_type, column_length, column_position, table_version
@@ -256,7 +256,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
                     free(currentPage);
                     free(column);
                     free(table_name);
-                    rbfm->closeFile(fileHandle);
+                    //rbfm->closeFile(fileHandle);
 
                     return fail;
                 }
@@ -271,7 +271,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     free(currentPage);
     free(column);
     free(table_name);
-    rbfm->closeFile(fileHandle);
+    //rbfm->closeFile(fileHandle);
 
     return success;
 }
@@ -455,7 +455,7 @@ return -1;
 RC RelationManager::createTableDescriptor(std::vector<Attribute> &descriptor) {
 
     Attribute attr;
-    attr.name = "table-id";
+    attr.name = "table_id";
     attr.type = TypeInt;
     attr.length = (AttrLength) 4;
     descriptor.push_back(attr);
