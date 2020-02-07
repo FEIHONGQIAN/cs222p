@@ -46,7 +46,6 @@ RC RelationManager::deleteCatalog() {
 
 RC RelationManager::createTable(const std::string &tableName, const std::vector<Attribute> &attrs) {
     //Step 1: add table of tables;
-
     FileHandle fileHandle;
     int rc = rbfm->openFile("Tables", fileHandle);
     if (rc == fail) return fail;
@@ -337,9 +336,13 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
     rc = rbfm->openFile(tableName, fileHandle);
     if (rc == fail) return fail;
     std::vector<Attribute> recordDescriptor;
+
     getAttributes(tableName, recordDescriptor);
     rc = rbfm->insertRecord(fileHandle, recordDescriptor, data, rid);
-    if (rc == fail) return fail;
+    if (rc == fail) {
+        return fail;
+    }
+//    return fail;
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail) return fail;
     return success;
@@ -405,7 +408,16 @@ RC RelationManager::readAttribute(const std::string &tableName, const RID &rid, 
     if(rc == fail) return fail;
     return success;
 }
+RC RelationManager::getTotalslot(const std::string &tableName) {
+FileHandle fileHandle;
+int rc = 0;
+rc = rbfm -> openFile(tableName, fileHandle);
+if(rc == fail) return fail;
+rc = rbfm->getTotalSlotNumber(fileHandle);
+return rc;
 
+
+}
 RC RelationManager::scan(const std::string &tableName,
                          const std::string &conditionAttribute,
                          const CompOp compOp,

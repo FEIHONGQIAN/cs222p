@@ -13,9 +13,25 @@ if not os.path.exists(executable_dir):
 os.chdir(executable_dir)
 
 valgrind_cmd = (
-    "G_SLICE=always-malloc G_DEBUG=gc-friendly  "
-    + "valgrind -v --tool=memcheck --leak-check=full --num-callers=40 {test_path}"
+        "G_SLICE=always-malloc G_DEBUG=gc-friendly  "
+        + "valgrind -v --tool=memcheck --leak-check=full --num-callers=40 {test_path}"
 )
+
+tests_order_map = {"rbftest": "0", "rmtest_create_tables": "1", "rmtest": "2"}
+
+
+def get_test_order(test_name):
+    test_name = os.path.basename(test_name)
+    name, suffix = os.path.splitext(test_name)
+    if name in tests_order_map:
+        return tests_order_map[name] + name
+    prefix, left = name.split("_", 1)
+    if prefix in tests_order_map:
+        return tests_order_map[prefix] + name
+    else:
+        print("illegal test name format:" + test_name)
+        sys.exit(1)
+
 
 if len(sys.argv) > 1 and sys.argv[1] == "mem":
     cmd = valgrind_cmd
@@ -42,12 +58,12 @@ def print_test(test, output, err, code):
 tests, fail_tests, success_tests = [], [], []
 for f in os.listdir():
     if (
-        os.path.isfile(f)
-        and re.match(".*?test[^\.]*?", f)
-        and os.access(f, os.X_OK)
+            os.path.isfile(f)
+            and re.match(".*?test[^\.]*?", f)
+            and os.access(f, os.X_OK)
     ):
         tests.append(os.path.abspath(f))
-tests.sort()
+tests.sort(key=get_test_order)
 print("ALL TESTS:")
 for test in tests:
     print(test)

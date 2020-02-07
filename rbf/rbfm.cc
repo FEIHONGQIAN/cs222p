@@ -53,9 +53,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
 {
     void *record = malloc(PAGE_SIZE);
     int recordSize = transformData(recordDescriptor, data, record); // Get record and recordSize
-
     fileHandle.slotCounter += 1;
-
     void *currentPage = malloc(PAGE_SIZE); // Create a new page to cache the content of the page
     int pageCount = fileHandle.getNumberOfPages() - 1;
     if (pageCount == -1) // If there is no page
@@ -112,6 +110,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
         free(currentPage);
         free(record);
     }
+    std::cout << "insert done" << std::endl;
     return success;
 };
 RC RecordBasedFileManager::countOffsetForNewRecord(void *page)
@@ -458,6 +457,7 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
             switch (attr.type)
             {
             case TypeInt:
+                std::cout << "int type" << std::endl;
                 buffer = malloc(sizeof(int));
                 memcpy(buffer, (char *)data + offset, sizeof(int));
                 offset += sizeof(int);
@@ -468,6 +468,7 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
                 recordLen += sizeof(int);
                 break;
             case TypeReal:
+                std::cout << "real type" << std::endl;
                 buffer = malloc(sizeof(float));
                 memcpy(buffer, (char *)data + offset, sizeof(float));
                 offset += sizeof(float);
@@ -478,6 +479,7 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
                 recordLen += sizeof(float);
                 break;
             case TypeVarChar:
+                std::cout << "var char type" << std::endl;
                 buffer = malloc(sizeof(int));
                 memcpy(buffer, (char *)data + offset, sizeof(int));
                 int varCharLen = *(int *)buffer;
@@ -520,6 +522,7 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
     free(actualContent);
     free(nullFieldsIndicator);
     delete[] offsetInFormattedData;
+    std::cout << "finish the transforming" << std::endl;
     return recordLen + index;
 }
 RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescriptor, const void *data) // Based on recordDescriptor, print data pointed by *data
@@ -846,7 +849,33 @@ RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attrib
 
     return 0;
 }
+RC RecordBasedFileManager::getTotalSlotNumber(FileHandle &fileHandle) {
+    int totalPage = fileHandle.getNumberOfPages();
 
+    std::cout << "total Page is: " << totalPage << std::endl;
+    int aa = 0;
+    for (int i = 0; i < totalPage; i++) {
+        auto *currentpageData = malloc(PAGE_SIZE);
+        if (fileHandle.readPage(i, currentpageData) != 0) {
+            free(currentpageData);
+            return -1;
+        }
+        int totalSlotNumberForCurrentPage = getSlotNumber(currentpageData);
+
+        for (int j = 1; j <= totalSlotNumberForCurrentPage; j++) {
+            int len = getLengthForRecord(currentpageData, j);
+            int start = getOffsetForRecord(currentpageData, j);
+            if (len + start < 0) {
+
+            }
+            else {
+               aa++;
+            }
+        }
+        free(currentpageData);
+    }
+    return aa;
+}
 RC RecordBasedFileManager::getOffsetForRecord(void *currentPage, int slotNum)
 {
 

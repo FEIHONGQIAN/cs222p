@@ -85,6 +85,8 @@ public:
 
     RC dropAttribute(const std::string &tableName, const std::string &attributeName);
 
+    RC getTotalslot(const std::string &tableName);
+
 private:
     RecordBasedFileManager *rbfm;
 
