@@ -1011,7 +1011,7 @@ bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttri
     }
     if (isNullForThisField)
     {
-        std::cout << "No value" << std::endl;
+        // std::cout << "No value" << std::endl;
         if (compOp == EQ_OP && value == NULL)
         {
             return true;
@@ -1031,15 +1031,18 @@ bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttri
     switch (conditionAttributeType)
     {
     case TypeInt:
-        valueOfRecord = *(int *)((char *)recordDataOfGivenAttribute + offset);
+        memcpy(&valueOfRecord, ((char *)recordDataOfGivenAttribute + offset), sizeof(int));
+        // valueOfRecord = *(int *)((char *)recordDataOfGivenAttribute + offset);
         isSatisfiedRecord = processWithTypeInt(valueOfRecord, compOp, value);
         break;
     case TypeReal:
-        valueOfRecordFloat = *(float *)((char *)recordDataOfGivenAttribute + offset);
+        memcpy(&valueOfRecordFloat, (char *) recordDataOfGivenAttribute + offset, sizeof(float));
+        // valueOfRecordFloat = *(float *)((char *)recordDataOfGivenAttribute + offset);
         isSatisfiedRecord = processWithTypeReal(valueOfRecordFloat, compOp, value);
         break;
     case TypeVarChar:
-        stringLen = *(int *)((char *)recordDataOfGivenAttribute + offset);
+        memcpy(&stringLen, (char *) recordDataOfGivenAttribute + offset, sizeof(int));
+        // stringLen = *(int *)((char *)recordDataOfGivenAttribute + offset);
         offset += sizeof(int);
         valueOfRecordVarChar = "";
         for (int kk = 0; kk < stringLen; kk++)
@@ -1187,7 +1190,7 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
                 int isValidAttribute = rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
                 //
                 //                std::cout << "after read attributes, before process valid" << std::endl;
-                bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, conditionAttributeType, isValidAttribute);
+                bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, (AttrType) conditionAttributeType, isValidAttribute);
                 free(recordDataOfGivenAttribute);
                 if (!isValidRecord)
                 {
