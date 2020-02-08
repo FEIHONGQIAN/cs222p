@@ -321,7 +321,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     free(column);
     free(table_name);
     rbfm->closeFile(fileHandle);
-    rbfm->closeFile(fileHandleForTable);
+    //rbfm->closeFile(fileHandleForTable);
 
     return success;
 }
