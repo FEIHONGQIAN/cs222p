@@ -188,7 +188,6 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
     int pageNum = fileHandle.getNumberOfPages();
     RID rid;
 
-    int index = 0;
     for (int i = 0; i < pageNum; i++)
     {
         fileHandle.readPage(i, currentPage);
@@ -254,11 +253,8 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandleForTable);
     if (rc == fail) {
-        std::cout << "111" << std::endl;
         return fail;
     }
-//        return fail;
-    //rbfm->closeFile(fileHandleForTable);
 
     void *currentPage = malloc(PAGE_SIZE);
     void *column = malloc(PAGE_SIZE);
@@ -287,7 +283,6 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
             rc = appendString(recordedTableName, table_name, 0, len);
             if (rc == fail)
             {
-                std::cout << "222" << std::endl;
                 free(currentPage);
                 free(column);
                 free(table_name);
@@ -301,7 +296,6 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
                 rc = filterAttributeFromColumnRecord(column, attrs);
                 if (rc == fail)
                 {
-                    std::cout << "333" << std::endl;
                     free(currentPage);
                     free(column);
                     free(table_name);
