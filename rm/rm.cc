@@ -249,16 +249,11 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
 
 RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attribute> &attrs)
 {
-    FileHandle fileHandleForTable;
     int rc = 0;
-    rc = rbfm->openFile(tableName, fileHandleForTable);
-    if (rc == fail) {
-        return fail;
-    }
-
     void *currentPage = malloc(PAGE_SIZE);
     void *column = malloc(PAGE_SIZE);
     void *table_name = malloc(PAGE_SIZE);
+
     FileHandle fileHandle;
     rbfm->openFile("Columns", fileHandle);
 
@@ -286,7 +281,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
                 free(currentPage);
                 free(column);
                 free(table_name);
-                //rbfm->closeFile(fileHandle);
+                rbfm->closeFile(fileHandle);
                 return fail;
             }
             //Format: fieldCount + offset + table_id, table_name, column_name, column_type, column_length, column_position, table_version
@@ -299,7 +294,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
                     free(currentPage);
                     free(column);
                     free(table_name);
-                    //rbfm->closeFile(fileHandle);
+                    rbfm->closeFile(fileHandle);
 
                     return fail;
                 }
@@ -315,7 +310,6 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     free(column);
     free(table_name);
     rbfm->closeFile(fileHandle);
-    rbfm->closeFile(fileHandleForTable);
 
     return success;
 }
