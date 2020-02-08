@@ -201,8 +201,8 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
                                     sizeof(short));
             memcpy((char *)table, (char *)currentPage + start1, len1);
 
-            int start = *(short *)((char *)table + sizeof(short));
-            int len = *(short *)((char *)table + 2 * sizeof(short)) - *(short *)((char *)table + sizeof(short));
+            int start = *(short *)((char *)table + 5 * sizeof(short));
+            int len = *(short *)((char *)table + 6 * sizeof(short)) - *(short *)((char *)table + 5 * sizeof(short));
 
             memcpy((char *)table_name, (char *)table + start, len);
 
@@ -267,9 +267,9 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
                                           (j + 1) * 2 * sizeof(short) + sizeof(short));
             memcpy((char *)column, (char *)currentPage + column_start, column_len); //copy the column record
 
-            int start = *(short *)((char *)column + sizeof(short)); //table_name_start_pos
-            int len = *(short *)((char *)column + 2 * sizeof(short)) -
-                      *(short *)((char *)column + sizeof(short)); //table_name_len
+            int start = *(short *)((char *)column + 5 * sizeof(short)); //table_name_start_pos
+            int len = *(short *)((char *)column + 6 * sizeof(short)) -
+                      *(short *)((char *)column + 5 * sizeof(short)); //table_name_len
 
             memcpy((char *)table_name, (char *)column + start, len); //copy the table_name
             std::string recordedTableName;
@@ -315,9 +315,9 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
 RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vector<Attribute> &attrs)
 {
     Attribute attr;
-    int start_pos = *(short *)((char *)column + 2 *
+    int start_pos = *(short *)((char *)column + 1 *
                                                     sizeof(short)); //start pos of each attribute (we only need column_name, column_type, column_length)
-    int len = *(short *)((char *)column + 3 * sizeof(short)) - start_pos;
+    int len = *(short *)((char *)column + 2 * sizeof(short)) - start_pos;
 
     //get the name of the attribute
     std::string name;
