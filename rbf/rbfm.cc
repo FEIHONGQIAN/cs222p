@@ -844,7 +844,7 @@ RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attrib
         int index = std::distance(attributeNameVec.begin(), it);
         rbfm_ScanIterator.attributeTypes.push_back(recordDescriptor[index].type);
     }
-
+    
     return 0;
 }
 RC RBFM_ScanIterator::getTotalSlotNumber(FileHandle &fileHandle)
