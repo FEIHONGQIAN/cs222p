@@ -1064,11 +1064,11 @@ RC RBFM_ScanIterator::UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberF
 {
     if (j == totalSlotNumberForCurrentPage)
     {
-        if (currentPageNum != totalPage - 1)
-        {
+//        if (currentPageNum != totalPage - 1)
+//        {
             currentPageNum++;
             currentSlotNum = 1;
-        }
+//        }
         //        else {
         ////            currentSlotNum++;
         //        }
