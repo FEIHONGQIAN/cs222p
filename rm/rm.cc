@@ -155,7 +155,7 @@ RC RelationManager::deleteTable(const std::string &tableName)
     std::vector<Attribute> tableDescriptor;
     createTableDescriptor(tableDescriptor);
 
-    deleteRecordInTableOrColumn(tableName, fileHandle, tableDescriptor);
+    deleteRecordInTableOrColumn(tableName, fileHandle, tableDescriptor, 0);
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail)
         return fail;
@@ -169,7 +169,7 @@ RC RelationManager::deleteTable(const std::string &tableName)
 
     std::vector<Attribute> columnDescriptor;
     createTableDescriptor(columnDescriptor);
-    deleteRecordInTableOrColumn(tableName, fileHandle2, columnDescriptor);
+    deleteRecordInTableOrColumn(tableName, fileHandle2, columnDescriptor, 1);
 
     rc = rbfm->closeFile(fileHandle2);
     if (rc == fail)
@@ -179,7 +179,7 @@ RC RelationManager::deleteTable(const std::string &tableName)
 }
 
 RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle,
-                                                std::vector<Attribute> descriptor)
+                                                std::vector<Attribute> descriptor, int tableIndex)
 {
     void *currentPage = malloc(PAGE_SIZE);
     void *table = malloc(PAGE_SIZE);
@@ -187,6 +187,8 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
 
     int pageNum = fileHandle.getNumberOfPages();
     RID rid;
+
+    int index = 0;
     for (int i = 0; i < pageNum; i++)
     {
         fileHandle.readPage(i, currentPage);
@@ -201,8 +203,14 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
                                     sizeof(short));
             memcpy((char *)table, (char *)currentPage + start1, len1);
 
-            int start = *(short *)((char *)table + 5 * sizeof(short));
-            int len = *(short *)((char *)table + 6 * sizeof(short)) - *(short *)((char *)table + 5 * sizeof(short));
+            if (tableIndex == 0) {
+                index = 1;
+            }
+            else {
+                index = 5;
+            }
+            int start = *(short *)((char *)table + index * sizeof(short));
+            int len = *(short *)((char *)table + (index + 1) * sizeof(short)) - *(short *)((char *)table + index * sizeof(short));
 
             memcpy((char *)table_name, (char *)table + start, len);
 
@@ -594,6 +602,11 @@ RC RelationManager::createColumnDescriptor(std::vector<Attribute> &descriptor)
     attr.length = (AttrLength)4;
     descriptor.push_back(attr);
 
+    attr.name = "table_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength) 50;
+    descriptor.push_back(attr);
+
     attr.name = "table_version";
     attr.type = TypeInt;
     attr.length = (AttrLength)4;
@@ -651,11 +664,6 @@ RC RelationManager::createCatalogColumns(std::string &tableName)
     attr.name = "column-position";
     attr.type = TypeInt;
     attr.length = 4;
-    attrs.push_back(attr);
-
-    attr.name = "table-name";
-    attr.type = TypeVarChar;
-    attr.length = (AttrLength) 50;
     attrs.push_back(attr);
 
     return createTable(tableName, attrs);
