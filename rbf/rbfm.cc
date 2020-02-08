@@ -788,6 +788,13 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
         }
         else
         {
+//            std::cout << "it is a varchar type " << std::endl;
+//            std::cout << "the length of the var char is:" << stringLen;
+//            std::cout << "the contents in the var char are:" << std::endl;
+//            for (int i = 0; i < end - start; i++) {
+//                std::cout << *((char *) record + start + i);
+//            }
+//            std::cout << std::endl;
             memcpy((char *)data + 1, &stringLen, sizeof(int));
             memcpy((char *)data + 1 + sizeof(int), (char *)record + start, end - start);
         }
@@ -1176,8 +1183,9 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
         free(recordDataOfGivenAttribute);
         if (!isValidRecord)
         {
+            moveToNextRecord(currentPage);
             free(currentPage);
-            return RBFM_EOF;
+            return getNextRecord(rid, data);
         }
         else
         {
