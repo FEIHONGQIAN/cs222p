@@ -87,6 +87,9 @@ Third, delete the record.
             4.write back to the file
 
 - Scan
+First, we store all parameters passed to scan function to scan iterator. Then the scan iterator started from the first slot for the first page,
+it will check whether the current slot is deleted or updated record, if so, recursive call getNextRecord. Otherwise, we compare whether this slot 
+is valid by comparing the value in the condition attribute with the value given. If satisfies, print this record. Else, recursive call itself again until we the last slot for the last page.
 
 
 7. Implementation Detail
