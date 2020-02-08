@@ -250,6 +250,7 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
 RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attribute> &attrs)
 {
     int rc = 0;
+    bool flag = false;
     void *currentPage = malloc(PAGE_SIZE);
     void *column = malloc(PAGE_SIZE);
     void *table_name = malloc(PAGE_SIZE);
@@ -298,6 +299,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
 
                     return fail;
                 }
+                flag = true;
             }
 
             memset((char *)column, 0, PAGE_SIZE);
@@ -311,7 +313,8 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     free(table_name);
     rbfm->closeFile(fileHandle);
 
-    return success;
+    if(flag) return success;
+    return fail;
 }
 
 RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vector<Attribute> &attrs)
