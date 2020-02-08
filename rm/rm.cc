@@ -109,9 +109,9 @@ void RelationManager::addTableOfColumns(FileHandle &fileHandle, const int table_
         RID rid;
         int recordSize = 0;
 
-        prepareColumnRecord(columnDescriptor.size(), nullsIndicator, table_counter + 1, tableName.size(), tableName,
+        prepareColumnRecord(columnDescriptor.size(), nullsIndicator, table_counter + 1, 
                             attrs[i].name.size(), attrs[i].name,
-                            attrs[i].type, attrs[i].length, i + 1, 1, column, &recordSize);
+                            attrs[i].type, attrs[i].length, i + 1, tableName.size(), tableName, 1, column, &recordSize);
 
         rbfm->insertRecord(fileHandle, columnDescriptor, column, rid);
 
@@ -625,17 +625,17 @@ RC RelationManager::createCatalogTables(std::string &tableName)
 }
 RC RelationManager::createCatalogColumns(std::string &tableName)
 {
-    std::vector<Attribute> attrs;
+        std::vector<Attribute> attrs;
     Attribute attr;
 
     attr.name = "table-id";
     attr.type = TypeInt;
-    attr.length = (AttrLength)4;
+    attr.length = (AttrLength) 4;
     attrs.push_back(attr);
 
     attr.name = "column-name";
     attr.type = TypeVarChar;
-    attr.length = (AttrLength)50;
+    attr.length = (AttrLength) 50;
     attrs.push_back(attr);
 
     attr.name = "column-type";
@@ -651,6 +651,11 @@ RC RelationManager::createCatalogColumns(std::string &tableName)
     attr.name = "column-position";
     attr.type = TypeInt;
     attr.length = 4;
+    attrs.push_back(attr);
+
+    attr.name = "table-name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength) 50;
     attrs.push_back(attr);
 
     return createTable(tableName, attrs);
@@ -707,72 +712,66 @@ void RelationManager::prepareTableRecord(int fieldCount, unsigned char *nullFiel
 }
 
 void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id,
-                                          const int table_name_length, const std::string &table_name,
                                           const int column_name_length, const std::string &column_name,
                                           const int column_type, const int column_length, const int column_position,
+                                          const int table_name_length, const std::string &table_name,
                                           const int table_version, void *buffer, int *recordSize)
 {
     int offset = 0;
 
     // Null-indicators
     bool nullBit = false;
-    int nullFieldsIndicatorActualSize = ceil((double)fieldCount / CHAR_BIT);
-    ;
+    int nullFieldsIndicatorActualSize = ceil((double) fieldCount / CHAR_BIT);;
 
     // Null-indicator for the fields
-    memcpy((char *)buffer + offset, nullFieldsIndicator, nullFieldsIndicatorActualSize);
+    memcpy((char *) buffer + offset, nullFieldsIndicator, nullFieldsIndicatorActualSize);
     offset += nullFieldsIndicatorActualSize;
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)7;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &table_id, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 7;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &table_id, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)6;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &table_name_length, sizeof(int));
-        offset += sizeof(int);
-        memcpy((char *)buffer + offset, table_name.c_str(), table_name_length);
-        offset += table_name_length;
-    }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)5;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &column_name_length, sizeof(int));
+
+    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 6;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &column_name_length, sizeof(int));
         offset += sizeof(int);
-        memcpy((char *)buffer + offset, column_name.c_str(), column_name_length);
+        memcpy((char *) buffer + offset, column_name.c_str(), column_name_length);
         offset += column_name_length;
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)4;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &column_type, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 5;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &column_type, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)3;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &column_length, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 4;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &column_length, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)2;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &column_position, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 3;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &column_position, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)1;
-    if (!nullBit)
-    {
-        memcpy((char *)buffer + offset, &table_version, sizeof(int));
+        nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 2;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &table_name_length, sizeof(int));
+        offset += sizeof(int);
+        memcpy((char *) buffer + offset, table_name.c_str(), table_name_length);
+        offset += table_name_length;
+    }
+
+    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 1;
+    if (!nullBit) {
+        memcpy((char *) buffer + offset, &table_version, sizeof(int));
         offset += sizeof(int);
     }
 
