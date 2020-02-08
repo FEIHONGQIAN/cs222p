@@ -179,11 +179,7 @@ RC RelationManager::deleteTable(const std::string &tableName)
 }
 
 RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle,
-<<<<<<< HEAD
-                                                std::vector<Attribute> descriptor, int tableIndex)
-=======
                                                 std::vector<Attribute> descriptor, int flag)
->>>>>>> f8e0bd115b85150b91d5b547cc4ce28e364e057b
 {
     void *currentPage = malloc(PAGE_SIZE);
     void *table = malloc(PAGE_SIZE);
@@ -207,17 +203,10 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
                                     sizeof(short));
             memcpy((char *)table, (char *)currentPage + start1, len1);
 
-<<<<<<< HEAD
-            if (tableIndex == 0) {
-                index = 1;
-            }
-            else {
-=======
             int index = 0;
             if(flag == 0){
                 index = 1;
             }else{
->>>>>>> f8e0bd115b85150b91d5b547cc4ce28e364e057b
                 index = 5;
             }
             int start = *(short *)((char *)table + index * sizeof(short));
@@ -610,11 +599,7 @@ RC RelationManager::createColumnDescriptor(std::vector<Attribute> &descriptor)
 
     attr.name = "table_name";
     attr.type = TypeVarChar;
-<<<<<<< HEAD
-    attr.length = (AttrLength) 50;
-=======
     attr.length = (AttrLength)50;
->>>>>>> f8e0bd115b85150b91d5b547cc4ce28e364e057b
     descriptor.push_back(attr);
 
     attr.name = "table_version";

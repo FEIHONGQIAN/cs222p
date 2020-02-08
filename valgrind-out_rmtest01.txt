@@ -1,0 +1,208 @@
+==2758== Memcheck, a memory error detector
+==2758== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2758== Using Valgrind-3.14.0-353a3587bb-20181007X and LibVEX; rerun with -h for copyright info
+==2758== Command: ./rmtest_01
+==2758== Parent PID: 32584
+==2758== 
+--2758-- 
+--2758-- Valgrind options:
+--2758--    --leak-check=full
+--2758--    --show-leak-kinds=all
+--2758--    --track-origins=yes
+--2758--    --verbose
+--2758--    --log-file=valgrind-out_rmtest01.txt
+--2758-- Contents of /proc/version:
+--2758--   Linux version 3.10.0-1062.9.1.el7.x86_64 (mockbuild@kbuilder.bsys.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-39) (GCC) ) #1 SMP Fri Dec 6 15:49:49 UTC 2019
+--2758-- 
+--2758-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-rdtscp-sse3
+--2758-- Page sizes: currently 4096, max supported 4096
+--2758-- Valgrind library directory: /usr/lib64/valgrind
+--2758-- Reading syms from /home/songh9/cs222P/project2/cs222p-winter20-team-6/rm/rmtest_01
+--2758-- Reading syms from /usr/lib64/ld-2.17.so
+--2758--   Considering /usr/lib/debug/.build-id/5c/c1a53b747a7e4d21198723c2b633e54f3c06d9.debug ..
+--2758--   .. build-id is valid
+--2758-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--2758--    object doesn't have a symbol table
+--2758--    object doesn't have a dynamic symbol table
+--2758-- Scheduler: using generic scheduler lock implementation.
+--2758-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==2758== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-2758-by-songh9-on-circinus-4
+==2758== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-2758-by-songh9-on-circinus-4
+==2758== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-2758-by-songh9-on-circinus-4
+==2758== 
+==2758== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==2758== don't want to do, unless you know exactly what you're doing,
+==2758== or are doing some strange experiment):
+==2758==   /usr/lib64/valgrind/../../bin/vgdb --pid=2758 ...command...
+==2758== 
+==2758== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==2758==   /path/to/gdb ./rmtest_01
+==2758== and then give GDB the following command
+==2758==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=2758
+==2758== --pid is optional if only one valgrind process is running
+==2758== 
+--2758-- REDIR: 0x4019df0 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c66c5 (???)
+--2758-- REDIR: 0x4019bc0 (ld-linux-x86-64.so.2:index) redirected to 0x580c66df (???)
+--2758-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--2758-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+==2758== WARNING: new redirection conflicts with existing -- ignoring it
+--2758--     old: 0x04019df0 (strlen              ) R-> (0000.0) 0x580c66c5 ???
+--2758--     new: 0x04019df0 (strlen              ) R-> (2007.0) 0x04c2d0e0 strlen
+--2758-- REDIR: 0x4019d70 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c2e230 (strcmp)
+--2758-- REDIR: 0x401aa30 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c31de0 (mempcpy)
+--2758-- Reading syms from /pkg/gcc/8.2.0/lib64/libstdc++.so.6.0.25
+--2758-- Reading syms from /usr/lib64/libm-2.17.so
+--2758--   Considering /usr/lib/debug/.build-id/56/81c054fdabcf789f4dda66e94f1f6ed1747327.debug ..
+--2758--   .. build-id is valid
+--2758-- Reading syms from /pkg/gcc/8.2.0/lib64/libgcc_s.so.1
+--2758-- Reading syms from /usr/lib64/libc-2.17.so
+--2758--   Considering /usr/lib/debug/.build-id/39/8944d32cf16a67af51067a326e6c0cc14f90ed.debug ..
+--2758--   .. build-id is valid
+--2758-- REDIR: 0x57640e0 (libc.so.6:strcasecmp) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x5760e60 (libc.so.6:strnlen) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x57663b0 (libc.so.6:strncasecmp) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x57638c0 (libc.so.6:memset) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x5763870 (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x5762850 (libc.so.6:__GI_strrchr) redirected to 0x4c2caa0 (__GI_strrchr)
+--2758-- REDIR: 0x5759a90 (libc.so.6:malloc) redirected to 0x4c29e1c (malloc)
+--2758-- REDIR: 0x5760d80 (libc.so.6:__GI_strlen) redirected to 0x4c2d040 (__GI_strlen)
+--2758-- REDIR: 0x57632e0 (libc.so.6:__GI_memcmp) redirected to 0x4c30380 (__GI_memcmp)
+--2758-- REDIR: 0x575f2e0 (libc.so.6:strcmp) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x5812d40 (libc.so.6:__strcmp_sse42) redirected to 0x4c2e1e0 (__strcmp_sse42)
+--2758-- REDIR: 0x5760d30 (libc.so.6:strlen) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x5843630 (libc.so.6:__strlen_sse2_pminub) redirected to 0x4c2d020 (strlen)
+--2758-- REDIR: 0x5768a80 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x58289f0 (libc.so.6:__memcpy_ssse3_back) redirected to 0x4c2e6e0 (memcpy@@GLIBC_2.14)
+--2758-- REDIR: 0x57632a0 (libc.so.6:bcmp) redirected to 0x4a247a0 (_vgnU_ifunc_wrapper)
+--2758-- REDIR: 0x583df60 (libc.so.6:__memcmp_sse4_1) redirected to 0x4c304c0 (__memcmp_sse4_1)
+--2758-- REDIR: 0x5763a90 (libc.so.6:__GI_mempcpy) redirected to 0x4c31b10 (__GI_mempcpy)
+--2758-- REDIR: 0x57798d0 (libc.so.6:__GI_strstr) redirected to 0x4c32070 (__strstr_sse2)
+--2758-- REDIR: 0x5768af0 (libc.so.6:__GI_memcpy) redirected to 0x4c2eee0 (__GI_memcpy)
+--2758-- REDIR: 0x5759eb0 (libc.so.6:free) redirected to 0x4c2af16 (free)
+--2758-- REDIR: 0x5763920 (libc.so.6:__GI_memset) redirected to 0x4c30d30 (memset)
+--2758-- REDIR: 0x4ec91d0 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x4c2a43c (operator new(unsigned long))
+--2758-- REDIR: 0x4ec7460 (libstdc++.so.6:operator delete(void*)) redirected to 0x4c2b3c6 (operator delete(void*))
+--2758-- REDIR: 0x576a370 (libc.so.6:strchrnul) redirected to 0x4c31900 (strchrnul)
+--2758-- REDIR: 0x5762f50 (libc.so.6:memchr) redirected to 0x4c2e2d0 (memchr)
+--2758-- REDIR: 0x4ec9280 (libstdc++.so.6:operator new[](unsigned long)) redirected to 0x4c2aae1 (operator new[](unsigned long))
+--2758-- REDIR: 0x4ec7490 (libstdc++.so.6:operator delete[](void*)) redirected to 0x4c2ba38 (operator delete[](void*))
+==2758== Syscall param write(buf) points to uninitialised byte(s)
+==2758==    at 0x57C39B0: __write_nocancel (syscall-template.S:81)
+==2758==    by 0x574E212: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1258)
+==2758==    by 0x574FA2D: new_do_write (fileops.c:519)
+==2758==    by 0x574FA2D: _IO_do_write@@GLIBC_2.2.5 (fileops.c:495)
+==2758==    by 0x574D867: _IO_file_sync@@GLIBC_2.2.5 (fileops.c:869)
+==2758==    by 0x5742662: fflush (iofflush.c:40)
+==2758==    by 0x40A5E1: FileHandle::appendPage(void const*) (pfm.cc:238)
+==2758==    by 0x40AC8C: RecordBasedFileManager::UpdateFirstSlots(void*, FileHandle&, void*, int) (rbfm.cc:157)
+==2758==    by 0x40A909: RecordBasedFileManager::insertRecord(FileHandle&, std::vector<Attribute, std::allocator<Attribute> > const&, void const*, RID&) (rbfm.cc:61)
+==2758==    by 0x4081B3: RelationManager::insertTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, void const*, RID&) (rm.cc:391)
+==2758==    by 0x404399: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:31)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758==  Address 0x4029024 is in a rw- anonymous segment
+==2758==  Uninitialised value was created by a heap allocation
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x40A8CF: RecordBasedFileManager::insertRecord(FileHandle&, std::vector<Attribute, std::allocator<Attribute> > const&, void const*, RID&) (rbfm.cc:57)
+==2758==    by 0x4081B3: RelationManager::insertTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, void const*, RID&) (rm.cc:391)
+==2758==    by 0x404399: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:31)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+--2758-- REDIR: 0x582df90 (libc.so.6:__memmove_ssse3_back) redirected to 0x4c2e390 (memcpy@GLIBC_2.2.5)
+==2758== 
+==2758== HEAP SUMMARY:
+==2758==     in use at exit: 3,408 bytes in 6 blocks
+==2758==   total heap usage: 92 allocs, 86 frees, 177,007 bytes allocated
+==2758== 
+==2758== Searching for pointers to 6 not-freed blocks
+==2758== Checked 113,888 bytes
+==2758== 
+==2758== 568 bytes in 1 blocks are still reachable in loss record 1 of 6
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x5742B6C: __fopen_internal (iofopen.c:69)
+==2758==    by 0x40A0C4: PagedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (pfm.cc:85)
+==2758==    by 0x40A842: RecordBasedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (rbfm.cc:43)
+==2758==    by 0x407B09: RelationManager::getAttributes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<Attribute, std::allocator<Attribute> >&) (rm.cc:253)
+==2758==    by 0x40429B: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:17)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== 568 bytes in 1 blocks are still reachable in loss record 2 of 6
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x5742B6C: __fopen_internal (iofopen.c:69)
+==2758==    by 0x40A0C4: PagedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (pfm.cc:85)
+==2758==    by 0x40A842: RecordBasedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (rbfm.cc:43)
+==2758==    by 0x407B96: RelationManager::getAttributes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<Attribute, std::allocator<Attribute> >&) (rm.cc:262)
+==2758==    by 0x40429B: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:17)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== 568 bytes in 1 blocks are still reachable in loss record 3 of 6
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x5742B6C: __fopen_internal (iofopen.c:69)
+==2758==    by 0x40A0C4: PagedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (pfm.cc:85)
+==2758==    by 0x40A842: RecordBasedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (rbfm.cc:43)
+==2758==    by 0x407B09: RelationManager::getAttributes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<Attribute, std::allocator<Attribute> >&) (rm.cc:253)
+==2758==    by 0x408191: RelationManager::insertTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, void const*, RID&) (rm.cc:390)
+==2758==    by 0x404399: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:31)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== 568 bytes in 1 blocks are still reachable in loss record 4 of 6
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x5742B6C: __fopen_internal (iofopen.c:69)
+==2758==    by 0x40A0C4: PagedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (pfm.cc:85)
+==2758==    by 0x40A842: RecordBasedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (rbfm.cc:43)
+==2758==    by 0x407B96: RelationManager::getAttributes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<Attribute, std::allocator<Attribute> >&) (rm.cc:262)
+==2758==    by 0x408191: RelationManager::insertTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, void const*, RID&) (rm.cc:390)
+==2758==    by 0x404399: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:31)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== 568 bytes in 1 blocks are still reachable in loss record 5 of 6
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x5742B6C: __fopen_internal (iofopen.c:69)
+==2758==    by 0x40A0C4: PagedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (pfm.cc:85)
+==2758==    by 0x40A842: RecordBasedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (rbfm.cc:43)
+==2758==    by 0x407B09: RelationManager::getAttributes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<Attribute, std::allocator<Attribute> >&) (rm.cc:253)
+==2758==    by 0x4084FD: RelationManager::readTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, RID const&, void*) (rm.cc:447)
+==2758==    by 0x4043D6: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:35)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== 568 bytes in 1 blocks are still reachable in loss record 6 of 6
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x5742B6C: __fopen_internal (iofopen.c:69)
+==2758==    by 0x40A0C4: PagedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (pfm.cc:85)
+==2758==    by 0x40A842: RecordBasedFileManager::openFile(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, FileHandle&) (rbfm.cc:43)
+==2758==    by 0x407B96: RelationManager::getAttributes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<Attribute, std::allocator<Attribute> >&) (rm.cc:262)
+==2758==    by 0x4084FD: RelationManager::readTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, RID const&, void*) (rm.cc:447)
+==2758==    by 0x4043D6: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:35)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== LEAK SUMMARY:
+==2758==    definitely lost: 0 bytes in 0 blocks
+==2758==    indirectly lost: 0 bytes in 0 blocks
+==2758==      possibly lost: 0 bytes in 0 blocks
+==2758==    still reachable: 3,408 bytes in 6 blocks
+==2758==         suppressed: 0 bytes in 0 blocks
+==2758== 
+==2758== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==2758== 
+==2758== 1 errors in context 1 of 1:
+==2758== Syscall param write(buf) points to uninitialised byte(s)
+==2758==    at 0x57C39B0: __write_nocancel (syscall-template.S:81)
+==2758==    by 0x574E212: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1258)
+==2758==    by 0x574FA2D: new_do_write (fileops.c:519)
+==2758==    by 0x574FA2D: _IO_do_write@@GLIBC_2.2.5 (fileops.c:495)
+==2758==    by 0x574D867: _IO_file_sync@@GLIBC_2.2.5 (fileops.c:869)
+==2758==    by 0x5742662: fflush (iofflush.c:40)
+==2758==    by 0x40A5E1: FileHandle::appendPage(void const*) (pfm.cc:238)
+==2758==    by 0x40AC8C: RecordBasedFileManager::UpdateFirstSlots(void*, FileHandle&, void*, int) (rbfm.cc:157)
+==2758==    by 0x40A909: RecordBasedFileManager::insertRecord(FileHandle&, std::vector<Attribute, std::allocator<Attribute> > const&, void const*, RID&) (rbfm.cc:61)
+==2758==    by 0x4081B3: RelationManager::insertTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, void const*, RID&) (rm.cc:391)
+==2758==    by 0x404399: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:31)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758==  Address 0x4029024 is in a rw- anonymous segment
+==2758==  Uninitialised value was created by a heap allocation
+==2758==    at 0x4C29EA3: malloc (vg_replace_malloc.c:309)
+==2758==    by 0x40A8CF: RecordBasedFileManager::insertRecord(FileHandle&, std::vector<Attribute, std::allocator<Attribute> > const&, void const*, RID&) (rbfm.cc:57)
+==2758==    by 0x4081B3: RelationManager::insertTuple(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, void const*, RID&) (rm.cc:391)
+==2758==    by 0x404399: TEST_RM_1(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, float, int) (rmtest_01.cc:31)
+==2758==    by 0x4045A2: main (rmtest_01.cc:61)
+==2758== 
+==2758== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
