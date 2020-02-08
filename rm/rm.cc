@@ -145,6 +145,7 @@ void RelationManager::addTableOfTables(FileHandle &fileHandle, const int table_c
 
 RC RelationManager::deleteTable(const std::string &tableName)
 {
+    if(tableName == "Tables" || tableName == "Columns") return fail;
     rbfm->destroyFile(tableName);
 
     //Step 1 : delete table in table
