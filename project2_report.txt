@@ -10,7 +10,7 @@ Student 2 Name (if applicable): Feihong Qian
 2. Meta-data
 - Show your meta-data design (Tables and Columns table) and information about each column.
     - Tables (table_id:int, table_name:varchar(50), file_name:varchar(50), table_version:int)
-    - Columns(table_id:int, table_name:varchar(50), column_name:varchar(50), column_type:int, column_length:int, column_position:int, table_version:int)
+    - Columns(table_id:int, column_name:varchar(50), column_type:int, column_length:int, column_position:int, table_name:varchar(50), table_version:int)
     - In 'Tables', all the required attributes are not modified. 'table_version' is newly added for advanced requirements(ff addAttribute and dropAttribute functions are not implemented, the version
     is always 1).
     - In 'Columns', all the required attributes are not modified. 'table_name' and 'table_version' are newly added.
