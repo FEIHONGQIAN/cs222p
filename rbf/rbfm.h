@@ -9,40 +9,45 @@
 #include "pfm.h"
 
 // Record ID
-typedef struct {
-    unsigned pageNum;    // page number
-    unsigned short slotNum;    // slot number in the page
+typedef struct
+{
+    unsigned pageNum;       // page number
+    unsigned short slotNum; // slot number in the page
 } RID;
 // Attribute
-typedef enum {
-    TypeInt = 0, TypeReal, TypeVarChar
+typedef enum
+{
+    TypeInt = 0,
+    TypeReal,
+    TypeVarChar
 } AttrType;
 
 typedef unsigned AttrLength;
 
-struct Attribute {
+struct Attribute
+{
     std::string name;  // attribute name
     AttrType type;     // attribute type
     AttrLength length; // attribute length
 };
 
 // Comparison Operator (NOT needed for part 1 of the project)
-typedef enum {
+typedef enum
+{
     EQ_OP = 0, // no condition// =
-    LT_OP,      // <
-    LE_OP,      // <=
-    GT_OP,      // >
-    GE_OP,      // >=
-    NE_OP,      // !=
-    NO_OP       // no condition
+    LT_OP,     // <
+    LE_OP,     // <=
+    GT_OP,     // >
+    GE_OP,     // >=
+    NE_OP,     // !=
+    NO_OP      // no condition
 } CompOp;
-
 
 /********************************************************************
 * The scan iterator is NOT required to be implemented for Project 1 *
 ********************************************************************/
 
-# define RBFM_EOF (-1)  // end of a scan operator
+#define RBFM_EOF (-1) // end of a scan operator
 
 //  RBFM_ScanIterator is an iterator to go through records
 //  The way to use it is like the following:
@@ -53,7 +58,8 @@ typedef enum {
 //  }
 //  rbfmScanIterator.close();
 class RecordBasedFileManager;
-class RBFM_ScanIterator {
+class RBFM_ScanIterator
+{
 public:
     RBFM_ScanIterator();
     ;
@@ -80,41 +86,41 @@ public:
     int currentPageNum = 0;
     int currentSlotNum = 1;
 
-
-//    RecordBasedFileManager rbfm  = RecordBasedFileManager::instance();
+    //    RecordBasedFileManager rbfm  = RecordBasedFileManager::instance();
 
     bool processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType, int isValidAttribute);
-    bool processWithTypeInt(int valueOfRecord, CompOp compOp,const  void *value);
+    bool processWithTypeInt(int valueOfRecord, CompOp compOp, const void *value);
     bool processWithTypeReal(float valueOfRecord, CompOp compOp, const void *value);
     bool processWithTypeVarChar(std::string valueOfRecord, CompOp compOp, const void *value);
     RC UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberForCurrentPage, int totalPage);
     RC RetrieveProjectedAttributes(RID &rid, void *data);
-    RC moveToNextRecord(void * page);
+    RC moveToNextRecord(void *page);
 
-    RC getTotalSlotNumber( FileHandle &fileHandle);
+    RC getTotalSlotNumber(FileHandle &fileHandle);
 
-
-
-    RC close() {
-//        currentPageNum = 0;
-//        currentSlotNum = 1;
-        return 0; };
+    RC close()
+    {
+        //        currentPageNum = 0;
+        //        currentSlotNum = 1;
+        return 0;
+    };
 
 private:
     RecordBasedFileManager *rbfm;
 };
 
-class RecordBasedFileManager {
+class RecordBasedFileManager
+{
 public:
-    static RecordBasedFileManager &instance();                          // Access to the _rbf_manager instance
+    static RecordBasedFileManager &instance(); // Access to the _rbf_manager instance
 
-    RC createFile(const std::string &fileName);                         // Create a new record-based file
+    RC createFile(const std::string &fileName); // Create a new record-based file
 
-    RC destroyFile(const std::string &fileName);                        // Destroy a record-based file
+    RC destroyFile(const std::string &fileName); // Destroy a record-based file
 
-    RC openFile(const std::string &fileName, FileHandle &fileHandle);   // Open a record-based file
+    RC openFile(const std::string &fileName, FileHandle &fileHandle); // Open a record-based file
 
-    RC closeFile(FileHandle &fileHandle);                               // Close a record-based file
+    RC closeFile(FileHandle &fileHandle); // Close a record-based file
 
     friend class RBFM_ScanIterator;
 
@@ -166,35 +172,35 @@ public:
     RC scan(FileHandle &fileHandle,
             const std::vector<Attribute> &recordDescriptor,
             const std::string &conditionAttribute,
-            const CompOp compOp,                  // comparision type such as "<" and "="
-            const void *value,                    // used in the comparison
+            const CompOp compOp,                            // comparision type such as "<" and "="
+            const void *value,                              // used in the comparison
             const std::vector<std::string> &attributeNames, // a list of projected attributes
             RBFM_ScanIterator &rbfm_ScanIterator);
-    RC  getActualByteForNullsIndicator(int fieldCount);
+    RC getActualByteForNullsIndicator(int fieldCount);
     //transform the input data to the traditional formatted data, return the length of the formatted data
     RC transformData(const std::vector<Attribute> &recordDescriptor, const void *data, void *record);
 
     RC getSlotNumber(void *currentPage);
 
-    RC getFreeSpaceOfCurrentPage(void* currentPage);
+    RC getFreeSpaceOfCurrentPage(void *currentPage);
 
     RC UpdateSlots(void *currentPage, FileHandle &fileHandle, void *record, int offset, int recordSize, int pageCount, RID &rid); //used in the insertion
 
     RC UpdateFirstSlots(void *currentPage, FileHandle &fileHandle, void *record, int recordSize); //used in the insertion
 
-    RC updateSlotDirectory(void * currentPage, int len, int end); //used in the deletion, update the directory of slots that are not deleted
+    RC updateSlotDirectory(void *currentPage, int len, int end); //used in the deletion, update the directory of slots that are not deleted
 
     RC shiftContentToLeft(void *currentPage, int len, int start, int recordSize); //used in the deletion, update, shift the content to the left to save space
 
-    RC countOffsetForNewRecord(void * page);
+    RC countOffsetForNewRecord(void *page);
 
-    RC updateFreeSpace(void * page, int space);
+    RC updateFreeSpace(void *page, int space);
 
-    RC updateSlotNum(void * page, int num);
+    RC updateSlotNum(void *page, int num);
 
-    RC updateSlotDirectoryForOneSlot(void * page, int offset, int len, int start);
+    RC updateSlotDirectoryForOneSlot(void *page, int offset, int len, int start);
 
-    RC findInsertPos(void * page, RID &rid); //used in insertion
+    RC findInsertPos(void *page, RID &rid); //used in insertion
 
     void prepareRecord(void *buffer, const std::vector<Attribute> &recordDescriptor, void *contentOfRecords, int len);
 
@@ -202,14 +208,11 @@ public:
 
     RC getLengthForRecord(void *currentPage, int i);
 
-
-
 protected:
-    RecordBasedFileManager();                                                   // Prevent construction
-    ~RecordBasedFileManager();                                                  // Prevent unwanted destruction
-    RecordBasedFileManager(const RecordBasedFileManager &);                     // Prevent construction by copying
-    RecordBasedFileManager &operator=(const RecordBasedFileManager &);          // Prevent assignment
-
+    RecordBasedFileManager();                                          // Prevent construction
+    ~RecordBasedFileManager();                                         // Prevent unwanted destruction
+    RecordBasedFileManager(const RecordBasedFileManager &);            // Prevent construction by copying
+    RecordBasedFileManager &operator=(const RecordBasedFileManager &); // Prevent assignment
 };
 
 #endif // _rbfm_h_

@@ -380,7 +380,7 @@ RC RelationManager::appendString(std::string &s, const void *record, int start_p
 
 RC RelationManager::insertTuple(const std::string &tableName, const void *data, RID &rid)
 {
-//    if(tableName == "Tables" || tableName == "Columns") return fail;
+    if(tableName == "Tables" || tableName == "Columns") return fail;
     FileHandle fileHandle;
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandle);
@@ -403,7 +403,7 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
 
 RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
 {
-//    if(tableName == "Tables" || tableName == "Columns") return fail;
+    if(tableName == "Tables" || tableName == "Columns") return fail;
     FileHandle fileHandle;
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandle);
@@ -422,6 +422,8 @@ RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
 
 RC RelationManager::updateTuple(const std::string &tableName, const void *data, const RID &rid)
 {
+    if(tableName == "Tables" || tableName == "Columns") return fail;
+
     FileHandle fileHandle;
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandle);
