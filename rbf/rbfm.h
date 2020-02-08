@@ -89,6 +89,7 @@ public:
     bool processWithTypeVarChar(std::string valueOfRecord, CompOp compOp, const void *value);
     RC UpdatePageNumAndSLotNum(int i, int j, int totalSlotNumberForCurrentPage, int totalPage);
     RC RetrieveProjectedAttributes(RID &rid, void *data);
+    RC moveToNextRecord(void * page);
 
     RC getTotalSlotNumber( FileHandle &fileHandle);
 
