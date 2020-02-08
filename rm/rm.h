@@ -77,7 +77,11 @@ public:
     void prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int column_name_length, 
                              const std::string &column_name, const int column_type, const int column_length, const int column_position, const int table_name_length, const std::string &table_name, const int table_version, void *buffer, int *recordSize);
 
+<<<<<<< HEAD
     RC deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle, std::vector<Attribute> descriptor, int index);
+=======
+    RC deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle, std::vector<Attribute> descriptor, int flag);
+>>>>>>> f8e0bd115b85150b91d5b547cc4ce28e364e057b
     RC appendString(std::string &s, const void *record, int start_pos, int len);
     RC filterAttributeFromColumnRecord(const void *column, std::vector<Attribute> &attrs);
 
