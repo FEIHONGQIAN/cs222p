@@ -104,12 +104,12 @@ void RelationManager::addTableOfColumns(FileHandle &fileHandle, const int table_
     auto *nullsIndicator = (unsigned char *)malloc(nullFieldsIndicatorActualSize);
     memset(nullsIndicator, 0, nullFieldsIndicatorActualSize);
 
-    for (int i = 0; i < (int) attrs.size(); i++)
+    for (int i = 0; i < (int)attrs.size(); i++)
     {
         RID rid;
         int recordSize = 0;
 
-        prepareColumnRecord(columnDescriptor.size(), nullsIndicator, table_counter + 1, 
+        prepareColumnRecord(columnDescriptor.size(), nullsIndicator, table_counter + 1,
                             attrs[i].name.size(), attrs[i].name,
                             attrs[i].type, attrs[i].length, i + 1, tableName.size(), tableName, 1, column, &recordSize);
 
@@ -145,7 +145,8 @@ void RelationManager::addTableOfTables(FileHandle &fileHandle, const int table_c
 
 RC RelationManager::deleteTable(const std::string &tableName)
 {
-    if(tableName == "Tables" || tableName == "Columns") return fail;
+    if (tableName == "Tables" || tableName == "Columns")
+        return fail;
     rbfm->destroyFile(tableName);
 
     //Step 1 : delete table in table
@@ -204,9 +205,12 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
             memcpy((char *)table, (char *)currentPage + start1, len1);
 
             int index = 0;
-            if(flag == 0){
+            if (flag == 0)
+            {
                 index = 1;
-            }else{
+            }
+            else
+            {
                 index = 5;
             }
             int start = *(short *)((char *)table + index * sizeof(short));
@@ -215,7 +219,7 @@ RC RelationManager::deleteRecordInTableOrColumn(const std::string &tableName, Fi
             memcpy((char *)table_name, (char *)table + start, len);
 
             std::string s;
-            rc = appendString(s, table_name, start, len);
+            rc = appendString(s, table_name, 0, len);
             if (rc == fail)
             {
                 free(currentPage);
@@ -314,7 +318,8 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
     free(table_name);
     rbfm->closeFile(fileHandle);
 
-    if(flag) return success;
+    if (flag)
+        return success;
     return fail;
 }
 
@@ -380,7 +385,8 @@ RC RelationManager::appendString(std::string &s, const void *record, int start_p
 
 RC RelationManager::insertTuple(const std::string &tableName, const void *data, RID &rid)
 {
-    if(tableName == "Tables" || tableName == "Columns") return fail;
+    if (tableName == "Tables" || tableName == "Columns")
+        return fail;
     FileHandle fileHandle;
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandle);
@@ -392,6 +398,7 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
     rc = rbfm->insertRecord(fileHandle, recordDescriptor, data, rid);
     if (rc == fail)
     {
+        rc = rbfm->closeFile(fileHandle);
         return fail;
     }
     //    return fail;
@@ -403,17 +410,25 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
 
 RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
 {
-    if(tableName == "Tables" || tableName == "Columns") return fail;
+    if (tableName == "Tables" || tableName == "Columns")
+        return fail;
     FileHandle fileHandle;
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandle);
     if (rc == fail)
+    {
+        std::cout << "open file failed" << std::endl;
         return fail;
+    }
     std::vector<Attribute> recordDescriptor;
     getAttributes(tableName, recordDescriptor);
     rc = rbfm->deleteRecord(fileHandle, recordDescriptor, rid);
     if (rc == fail)
+    {
+        rc = rbfm->closeFile(fileHandle);
+        std::cout << "delete record error" << std::endl;
         return fail;
+    }
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail)
         return fail;
@@ -422,7 +437,8 @@ RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
 
 RC RelationManager::updateTuple(const std::string &tableName, const void *data, const RID &rid)
 {
-    if(tableName == "Tables" || tableName == "Columns") return fail;
+    if (tableName == "Tables" || tableName == "Columns")
+        return fail;
 
     FileHandle fileHandle;
     int rc = 0;
@@ -433,7 +449,10 @@ RC RelationManager::updateTuple(const std::string &tableName, const void *data, 
     getAttributes(tableName, recordDescriptor);
     rc = rbfm->updateRecord(fileHandle, recordDescriptor, data, rid);
     if (rc == fail)
+    {
+        rc = rbfm->closeFile(fileHandle);
         return fail;
+    }
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail)
         return fail;
@@ -451,7 +470,10 @@ RC RelationManager::readTuple(const std::string &tableName, const RID &rid, void
     getAttributes(tableName, recordDescriptor);
     rc = rbfm->readRecord(fileHandle, recordDescriptor, rid, data);
     if (rc == fail)
+    {
+        rc = rbfm->closeFile(fileHandle);
         return fail;
+    }
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail)
         return fail;
@@ -478,7 +500,11 @@ RC RelationManager::readAttribute(const std::string &tableName, const RID &rid, 
     getAttributes(tableName, recordDescriptor);
     rc = rbfm->readAttribute(fileHandle, recordDescriptor, rid, attributeName, data);
     if (rc == fail)
+    {
+        rbfm->closeFile(fileHandle);
+
         return fail;
+    }
     rbfm->closeFile(fileHandle);
     return success;
 }
@@ -488,7 +514,10 @@ RC RM_ScanIterator::getTotalslot(const std::string &tableName)
     int rc = 0;
     rc = rbfm->openFile(tableName, fileHandle);
     if (rc == fail)
+    {
+        rbfm->closeFile(fileHandle);
         return fail;
+    }
     rc = rbfmScanIterator.getTotalSlotNumber(fileHandle);
     rbfm->closeFile(fileHandle);
     return rc;
@@ -542,7 +571,7 @@ RC RM_ScanIterator::close()
     //        std::cout<< "cannot close the fiel" << std::endl;
     //    }
     //    return 0;
-    return -1;
+    return 0;
 }
 
 RC RelationManager::createTableDescriptor(std::vector<Attribute> &descriptor)
@@ -637,17 +666,17 @@ RC RelationManager::createCatalogTables(std::string &tableName)
 }
 RC RelationManager::createCatalogColumns(std::string &tableName)
 {
-        std::vector<Attribute> attrs;
+    std::vector<Attribute> attrs;
     Attribute attr;
 
     attr.name = "table-id";
     attr.type = TypeInt;
-    attr.length = (AttrLength) 4;
+    attr.length = (AttrLength)4;
     attrs.push_back(attr);
 
     attr.name = "column-name";
     attr.type = TypeVarChar;
-    attr.length = (AttrLength) 50;
+    attr.length = (AttrLength)50;
     attrs.push_back(attr);
 
     attr.name = "column-type";
@@ -728,55 +757,63 @@ void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFie
 
     // Null-indicators
     bool nullBit = false;
-    int nullFieldsIndicatorActualSize = ceil((double) fieldCount / CHAR_BIT);;
+    int nullFieldsIndicatorActualSize = ceil((double)fieldCount / CHAR_BIT);
+    ;
 
     // Null-indicator for the fields
-    memcpy((char *) buffer + offset, nullFieldsIndicator, nullFieldsIndicatorActualSize);
+    memcpy((char *)buffer + offset, nullFieldsIndicator, nullFieldsIndicatorActualSize);
     offset += nullFieldsIndicatorActualSize;
 
-    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 7;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &table_id, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)7;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &table_id, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 6;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &column_name_length, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)6;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &column_name_length, sizeof(int));
         offset += sizeof(int);
-        memcpy((char *) buffer + offset, column_name.c_str(), column_name_length);
+        memcpy((char *)buffer + offset, column_name.c_str(), column_name_length);
         offset += column_name_length;
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 5;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &column_type, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)5;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &column_type, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 4;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &column_length, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)4;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &column_length, sizeof(int));
         offset += sizeof(int);
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 3;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &column_position, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)3;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &column_position, sizeof(int));
         offset += sizeof(int);
     }
 
-        nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 2;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &table_name_length, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)2;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &table_name_length, sizeof(int));
         offset += sizeof(int);
-        memcpy((char *) buffer + offset, table_name.c_str(), table_name_length);
+        memcpy((char *)buffer + offset, table_name.c_str(), table_name_length);
         offset += table_name_length;
     }
 
-    nullBit = nullFieldsIndicator[0] & (unsigned) 1 << (unsigned) 1;
-    if (!nullBit) {
-        memcpy((char *) buffer + offset, &table_version, sizeof(int));
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)1;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &table_version, sizeof(int));
         offset += sizeof(int);
     }
 
