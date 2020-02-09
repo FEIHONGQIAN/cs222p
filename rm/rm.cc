@@ -326,8 +326,7 @@ RC RelationManager::getAttributes(const std::string &tableName, std::vector<Attr
 RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vector<Attribute> &attrs)
 {
     Attribute attr;
-    int start_pos = *(short *)((char *)column + 1 *
-                                                    sizeof(short)); //start pos of each attribute (we only need column_name, column_type, column_length)
+    int start_pos = *(short *)((char *)column + 1 * sizeof(short)); //start pos of each attribute (we only need column_name, column_type, column_length)
     int len = *(short *)((char *)column + 2 * sizeof(short)) - start_pos;
 
     //get the name of the attribute
@@ -342,7 +341,6 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
     //get the type of the attribute
     start_pos += len;
     len = sizeof(int);
-    //    int type_enum = *(AttrType *) ((char *) column + start_pos);
     void *type_enum_address = malloc(sizeof(AttrType));
     memcpy((char *)type_enum_address, (char *)column + start_pos, sizeof(AttrType));
     int type_enum = *(AttrType *)((char *)type_enum_address);
@@ -362,8 +360,6 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
 
     //get the length of the attribute
     start_pos += len;
-    //    attr.length = *(AttrLength *) ((char *) column + start_pos);
-
     auto *attr_length_addr = malloc(sizeof(AttrLength));
     memcpy((char *)attr_length_addr, (char *)column + start_pos, sizeof(AttrLength));
     attr.length = *(AttrLength *)((char *)attr_length_addr);
@@ -375,7 +371,6 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
 
 RC RelationManager::appendString(std::string &s, const void *record, int start_pos, int len)
 {
-    //std::string s;
     for (int i = 0; i < len; i++)
     {
         s += *((char *)record + start_pos + i);
@@ -401,7 +396,6 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
         rc = rbfm->closeFile(fileHandle);
         return fail;
     }
-    //    return fail;
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail)
         return fail;
@@ -417,7 +411,6 @@ RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
     rc = rbfm->openFile(tableName, fileHandle);
     if (rc == fail)
     {
-        std::cout << "open file failed" << std::endl;
         return fail;
     }
     std::vector<Attribute> recordDescriptor;
@@ -426,7 +419,6 @@ RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
     if (rc == fail)
     {
         rc = rbfm->closeFile(fileHandle);
-        std::cout << "delete record error" << std::endl;
         return fail;
     }
     rc = rbfm->closeFile(fileHandle);
@@ -567,10 +559,6 @@ RC RM_ScanIterator::close()
 {
     rbfmScanIterator.close();
     rbfm->closeFile(fileHandle);
-    //    if (a == fail) {
-    //        std::cout<< "cannot close the fiel" << std::endl;
-    //    }
-    //    return 0;
     return 0;
 }
 

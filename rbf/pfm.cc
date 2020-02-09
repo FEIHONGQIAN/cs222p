@@ -49,7 +49,7 @@ RC PagedFileManager::createFile(const std::string &fileName)
     offset += sizeof(int);
     *(int *)((char *)hiddenPageData + offset) = 0;
     offset += sizeof(int);
-    *(int *)((char *)hiddenPageData + offset) = 0;//used to count how many slots in the file
+    *(int *)((char *)hiddenPageData + offset) = 0; //used to count how many slots in the file
 
     if (fwrite(hiddenPageData, 1, PAGE_SIZE, pFile) != PAGE_SIZE)
     {

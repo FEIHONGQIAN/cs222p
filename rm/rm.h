@@ -74,7 +74,7 @@ public:
     RC createColumnDescriptor(std::vector<Attribute> &descriptor);
     void prepareTableRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int table_name_length, const std::string &table_name,
                             const int file_name_length, const std::string &file_name, const int table_version, void *buffer, int *recordSize);
-    void prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int column_name_length, 
+    void prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int column_name_length,
                              const std::string &column_name, const int column_type, const int column_length, const int column_position, const int table_name_length, const std::string &table_name, const int table_version, void *buffer, int *recordSize);
 
     RC deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle, std::vector<Attribute> descriptor, int flag);

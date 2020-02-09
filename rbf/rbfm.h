@@ -86,8 +86,6 @@ public:
     unsigned int currentPageNum = 0;
     unsigned int currentSlotNum = 1;
 
-    //    RecordBasedFileManager rbfm  = RecordBasedFileManager::instance();
-
     bool processOnConditionAttribute(void *recordDataOfGivenAttribute, const void *value, CompOp compOp, AttrType conditionAttributeType, int isValidAttribute);
     bool processWithTypeInt(int valueOfRecord, CompOp compOp, const void *value);
     bool processWithTypeReal(float valueOfRecord, CompOp compOp, const void *value);
