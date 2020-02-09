@@ -68,7 +68,7 @@ RC RecordBasedFileManager::insertRecord(FileHandle &fileHandle, const std::vecto
     }
     int pageIndex = -1;
     int minFreeSpace = 4096;
-    for (int i = pageCount; i >= 0; i--)
+    for (auto i = pageCount; i >= 0; i--)
     {
         fileHandle.readPage(i, currentPage); // Put the page content to currentPage
         int freeSpace = getFreeSpaceOfCurrentPage(currentPage);
@@ -217,7 +217,7 @@ RC RecordBasedFileManager::findInsertPos(void *page, RID &rid)
 }
 RC RecordBasedFileManager::getSlotNumber(void *currentPage)
 {
-    return *((int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE));
+    return *((unsigned int *)((char *)currentPage + PAGE_SIZE - FREE_SPACE_SIZE - SLOT_NUMBER_SPACE_SIZE));
 }
 RC RecordBasedFileManager::deleteRecord(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor, const RID &rid)
 {
@@ -442,7 +442,7 @@ int RecordBasedFileManager::transformData(const std::vector<Attribute> &recordDe
     offsetInFormattedData[0] = sizeof(short) * (fieldCount + 1);
     int end = offsetInFormattedData[0];
     int leftShift = 7;
-    for (int i = 0; i < recordDescriptor.size(); i++)
+    for (int i = 0; i < (int)recordDescriptor.size(); i++)
     {
         Attribute attr = recordDescriptor[i];
 
@@ -533,7 +533,7 @@ RC RecordBasedFileManager::printRecord(const std::vector<Attribute> &recordDescr
     offset += nullFieldsIndicatorActualSize;
 
     int leftShift = 7;
-    for (int i = 0; i < recordDescriptor.size(); i++)
+    for (int i = 0; i < (int)recordDescriptor.size(); i++)
     {
         Attribute attr = recordDescriptor[i];
 
@@ -695,9 +695,15 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
 {
     void *currentPage = malloc(PAGE_SIZE);
     void *record = malloc(PAGE_SIZE);
-    int pageNum = rid.pageNum;
-    int slotNum = rid.slotNum;
-    fileHandle.readPage(pageNum, currentPage);
+    unsigned int pageNum = rid.pageNum;
+    unsigned int slotNum = rid.slotNum;
+    std::cout << "before read attributes" << std::endl;
+    std::cout << "page num is: " << pageNum << std::endl;
+    int rc = fileHandle.readPage(pageNum, currentPage);
+    if (rc != success) {
+        return fail;
+    }
+    std::cout << "after read attributes" << std::endl;
 
     int len_dic = PAGE_SIZE - 2 * sizeof(int) - slotNum * sizeof(short) * 2;
     int start_dic = len_dic + sizeof(short);
@@ -724,7 +730,7 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
 
     bool isVarChar = false;
     int attribute_id = -1;
-    for (int i = 0; i < recordDescriptor.size(); i++)
+    for (int i = 0; i < (int)recordDescriptor.size(); i++)
     {
         if (recordDescriptor[i].name.compare(attributeName) == 0)
         {
@@ -788,15 +794,17 @@ RC RecordBasedFileManager::readAttribute(FileHandle &fileHandle, const std::vect
         }
         else
         {
-            //            std::cout << "it is a varchar type " << std::endl;
-            //            std::cout << "the length of the var char is:" << stringLen;
-            //            std::cout << "the contents in the var char are:" << std::endl;
-            //            for (int i = 0; i < end - start; i++) {
-            //                std::cout << *((char *) record + start + i);
-            //            }
-            //            std::cout << std::endl;
+            // std::cout << "it is a varchar type " << std::endl;
+            // std::cout << "the length of the var char is:" << stringLen << std::endl;
+            // std::cout << "the contents in the var char are:" << std::endl;
+            // for (int i = 0; i < end - start; i++)
+            // {
+            //     std::cout << *((char *)record + start + i);
+            // }
+            // std::cout << std::endl;
             memcpy((char *)data + 1, &stringLen, sizeof(int));
             memcpy((char *)data + 1 + sizeof(int), (char *)record + start, end - start);
+            // std::cout << "memcpy no error" << std::endl;
         }
     }
 
@@ -825,12 +833,12 @@ RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attrib
 
     std::vector<std::string> attributeNameVec;
 
-    for (int i = 0; i < recordDescriptor.size(); i++)
+    for (int i = 0; i < (int)recordDescriptor.size(); i++)
     {
         if (recordDescriptor[i].name == rbfm_ScanIterator.conditionAttribute)
         {
             rbfm_ScanIterator.conditionAttributePos = i;
-            rbfm_ScanIterator.conditionAttributeType = (AttrType) recordDescriptor[i].type;
+            rbfm_ScanIterator.conditionAttributeType = (AttrType)recordDescriptor[i].type;
             searchConditionAttributeFlag = true;
         }
         attributeNameVec.push_back(recordDescriptor[i].name);
@@ -969,31 +977,34 @@ bool RBFM_ScanIterator::processWithTypeReal(float valueOfRecord, CompOp compOp, 
 }
 bool RBFM_ScanIterator::processWithTypeVarChar(std::string valueOfRecord, CompOp compOp, const void *value)
 {
-    int stringLen = *(int *)((char *)value);
+    // int stringLen = *(int *)((char *)value);
+    int stringLen = 0;
+    memcpy(&stringLen, (char *)value, sizeof(int));
     std::string valueToCompare = "";
     for (int i = 0; i < stringLen; i++)
     {
         valueToCompare += *((char *)value + sizeof(int) + i);
     }
+    int isStringLarger = valueOfRecord.compare(valueToCompare);
     switch (compOp)
     {
     case EQ_OP:
-        return valueOfRecord == valueToCompare;
+        return isStringLarger == 0;
         break;
     case LT_OP:
-        return valueOfRecord < valueToCompare;
+        return isStringLarger < 0;
         break;
     case LE_OP:
-        return valueOfRecord <= valueToCompare;
+        return isStringLarger <= 0;
         break;
     case GT_OP:
-        return valueOfRecord > valueToCompare;
+        return isStringLarger > 0;
         break;
     case GE_OP:
-        return valueOfRecord >= valueToCompare;
+        return isStringLarger >= 0;
         break;
     case NE_OP:
-        return valueOfRecord != valueToCompare;
+        return isStringLarger != 0;
         break;
     default:
         std::cout << "TypeVarChar should not enter this statement" << std::endl;
@@ -1057,6 +1068,14 @@ bool RBFM_ScanIterator::processOnConditionAttribute(void *recordDataOfGivenAttri
             valueOfRecordVarChar += *((char *)recordDataOfGivenAttribute + offset + kk);
         }
         isSatisfiedRecord = processWithTypeVarChar(valueOfRecordVarChar, compOp, value);
+        // if (isSatisfiedRecord)
+        // {
+        //     std::cout << "this is satisfied" << std::endl;
+        // }
+        // else
+        // {
+        //     std::cout << "not satisfied" << std::endl;
+        // }
         // *(int *)((char *)buffer + offset) = offsetOfField[i] - startAddress;
         // offset += sizeof(int);
         // memcpy((char *)buffer + offset, (char *)contentOfRecords + startAddress,
@@ -1112,7 +1131,7 @@ RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
     for (int i = 0; i < fieldCount; i++)
     {
         auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
-        //        std::cout << "attributesName is: " << attributeTypes[i] << std::endl;
+               std::cout << "attributesName is: " << attributeTypes[i] << std::endl;
         int rc = rbfm->readAttribute(fileHandle, recordDescriptor, rid, attributeNames[i], recordDataOfGivenAttribute);
         if (rc != success)
         {
@@ -1158,14 +1177,28 @@ RC RBFM_ScanIterator::RetrieveProjectedAttributes(RID &rid, void *data)
 }
 RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
 {
-    int pageNum = fileHandle.getNumberOfPages();
+    unsigned int pageNum = fileHandle.getNumberOfPages();
+    std::cout << "pageNum is: " << pageNum << std::endl;
     if (currentPageNum == pageNum)
+    {
+        currentPageNum = 0;
+        currentSlotNum = 1;
+        std::cout << "finish get next record" << std::endl;
         return RBFM_EOF;
+    }
     void *currentPage = malloc(PAGE_SIZE);
-    int rc = fileHandle.readPage(currentPageNum, currentPage);
+    std::cout << "before read page" << std::endl;
+    unsigned int eee = currentPageNum;
+    std::cout << "the page num is: " << eee << std::endl;
+    int rc = fileHandle.readPage(eee, currentPage);
+    std::cout << "after read page" << std::endl;
     if (rc == fail)
     {
+        std::cout << "read page faled" << std::endl;
         free(currentPage);
+        currentPageNum = 0;
+        currentSlotNum = 1;
+        std::cout << "finish get next record2" << std::endl;
         return RBFM_EOF;
     }
 
@@ -1173,6 +1206,8 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
     int start = rbfm->getOffsetForRecord(currentPage, currentSlotNum);
     if (len + start < 0)
     {
+        rid.pageNum = currentPageNum;
+        rid.slotNum = currentSlotNum;
         moveToNextRecord(currentPage);
         free(currentPage);
         return getNextRecord(rid, data);
@@ -1181,7 +1216,6 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
     {
         rid.pageNum = currentPageNum;
         rid.slotNum = currentSlotNum;
-
         auto *recordDataOfGivenAttribute = malloc(PAGE_SIZE);
         int isValidAttribute = rbfm->readAttribute(fileHandle, recordDescriptor, rid, conditionAttribute, recordDataOfGivenAttribute);
         bool isValidRecord = processOnConditionAttribute(recordDataOfGivenAttribute, value, compOp, conditionAttributeType, isValidAttribute);
@@ -1195,6 +1229,7 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
         else
         {
             moveToNextRecord(currentPage);
+            std::cout << "start retrieveprojected attributes" << std::endl;
             RetrieveProjectedAttributes(rid, data);
             free(currentPage);
             return 0;
@@ -1272,7 +1307,8 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
 }
 RC RBFM_ScanIterator::moveToNextRecord(void *currentPage)
 {
-    if (currentSlotNum == rbfm->getSlotNumber(currentPage))
+    unsigned int totalpageSlot = rbfm->getSlotNumber(currentPage);
+    if (currentSlotNum == totalpageSlot)
     {
         currentPageNum++;
         currentSlotNum = 1;

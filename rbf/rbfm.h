@@ -83,8 +83,8 @@ public:
     std::vector<std::string> attributeNames;
     std::vector<AttrType> attributeTypes;
 
-    int currentPageNum = 0;
-    int currentSlotNum = 1;
+    unsigned int currentPageNum = 0;
+    unsigned int currentSlotNum = 1;
 
     //    RecordBasedFileManager rbfm  = RecordBasedFileManager::instance();
 
@@ -100,8 +100,8 @@ public:
 
     RC close()
     {
-        //        currentPageNum = 0;
-        //        currentSlotNum = 1;
+        currentPageNum = 0;
+        currentSlotNum = 1;
         return 0;
     };
 

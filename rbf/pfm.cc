@@ -168,19 +168,23 @@ FileHandle::~FileHandle() = default;
 RC FileHandle::readPage(PageNum pageNum, void *data)
 {
     FILE *file = filePointer;
+    std::cout << "read page, first part" << std::endl;
     if (!file)
     {
         return fail; // if the file does not exist
     }
+    std::cout << "read page, second part" << std::endl;
     if (pageNum > getNumberOfPages() - 1)
     {
         return fail; //the pageNum is larger than the number of pages in the file
     }
     long int offset = (pageNum + 1) * PAGE_SIZE;
+    std::cout << "read page, third part" << std::endl;
     if (fseek(file, offset, SEEK_SET) != success)
     {
         return fail; //set the position indicator to the page we need to read
     }
+    std::cout << "hread page, fifth part" << std::endl;
     if (fread(data, 1, PAGE_SIZE, file) != PAGE_SIZE)
     {
         return fail; //read the page and store them in the *data

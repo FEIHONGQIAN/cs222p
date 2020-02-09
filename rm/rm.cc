@@ -104,7 +104,7 @@ void RelationManager::addTableOfColumns(FileHandle &fileHandle, const int table_
     auto *nullsIndicator = (unsigned char *)malloc(nullFieldsIndicatorActualSize);
     memset(nullsIndicator, 0, nullFieldsIndicatorActualSize);
 
-    for (int i = 0; i < attrs.size(); i++)
+    for (int i = 0; i < (int) attrs.size(); i++)
     {
         RID rid;
         int recordSize = 0;
