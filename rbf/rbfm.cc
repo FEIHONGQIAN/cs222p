@@ -1124,7 +1124,9 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
 {
     int pageNum = fileHandle.getNumberOfPages();
     if (currentPageNum == pageNum)
+    {
         return RBFM_EOF;
+    }
     void *currentPage = malloc(PAGE_SIZE);
     int rc = fileHandle.readPage(currentPageNum, currentPage);
     if (rc == fail)
@@ -1143,7 +1145,10 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
             moveToNextRecord(currentPage);
             memset(currentPage, 0, PAGE_SIZE);
             if (currentPageNum == pageNum)
+            {
+                free(currentPage);
                 return RBFM_EOF;
+            }
             rc = fileHandle.readPage(currentPageNum, currentPage);
             if (rc == fail)
             {
@@ -1166,7 +1171,10 @@ RC RBFM_ScanIterator::getNextRecord(RID &rid, void *data)
         {
             moveToNextRecord(currentPage);
             if (currentPageNum == pageNum)
+            {
+                free(currentPage);
                 return RBFM_EOF;
+            }
             rc = fileHandle.readPage(currentPageNum, currentPage);
             if (rc == fail)
             {
