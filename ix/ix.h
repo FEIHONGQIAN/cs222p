@@ -7,13 +7,14 @@
 #include "../rbf/rbfm.h"
 #include "../rbf/pfm.h"
 
-# define IX_EOF (-1)  // end of the index scan
+#define IX_EOF (-1) // end of the index scan
 
 class IX_ScanIterator;
 
 class IXFileHandle;
 
-class IndexManager {
+class IndexManager
+{
 
 public:
     static IndexManager &instance();
@@ -24,17 +25,17 @@ public:
     //add metapage(0), a non leaf page(1), and a leaf page(2)
     RC initialize(const std::string &fileName);
 
-    RC getLeftMostChildOfNonLeafNode(const void * page);
+    RC getLeftMostChildOfNonLeafNode(const void *page);
 
-    RC getSlotNum(const void * page);
+    RC getSlotNum(const void *page);
 
-    RC getFreeSpacePointer(const void * page);
+    RC getFreeSpacePointer(const void *page);
 
-    RC updateFreeSpacePointer(void * page, int offset);
+    RC updateFreeSpacePointer(void *page, int offset);
 
-    RC updateSlotNum(void * page);
+    RC updateSlotNum(void *page);
 
-    RC getNodeType(const void * page);
+    RC getNodeType(const void *page);
 
     RC updateRootPage(IXFileHandle &ixFileHandle, const int pageNum);
 
@@ -51,18 +52,18 @@ public:
     RC insertEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
 
     //recurively insert, used in insertEntry
-    RC insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void * newchildentry, int page_id);
+    RC insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newchildentry, int page_id);
 
     //choose subtree
-    RC getSubtree(const void * page, const Attribute &attribute, const void *key);
+    RC getSubtree(const void *page, const Attribute &attribute, const void *key);
 
-    RC findInsertedPosInLeafPage(const void * page, const Attribute &attribute, const void *key);
+    RC findInsertedPosInLeafPage(const void *page, const Attribute &attribute, const void *key);
 
-    RC getNextPageForLeafNode(const void * page);
+    RC getNextPageForLeafNode(const void *page);
 
-    RC getChildPageID(const void * page, const int index);
+    RC getChildPageID(const void *page, const int index);
 
-    RC compare(const void * page, const Attribute &attribute, const void *key, const int index, bool flag);
+    RC compare(const void *page, const Attribute &attribute, const void *key, const int index, bool flag);
 
     RC compareInt(const int insertedKey, const int recordedKey);
 
@@ -91,17 +92,17 @@ public:
 
 private:
     RecordBasedFileManager *rbfm;
-protected:
-    IndexManager() = default;                                                   // Prevent construction
-    ~IndexManager() = default;                                                  // Prevent unwanted destruction
-    IndexManager(const IndexManager &) = default;                               // Prevent construction by copying
-    IndexManager &operator=(const IndexManager &) = default;                    // Prevent assignment
 
+protected:
+    IndexManager() = default;                                // Prevent construction
+    ~IndexManager() = default;                               // Prevent unwanted destruction
+    IndexManager(const IndexManager &) = default;            // Prevent construction by copying
+    IndexManager &operator=(const IndexManager &) = default; // Prevent assignment
 };
 
-class IX_ScanIterator {
+class IX_ScanIterator
+{
 public:
-
     // Constructor
     IX_ScanIterator();
 
@@ -115,9 +116,9 @@ public:
     RC close();
 };
 
-class IXFileHandle {
+class IXFileHandle
+{
 public:
-
     // variables to keep counter for each operation
     unsigned ixReadPageCounter;
     unsigned ixWritePageCounter;
@@ -132,9 +133,9 @@ public:
     // Put the current counter values of associated PF FileHandles into variables
     RC collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount);
 
-    RC readPage(PageNum pageNum, void * data);
-    RC writePage(PageNum pageNum, const void * data);
-    RC appendPage(const void * data);
+    RC readPage(PageNum pageNum, void *data);
+    RC writePage(PageNum pageNum, const void *data);
+    RC appendPage(const void *data);
     unsigned getNumberOfPages();
 
     FileHandle fileHandle;
