@@ -1,4 +1,6 @@
 #include "ix.h"
+#include <stdio.h>
+#include <string.h>
 
 const int success = 0;
 const int fail = -1;
