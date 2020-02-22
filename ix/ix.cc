@@ -2,6 +2,8 @@
 
 const int success = 0;
 const int fail = -1;
+const int LeafNodeType = 0;
+const int NonLeafNodeType = 1;
 
 IndexManager &IndexManager::instance() {
     static IndexManager _index_manager = IndexManager();
@@ -11,6 +13,57 @@ IndexManager &IndexManager::instance() {
 RC IndexManager::createFile(const std::string &fileName) {
     int rc = rbfm -> createFile(fileName);
     if(rc == fail) return fail;
+
+    rc = initialize(fileName);
+    if(rc == fail) return fail;
+    return success;
+}
+
+RC IndexManager::initialize(const std::string &fileName) {
+    IXFileHandle ixFileHandle;
+    int rc = rbfm -> openFile(fileName, ixFileHandle.fileHandle);
+    if(rc == fail) return fail;
+
+    void * metapage = malloc(PAGE_SIZE);
+
+    //Step1: append metapage
+    *(int *)((char *) metapage) = 1; // the initial root page number
+    rc = ixFileHandle.fileHandle.appendPage(metapage);
+    if(rc == fail) {
+        rbfm -> closeFile(ixFileHandle.fileHandle);
+        free(metapage);
+        return fail;
+    }
+    memset(metapage, 0, PAGE_SIZE);
+
+    //Step2: append the first non leaf page
+    //non leaf page header + ... + slot number + freeSpacePointer + NodeType
+    *(int *)((char *) metapage) = 2; //non leaf page header (used to point at the left most children's page)
+    *(int *)((char *) metapage + PAGE_SIZE - sizeof(int)) = NonLeafNodeType; //NodeType
+    *(int *)((char *) metapage + PAGE_SIZE - 2 * sizeof(int)) = PAGE_SIZE - 3 * sizeof(int); //freeSpacePointer
+    *(int *)((char *) metapage + PAGE_SIZE - 3 * sizeof(int)) = 0; //slot number
+    rc = ixFileHandle.fileHandle.appendPage(metapage); //append first
+    if(rc == fail){
+        rbfm -> closeFile(ixFileHandle.fileHandle);
+        free(metapage);
+        return fail;
+    }
+    memset(metapage, 0, PAGE_SIZE);
+
+    //Step3: append the first leaf page
+    //... + next page pointer + slot number + freeSpace Pointer + NodeType
+    *(int *)((char *) metapage + PAGE_SIZE - sizeof(int)) = LeafNodeType; //NodeType
+    *(int *)((char *) metapage + PAGE_SIZE - 2 * sizeof(int)) = PAGE_SIZE - 4 * sizeof(int); //freeSpacePointer
+    *(int *)((char *) metapage + PAGE_SIZE - 3 * sizeof(int)) = 0; //slot number
+    *(int *)((char *) metapage + PAGE_SIZE - 4 * sizeof(int)) = -1; //point to null
+    rc = ixFileHandle.fileHandle.appendPage(metapage); //append first
+    if(rc == fail){
+        rbfm -> closeFile(ixFileHandle.fileHandle);
+        free(metapage);
+        return fail;
+    }
+
+    rbfm -> closeFile(ixFileHandle.fileHandle);
     return success;
 }
 

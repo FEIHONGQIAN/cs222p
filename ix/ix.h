@@ -21,6 +21,9 @@ public:
     // Create an index file.
     RC createFile(const std::string &fileName);
 
+    //add metapage(0), a non leaf page(1), and a leaf page(2)
+    RC initialize(const std::string &fileName);
+
     // Delete an index file.
     RC destroyFile(const std::string &fileName);
 
