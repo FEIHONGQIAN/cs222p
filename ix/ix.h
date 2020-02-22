@@ -24,6 +24,20 @@ public:
     //add metapage(0), a non leaf page(1), and a leaf page(2)
     RC initialize(const std::string &fileName);
 
+    RC getLeftMostChildOfNonLeafNode(const void * page);
+
+    RC getSlotNum(const void * page);
+
+    RC getFreeSpacePointer(const void * page);
+
+    RC updateFreeSpacePointer(void * page, int offset);
+
+    RC updateSlotNum(void * page);
+
+    RC getNodeType(const void * page);
+
+    RC updateRootPage(IXFileHandle &ixFileHandle, const int pageNum);
+
     // Delete an index file.
     RC destroyFile(const std::string &fileName);
 
@@ -35,6 +49,30 @@ public:
 
     // Insert an entry into the given index that is indicated by the given ixFileHandle.
     RC insertEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
+
+    //recurively insert, used in insertEntry
+    RC insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void * newchildentry, int page_id);
+
+    //choose subtree
+    RC getSubtree(const void * page, const Attribute &attribute, const void *key);
+
+    RC findInsertedPosInLeafPage(const void * page, const Attribute &attribute, const void *key);
+
+    RC getNextPageForLeafNode(const void * page);
+
+    RC getChildPageID(const void * page, const int index);
+
+    RC compare(const void * page, const Attribute &attribute, const void *key, const int index, bool flag);
+
+    RC compareInt(const int insertedKey, const int recordedKey);
+
+    RC compareReal(const float insertedKey, const float recordedKey);
+
+    RC compareString(std::string insertedKey, std::string recordedKey);
+
+    RC insertIntoLeafNodes(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newChildEntry, void *page, int pageNumber);
+
+    RC getFreeSpaceForLeafNodes(const void *page);
 
     // Delete an entry from the given index that is indicated by the given ixFileHandle.
     RC deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
