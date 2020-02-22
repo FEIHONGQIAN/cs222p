@@ -48,6 +48,8 @@ public:
     // Print the B+ tree in pre-order (in a JSON record format)
     void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const;
 
+private:
+    RecordBasedFileManager *rbfm;
 protected:
     IndexManager() = default;                                                   // Prevent construction
     ~IndexManager() = default;                                                  // Prevent unwanted destruction
@@ -94,7 +96,6 @@ public:
     RC appendPage(const void * data);
     unsigned getNumberOfPages();
 
-private:
     FileHandle fileHandle;
 };
 

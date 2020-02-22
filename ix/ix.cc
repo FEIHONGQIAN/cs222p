@@ -1,24 +1,35 @@
 #include "ix.h"
 
+const int success = 0;
+const int fail = -1;
+
 IndexManager &IndexManager::instance() {
     static IndexManager _index_manager = IndexManager();
     return _index_manager;
 }
 
 RC IndexManager::createFile(const std::string &fileName) {
-    return -1;
+    int rc = rbfm -> createFile(fileName);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC IndexManager::destroyFile(const std::string &fileName) {
-    return -1;
+    int rc = rbfm -> destroyFile(fileName);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC IndexManager::openFile(const std::string &fileName, IXFileHandle &ixFileHandle) {
-    return -1;
+    int rc = rbfm -> openFile(fileName, ixFileHandle.fileHandle);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC IndexManager::closeFile(IXFileHandle &ixFileHandle) {
-    return -1;
+    int rc = rbfm -> closeFile(ixFileHandle.fileHandle);
+    if(rc == fail) return fail;
+    return success;
 }
 
 RC IndexManager::insertEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid) {
