@@ -6,6 +6,7 @@ const int success = 0;
 const int fail = -1;
 const int LeafNodeType = 0;
 const int NonLeafNodeType = 1;
+const int newChildNULLIndicatorInitialValue = -3;
 
 IndexManager &IndexManager::instance()
 {
@@ -90,7 +91,8 @@ RC IndexManager::getSlotNum(const void *page)
 
 RC IndexManager::updateSlotNum(void *page)
 {
-    *(int *)((char *)page + PAGE_SIZE - 3 * sizeof(int)) += 1;
+    *(int *)((char *)page + PAGE_SIZE - 3 * sizeof(int)) = *(int *)((char *)page + PAGE_SIZE - 3 * sizeof(int)) + 1;
+    return success;
 }
 
 RC IndexManager::getFreeSpacePointer(const void *page)
@@ -161,6 +163,7 @@ RC IndexManager::insertEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
 
     if (rc == fail)
     {
+        std::cout << "insert entry failed" << std::endl;
         free(page);
         free(newchildentry);
         return fail;
@@ -177,6 +180,7 @@ RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, 
     int rc = ixFileHandle.fileHandle.readPage(page_id, page);
     if (rc == fail)
     {
+        std::cout << "Unable to read page in insert() function" << std::endl;
         free(page);
         return fail;
     }
@@ -186,9 +190,9 @@ RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, 
     {
         int childPageId = getSubtree(page, attribute, key);
         rc = insert(ixFileHandle, attribute, key, rid, newchildentry, childPageId);
-        int newchildEntryNullIndicator = -3;
+        int newchildEntryNullIndicator = newChildNULLIndicatorInitialValue;
         memcpy(&newchildEntryNullIndicator, (char *)newchildentry, sizeof(int));
-        if (newchildEntryNullIndicator == -3)
+        if (newchildEntryNullIndicator == newChildNULLIndicatorInitialValue)
         {
             std::cout << "new child entry returned wrong" << std::endl;
             free(page);
@@ -237,10 +241,10 @@ RC IndexManager::insertIntoLeafNodes(IXFileHandle &ixFileHandle, const Attribute
 
     if (EntryLen == -1)
     {
-        std::cout << "the key length is invalid" << std::endl;
+        std::cout << "the passed in key's length is invalid" << std::endl;
     }
 
-    int k = 2 * sizeof(int) + sizeof(short); //fisrt part of entry
+    int k = 2 * sizeof(int) + sizeof(short); //first part of entry
     if (EntryLen <= freeSpaceForThisPage)
     {
         int insertIndex = findInsertedPosInLeafPage(page, attribute, key);
@@ -254,7 +258,11 @@ RC IndexManager::insertIntoLeafNodes(IXFileHandle &ixFileHandle, const Attribute
         if (attribute.type == TypeInt || attribute.type == TypeReal)
         {
             memcpy((char *)page + insertPos, key, sizeof(int));
-            memcpy((char *)page + insertPos + sizeof(int), &rid, sizeof(rid));
+            // memcpy((char *)page + insertPos + sizeof(int), &rid, sizeof(rid));
+            auto ridPageNum = rid.pageNum;
+            auto ridSlotNum = rid.slotNum;
+            memcpy((char *)page + insertPos + sizeof(int), &ridPageNum, sizeof(int));
+            memcpy((char *)page + insertPos + 2 * sizeof(int), &ridSlotNum, sizeof(short));
         }
         else
         {
@@ -263,14 +271,22 @@ RC IndexManager::insertIntoLeafNodes(IXFileHandle &ixFileHandle, const Attribute
             len += sizeof(int);
             int charKeyOffset = getFreeSpacePointer(page) - len;
             memcpy((char *)page + insertPos, &charKeyOffset, sizeof(int));
-            memcpy((char *)page + insertPos + sizeof(int), &rid, sizeof(rid));
+            // memcpy((char *)page + insertPos + sizeof(int), &rid, sizeof(rid));
+            auto ridPageNum = rid.pageNum;
+            auto ridSlotNum = rid.slotNum;
+            memcpy((char *)page + insertPos + sizeof(int), &ridPageNum, sizeof(int));
+            memcpy((char *)page + insertPos + 2 * sizeof(int), &ridSlotNum, sizeof(short));
             memcpy((char *)page + charKeyOffset, key, len);
             //update free space pointer
             updateFreeSpacePointer(page, charKeyOffset);
         }
         updateSlotNum(page);
         int rc = ixFileHandle.fileHandle.writePage(pageNumber, page);
-
+        if (rc == fail)
+        {
+            std::cout << "write back after insertion into page failed" << std::endl;
+            return rc;
+        }
         return rc;
     }
     else
@@ -335,14 +351,39 @@ RC IndexManager::compare(const void *page, const Attribute &attribute, const voi
 
     if (type == TypeInt)
     {
-        int insertedKey = *(int *)((char *)key);
-        int recordedKey = *(int *)((char *)page + start_pos + index * entry_len);
+        // int insertedKey = *(int *)((char *)key);
+        int insertedKey = -1;
+        memcpy(&insertedKey, (char *)key, sizeof(int));
+        if (insertedKey == -1)
+        {
+            std::cout << "error in compare function, unable to get the correct INT key value" << std::endl;
+        }
+        int recordedKey = -1;
+        memcpy(&recordedKey, (char *)page + start_pos + index * entry_len, sizeof(int));
+        if (recordedKey == -1)
+        {
+            std::cout << "error in compare function, unable to get the correct INT recordKey value" << std::endl;
+        }
+        // int recordedKey = *(int *)((char *)page + start_pos + index * entry_len);
         return compareInt(insertedKey, recordedKey);
     }
     if (type == TypeReal)
     {
-        int insertedKey = *(int *)((char *)key);
-        int recordedKey = *(int *)((char *)page + start_pos + index * entry_len);
+        // int insertedKey = *(int *)((char *)key);
+        // int recordedKey = *(int *)((char *)page + start_pos + index * entry_len);
+        float b = -1.0;
+        float insertedKey = b;
+        memcpy(&insertedKey, (char *)key, sizeof(float));
+        if (abs(insertedKey - b) <= 1e-6)
+        {
+            std::cout << "error in compare function, unable to get the correct FLOAT key value" << std::endl;
+        }
+        float recordedKey = b;
+        memcpy(&recordedKey, (char *)page + start_pos + index * entry_len, sizeof(float));
+        if (abs(recordedKey - b) <= 1e-6)
+        {
+            std::cout << "error in compare function, unable to get the correct FLOAT recordKey value" << std::endl;
+        }
         return compareReal(insertedKey, recordedKey);
     }
     if (type == TypeVarChar)
@@ -354,6 +395,7 @@ RC IndexManager::compare(const void *page, const Attribute &attribute, const voi
         {
             insertedKey += *((char *)key + sizeof(int) + i);
         }
+
         int recordKeyLen = -1;
         int recordKeyOffset = -1;
         memcpy(&recordKeyOffset, ((char *)page + start_pos + index * entry_len), sizeof(int));
@@ -374,7 +416,20 @@ RC IndexManager::compareInt(const int insertedKey, const int recordedKey)
 
 RC IndexManager::compareReal(const float insertedKey, const float recordedKey)
 {
-    return insertedKey - recordedKey;
+    // return insertedKey - recordedKey;
+    // since this function return a int, to resolve type convertion between float and int, rewrite to if
+    if (insertedKey == recordedKey)
+    {
+        return 0;
+    }
+    else if (insertedKey < recordedKey)
+    {
+        return -1;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 RC IndexManager::compareString(std::string insertedKey, std::string recordedKey)
@@ -395,11 +450,16 @@ RC IndexManager::compareString(std::string insertedKey, std::string recordedKey)
 
 RC IndexManager::getChildPageID(const void *page, int index)
 {
-    int offset = index * 2 * sizeof(int);
-    int rid = *(int *)((char *)page + offset);
+    ///////////////////////////////////////
+    int offset = (index + 1) * 2 * sizeof(int);
+
+    ////////////////////////////////////////
+    int rid = 0;
+    memcpy(&rid, (char *)page + offset, sizeof(int));
+    // int rid = *(int *)((char *)page + offset);
     if (rid <= 0)
     {
-        printf("Child Page ID Error!");
+        printf("Child Page ID Error!\n");
     }
     return rid;
 }
