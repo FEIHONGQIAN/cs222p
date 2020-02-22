@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../rbf/rbfm.h"
+#include "../rbf/pfm.h"
 
 # define IX_EOF (-1)  // end of the index scan
 
@@ -88,6 +89,13 @@ public:
     // Put the current counter values of associated PF FileHandles into variables
     RC collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount);
 
+    RC readPage(PageNum pageNum, void * data);
+    RC writePage(PageNum pageNum, const void * data);
+    RC appendPage(const void * data);
+    unsigned getNumberOfPages();
+
+private:
+    FileHandle fileHandle;
 };
 
 #endif
