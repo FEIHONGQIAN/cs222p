@@ -307,6 +307,24 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
     int newPageId = ixFileHandle.fileHandle.getNumberOfPages() - 1;
     int rc = -1;
 
+    //////////////
+    //get real mid point of the page
+    if(attribute.type == TypeVarChar){
+        int halfLen = 0;
+        void * key = malloc(PAGE_SIZE);
+        for(int i = 0; i < slotNum; i++){
+            getKey(page, key, i, attribute, false, n);
+            int keyLen = *(int *)((char *)key) + sizeof(int);
+            if(halfLen + keyLen <= (PAGE_SIZE - 4 * sizeof(int)) / 2){
+                halfLen += keyLen;
+                mid = i;
+            }else{
+                break;
+            }
+        }
+    }
+    /////////////
+
     getKey(page, midKey, mid, attribute, false, n);
 
     //newchildentry set to mid key
@@ -777,9 +795,6 @@ RC IndexManager::getRID(const void *page, RID &rid, int index) {
     return success;
 }
 
-RC IndexManager::getChildPageNum(const void *page, int index) {
-
-}
 RC IndexManager::getFreeSpaceForLeafNodes(const void *page)
 {
     int slotNumber = getSlotNum(page);

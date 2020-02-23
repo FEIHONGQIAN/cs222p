@@ -99,8 +99,6 @@ public:
 
     RC getRID(const void * page, RID &rid, int index);
 
-    RC getChildPageNum(const void * page, int index);
-
     RC getFreeSpaceForLeafNodes(const void *page);
 
     RC getFreeSpaceForNonLeafNodes(const void *page);
