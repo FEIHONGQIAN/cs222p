@@ -116,11 +116,19 @@ public:
             IX_ScanIterator &ix_ScanIterator);
 
     // Print the B+ tree in pre-order (in a JSON record format)
-    void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const;
+    void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute);
 
-    void printLeafNodes(const void *page, const Attribute &attribute);
+    void printLeafNodes(void *page, const Attribute &attribute, std::string &space);
 
     void printLeafKey(const void *page, const Attribute &attribute);
+
+    void printBtree_rec(IXFileHandle &ixfileHandle, std::string &space, int pageNum, const Attribute &attr);
+
+    void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space);
+
+    void printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space);
+
+    void printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space);
 
 
 private:
