@@ -118,6 +118,11 @@ public:
     // Print the B+ tree in pre-order (in a JSON record format)
     void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const;
 
+    void printLeafNodes(const void *page, const Attribute &attribute);
+
+    void printLeafKey(const void *page, const Attribute &attribute);
+
+
 private:
     RecordBasedFileManager *rbfm;
 

@@ -1065,7 +1065,74 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const
 {
 }
+void IndexManager::printLeafKey(const void *page, const Attribute &attribute) {
+    std::cout << "\"";
+    if (attribute.type == TypeInt ) {
+        int keyVal = -1;
+        memcpy(&keyVal, page, sizeof(int));
+        std::cout << keyVal << ":[";
+    }
+    else if (attribute.type == TypeReal) {
+        float keyVal = -1.0;
+        memcpy(&keyVal, page, sizeof(float));
+        std::cout << keyVal << ":[";
+    }
+    else {
+        int keyLen = -1;
+        memcpy(&keyLen, page, sizeof(int));
+        std::string keyVal = "";
+        for (int i = 0; i < keyLen; i++) {
+            keyVal += *((char *)page + sizeof(int) + i);
+        }
+        std::cout << keyVal << ":[";
+    }
+    return ;
+}
+void IndexManager::printLeafNodes(const void *page, const Attribute &attribute)  {
+    int slotNum = getSlotNum(page);
 
+    std::vector<RID> ridVec;
+    ridVec.clear();
+    RID rid;
+    int len = 0;
+    void *key = malloc(PAGE_SIZE);
+    // Temp is used to store the key for last iteration
+    void *prev = malloc(PAGE_SIZE);
+    std::cout << "{\"keys\": [";
+
+    for (int i = 0; i < slotNum; i++) {
+        getKey(page, key, i, attribute, true, len);
+        // Initialize temp for the first iteration
+        if (i == 0) {
+            memcpy((char *)prev, (char *)key, PAGE_SIZE);
+        }
+        // if the current key is the same as the last iteration, push this RID into the vector
+        if (memcmp(page, key, PAGE_SIZE) == 0) {
+            getRID(page, rid, i);
+            ridVec.push_back(rid);
+        }
+        // pop all the rid in vector to the console
+        // Copy key to temp for next comparison
+        else {
+            printLeafKey(prev, attribute);
+            for (auto item : ridVec) {
+               std:: cout <<"(" << item.pageNum << "," << item.slotNum << "), ";
+            }
+            std::cout << "]\",";
+            ridVec.clear();
+            memcpy((char *)prev, (char *)key, PAGE_SIZE);
+        }
+    }
+    printLeafKey(key, attribute);
+    for (auto item : ridVec) {
+        std::cout <<"(" << item.pageNum << "," << item.slotNum << "), ";
+    }
+    std::cout << "]\",";
+    std::cout << "]}," << std::endl;
+
+    free(key);
+    free(prev);
+}
 IX_ScanIterator::IX_ScanIterator()
 {
 }
