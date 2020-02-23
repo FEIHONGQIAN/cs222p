@@ -322,6 +322,7 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
                 break;
             }
         }
+        free(key);
     }
     /////////////
 
