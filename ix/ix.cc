@@ -314,7 +314,8 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
         void * key = malloc(PAGE_SIZE);
         for(int i = 0; i < slotNum; i++){
             getKey(page, key, i, attribute, false, n);
-            int keyLen = *(int *)((char *)key) + sizeof(int);
+            int keyLen = *(int *)((char *)key) + sizeof(int); //real key len
+            keyLen += sizeof(int) * 2; //charkeyoffset + pageNum
             if(halfLen + keyLen <= (PAGE_SIZE - 4 * sizeof(int)) / 2){
                 halfLen += keyLen;
                 mid = i;
