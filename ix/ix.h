@@ -39,6 +39,8 @@ public:
 
     RC updateRootPage(IXFileHandle &ixFileHandle, const int pageNum);
 
+    RC getRootPage(IXFileHandle &ixFileHandle);
+
     // Delete an index file.
     RC destroyFile(const std::string &fileName);
 
@@ -59,6 +61,8 @@ public:
 
     RC findInsertedPosInLeafPage(const void *page, const Attribute &attribute, const void *key);
 
+    RC findInsertedPosInNonLeafPage(const void *page, const Attribute &attribute, const void *key);
+
     RC getNextPageForLeafNode(const void *page);
 
     RC getChildPageID(const void *page, const int index);
@@ -73,7 +77,33 @@ public:
 
     RC insertIntoLeafNodes(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newChildEntry, void *page, int pageNumber);
 
+    RC insertIntoNonLeafNodes(IXFileHandle &ixFileHandle, const Attribute &attribute, void *newChildEntry, void *page, int pageNumber);
+
+    RC splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const Attribute &attribute, void * key, int childPage, void *newChildEntry, int pageNumber);
+
+    RC splitLeafNodes(IXFileHandle &ixFileHandle, void * page, const Attribute &attribute, const void * key, const RID &rid, void *newChildEntry, int pageNumber);
+
+    RC updateLeafDirectory(void * ori, void * des, const int des_pageId);
+
+    RC copyedUpNewChildEntry(void * newChildEntry, const Attribute &attribute, const void * page);
+
+    RC moveNodesToNewPageInLeafNodes(void * ori, void * des, int start_pos, const Attribute &attribute, IXFileHandle &ixFileHandle, const int ori_pageId, const int des_pageId);
+
+    RC moveNodesToNewPageInNonLeafNodes(void * ori, void * des, int start_pos, const Attribute &attribute, IXFileHandle &ixFileHandle, const int ori_pageId, const int des_pageId);
+
+    RC initializeLeafNodes(void * page, IXFileHandle &ixFileHandle);
+
+    RC initializeNonLeafNodes(void * page, IXFileHandle &ixFileHandle);
+
+    RC getKey(const void * page, void * key, int index, const Attribute &attribute, bool flagForUpdate, int &len);
+
+    RC getRID(const void * page, RID &rid, int index);
+
+    RC getChildPageNum(const void * page, int index);
+
     RC getFreeSpaceForLeafNodes(const void *page);
+
+    RC getFreeSpaceForNonLeafNodes(const void *page);
 
     // Delete an entry from the given index that is indicated by the given ixFileHandle.
     RC deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
