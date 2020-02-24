@@ -13,6 +13,31 @@ class IX_ScanIterator;
 
 class IXFileHandle;
 
+class IXFileHandle
+{
+public:
+    // variables to keep counter for each operation
+    unsigned ixReadPageCounter;
+    unsigned ixWritePageCounter;
+    unsigned ixAppendPageCounter;
+
+    // Constructor
+    IXFileHandle();
+
+    // Destructor
+    ~IXFileHandle();
+
+    // Put the current counter values of associated PF FileHandles into variables
+    RC collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount);
+
+    RC readPage(PageNum pageNum, void *data);
+    RC writePage(PageNum pageNum, const void *data);
+    RC appendPage(const void *data);
+    unsigned getNumberOfPages();
+
+    FileHandle fileHandle;
+};
+
 class IndexManager
 {
 
@@ -149,6 +174,7 @@ public:
     // Destructor
     ~IX_ScanIterator();
 
+    friend class IndexManager;
     IXFileHandle ixFileHandle;
     Attribute attribute;
     const void *lowKey;
@@ -160,7 +186,7 @@ public:
 
     void findStartPointForScan();
 
-    void findLeafNodes(IXFileHandle ixFileHandle, void *page, const void *lowKey, bool lowKeyInclusive);
+//    void findLeafNodes(IXFileHandle ixFileHandle, void *page, const void *lowKey, bool lowKeyInclusive);
 
     // Get next matching entry
     RC getNextEntry(RID &rid, void *key);
@@ -169,29 +195,6 @@ public:
     RC close();
 };
 
-class IXFileHandle
-{
-public:
-    // variables to keep counter for each operation
-    unsigned ixReadPageCounter;
-    unsigned ixWritePageCounter;
-    unsigned ixAppendPageCounter;
 
-    // Constructor
-    IXFileHandle();
-
-    // Destructor
-    ~IXFileHandle();
-
-    // Put the current counter values of associated PF FileHandles into variables
-    RC collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount);
-
-    RC readPage(PageNum pageNum, void *data);
-    RC writePage(PageNum pageNum, const void *data);
-    RC appendPage(const void *data);
-    unsigned getNumberOfPages();
-
-    FileHandle fileHandle;
-};
 
 #endif

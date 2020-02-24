@@ -1254,30 +1254,31 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 
     ix_ScanIterator.findStartPointForScan();
 }
-RC IX_ScanIterator::findLeafNodes(IXFileHandle ixFileHandle, void *page, const *lowKey, bool lowKeyInclusive, int rootPageNum, int currentPageNum)
-{
-    void *page = malloc(PAGE_SIZE);
-    int rc = ixFileHandle.fileHandle.readPage(currentPageNum, page);
-    if (rc == fail)
-    {
-        free(page);
-        return fail;
-    }
 
-    int pageType = im->getNodeType(page);
-    if (pageType == NonLeafNodeType)
-    {
-    }
-    else if (pageType == LeafNodeType)
-    {
-    }
-    else
-    {
-        std::cout << "should not enter into this iteration" << std::endl;
-        free(page);
-        return fail;
-    }
-}
+//RC IX_ScanIterator::findLeafNodes(IXFileHandle ixFileHandle, void *page, const *lowKey, bool lowKeyInclusive, int rootPageNum, int currentPageNum)
+//{
+//    void *page = malloc(PAGE_SIZE);
+//    int rc = ixFileHandle.fileHandle.readPage(currentPageNum, page);
+//    if (rc == fail)
+//    {
+//        free(page);
+//        return fail;
+//    }
+//
+//    int pageType = im->getNodeType(page);
+//    if (pageType == NonLeafNodeType)
+//    {
+//    }
+//    else if (pageType == LeafNodeType)
+//    {
+//    }
+//    else
+//    {
+//        std::cout << "should not enter into this iteration" << std::endl;
+//        free(page);
+//        return fail;
+//    }
+//}
 void IX_ScanIterator::findStartPointForScan()
 {
     int rootPageNum = im->getRootPage(ixFileHandle);
