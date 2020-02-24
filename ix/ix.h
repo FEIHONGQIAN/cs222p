@@ -177,8 +177,18 @@ public:
     friend class IndexManager;
     IXFileHandle ixF;
     Attribute attribute;
-    const void *lowKey;
-    const void *highKey;
+//    const void *lowKey;
+    int lowKeyInt;
+    float lowKeyFloat;
+    std::string lowKeyString;
+    int lowKeyLen;
+
+    int highKeyInt;
+    float highKeyFloat;
+    std::string highKeyString;
+    int highKeyLen;
+
+//    const void *highKey;
     bool lowKeyInclusive;
     bool highKeyInclusive;
 

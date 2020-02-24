@@ -43,7 +43,7 @@ RC IndexManager::initialize(const std::string &fileName)
     rc = ixFileHandle.fileHandle.appendPage(metapage);
     if (rc == fail)
     {
-        //rbfm->closeFile(ixFileHandle.fileHandle);
+        rbfm->closeFile(ixFileHandle.fileHandle);
         free(metapage);
         return fail;
     }
@@ -58,7 +58,7 @@ RC IndexManager::initialize(const std::string &fileName)
     rc = ixFileHandle.fileHandle.appendPage(metapage);                                      //append first
     if (rc == fail)
     {
-        //rbfm->closeFile(ixFileHandle.fileHandle);
+        rbfm->closeFile(ixFileHandle.fileHandle);
         free(metapage);
         return fail;
     }
@@ -70,12 +70,12 @@ RC IndexManager::initialize(const std::string &fileName)
     if (rc == fail)
     {
         free(metapage);
-        //rbfm->closeFile(ixFileHandle.fileHandle);
+        rbfm->closeFile(ixFileHandle.fileHandle);
         return fail;
     }
 
     free(metapage);
-    //rbfm->closeFile(ixFileHandle.fileHandle);
+    rbfm->closeFile(ixFileHandle.fileHandle);
     return success;
 }
 
@@ -912,24 +912,29 @@ RC IndexManager::getFreeSpaceForNonLeafNodes(const void *page)
 RC IndexManager::getSubtree(const void *page, const Attribute &attribute, const void *key)
 {
     int res = -1;
-    for (int i = 0; i < getSlotNum(page); i++)
+    int slotNum = getSlotNum(page);
+    if (slotNum == 0) {
+        res = getLeftMostChildOfNonLeafNode(page);
+        return res;
+    }
+    int i = 0;
+    for (; i < getSlotNum(page); i++)
     {
-        if (compare(page, attribute, key, i, true) >= 0)
+        if (compare(page, attribute, key, i, true) < 0)
         {
-            res = i;
             break;
         }
     }
 
-    if (res == -1)
-    {
-        res = getLeftMostChildOfNonLeafNode(page);
-    }
-    else
-    {
-        res = getChildPageID(page, res);
-    }
-    return res;
+//    if (res == -1)
+//    {
+//        res = getLeftMostChildOfNonLeafNode(page);
+//    }
+//    else
+//    {
+//        res = getChildPageID(page, res);
+//    }
+    return getChildPageID(page, i - 1);
 }
 
 RC IndexManager::findInsertedPosInLeafPage(const void *page, const Attribute &attribute, const void *key)
@@ -953,16 +958,22 @@ RC IndexManager::findInsertedPosInLeafPage(const void *page, const Attribute &at
 
 RC IndexManager::findInsertedPosInNonLeafPage(const void *page, const Attribute &attribute, const void *key)
 {
-    int res = -1;
-    for (int i = 0; i < getSlotNum(page); i++)
-    {
-        if (compare(page, attribute, key, i, false) >= 0)
+
+        int res = -1;
+        int i = 0;
+        for (; i < getSlotNum(page); i++)
         {
-            res = i;
-            break;
+            if (compare(page, attribute, key, i, true) < 0)
+            {
+                res = i - 1;
+                break;
+            }
         }
-    }
-    return res;
+        if (i == getSlotNum(page))
+        {
+            res = i - 1;
+        }
+        return res;
 }
 RC IndexManager::compare(const void *page, const Attribute &attribute, const void *key, const int index, bool flag)
 {
@@ -1194,14 +1205,18 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
     {
         if (compare(page, attribute, key, target, false) == 0)
         {
-            break;
+            RID rid_temp;
+            getRID(page, rid_temp, target);
+            if(rid_temp.slotNum == rid.slotNum && rid_temp.pageNum == rid.pageNum){
+                break;
+            }
         }
     }
 
     if (target == slotNum)
     {
         free(page);
-        std::cout << "cannot find key in leaf nodes" << std::endl;
+        // std::cout << "cannot find key in leaf nodes" << std::endl;
         return fail;
     }
 
@@ -1260,13 +1275,34 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 {
     ix_ScanIterator.ixF = ixFileHandle;
     ix_ScanIterator.attribute = attribute;
-    ix_ScanIterator.lowKey = lowKey;
-    ix_ScanIterator.highKey = highKey;
+//    ix_ScanIterator.lowKey = lowKey;
+//    ix_ScanIterator.highKey = highKey;
     ix_ScanIterator.lowKeyInclusive = lowKeyInclusive;
     ix_ScanIterator.highKeyInclusive = highKeyInclusive;
+    if (attribute.type == TypeInt) {
+        ix_ScanIterator.highKeyLen = 4;
+        int intVal = 0;
+        memcpy(&intVal, highKey, sizeof(int));
+        ix_ScanIterator.highKeyInt = intVal;
+    }
+    else if (attribute.type == TypeReal) {
+        float floatVal = 0.0;
+        memcpy(&floatVal, highKey, sizeof(float));
+        ix_ScanIterator.highKeyFloat = floatVal;
+    }
+    else {
+        std::string stringVal = "";
+        int stringLen = 0;
+        memcpy(&stringLen, highKey, sizeof(int));
+        for(int i = 0; i < stringLen; i++) {
+            stringVal += *((char *)highKey + sizeof(int) + i);
+        }
+        ix_ScanIterator.highKeyString = stringVal;
+        ix_ScanIterator.highKeyLen = stringLen;
+    }
 
 
-    if(ix_ScanIterator.lowKey == NULL){
+    if(lowKey == NULL){
         void * page = malloc(PAGE_SIZE);
         int pageNum = -1;
         int rc = ix_ScanIterator.findStartPointForScan(page, pageNum);
@@ -1503,6 +1539,9 @@ void IndexManager::printLeafKey(const void *page, const Attribute &attribute) co
 
 void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space) const {
     int slotNum = getSlotNum(page);
+    if(slotNum == 0) {
+        return ;
+    }
     std::cout << space << "{" << std::endl;
     space += spaceMargin;
     std::cout << space << "\"keys\": [";
@@ -1526,8 +1565,11 @@ void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void
     int leftMostPage = getLeftMostChildOfNonLeafNode(page);
     int slotNum = getSlotNum(page);
     //print the first left child page by calling the header.leftChildPage.
-    std::cout << space << "\"children\":[" << std::endl;
-    space += space;
+    if (slotNum != 0) {
+        std::cout << space << "\"children\":[" << std::endl;
+        space += space;
+    }
+
     printBtree_rec(ixFileHandle, space, leftMostPage, attribute);
     //    std::cout << ",";
 
@@ -1543,10 +1585,13 @@ void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void
         printBtree_rec(ixFileHandle, space, nextLevelPageNum, attribute);
         //        cout << "}";
     }
-    space = space.substr(0, space.length() - spaceMargin.length());
-    std::cout << space << "]" << std::endl;
-    space = space.substr(0, space.length() - spaceMargin.length());
-    std::cout << space << "}" << std::endl;
+    if (slotNum != 0) {
+        space = space.substr(0, space.length() - spaceMargin.length());
+        std::cout << space << "]" << std::endl;
+        space = space.substr(0, space.length() - spaceMargin.length());
+        std::cout << space << "}" << std::endl;
+    }
+
 }
 void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::string &space) const {
     int slotNum = getSlotNum(page);
@@ -1619,21 +1664,20 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         free(page);
         return fail;
     }
-    if(highKey == NULL){
-        free(page);
-        return success;
+    auto *highKey = malloc(PAGE_SIZE);
+    if (attribute.type == TypeInt) {
+        int intHighKey = highKeyInt;
+        memcpy(highKey, &intHighKey, sizeof(int));
     }
-    //highKey != null
-
-    if(highKeyInclusive){
-        if(im -> compare(page, attribute, highKey, first_keyIndex, false) < 0){
-            free(page);
-            return fail;
-        }
-    }else{
-        if(im -> compare(page, attribute, highKey, first_keyIndex, false) <= 0){
-            free(page);
-            return fail;
+    else if(attribute.type == TypeReal) {
+        float floatHighKey = highKeyFloat;
+        memcpy(highKey, &floatHighKey, sizeof(float));
+    }
+    else {
+        int stringHighKeyLen = highKeyLen;
+        memcpy(highKey, &stringHighKeyLen, sizeof(int));
+        for(int i = 0; i < stringHighKeyLen; i++) {
+            memcpy(((char *)highKey + sizeof(int) + i), &highKeyString[i], 1);
         }
     }
 
@@ -1678,6 +1722,26 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         int len = 0;
         im -> getKey(page, key, first_keyIndex + 1, attribute, false, len);
         first_keyIndex = first_keyIndex + 1;
+    }
+
+    if(highKey == NULL){
+        free(page);
+        return success;
+    }
+    //highKey != null
+
+if(highKeyInclusive){
+        if(im -> compare(page, attribute, highKey, first_keyIndex, false) < 0) {
+            first_pageNum = -1;
+            free(page);
+            return success;
+        }
+    }else{
+        if(im -> compare(page, attribute, highKey, first_keyIndex, false) <= 0){
+            first_pageNum = -1;
+            free(page);
+            return success;
+        }
     }
 
     free(page);
