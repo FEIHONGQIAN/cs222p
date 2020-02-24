@@ -175,17 +175,23 @@ public:
     ~IX_ScanIterator();
 
     friend class IndexManager;
-    IXFileHandle ixFileHandle;
+    IXFileHandle ixF;
     Attribute attribute;
     const void *lowKey;
     const void *highKey;
     bool lowKeyInclusive;
     bool highKeyInclusive;
 
+//    void * first_key;
+    RID first_rid;
+    int first_pageNum = -1;
+    int first_keyIndex = -1;
+//    bool found_firstKey = false;
+
     IndexManager *im;
 
-    void findStartPointForScan();
-
+    RC findStartPointForScan(void * page, int &pageNum);
+    RC findFirstKey(void * page, RID &rid, void *key, int &pageNum);
 //    void findLeafNodes(IXFileHandle ixFileHandle, void *page, const void *lowKey, bool lowKeyInclusive);
 
     // Get next matching entry
