@@ -110,7 +110,7 @@ public:
 
     RC updateLeafDirectory(void *ori, void *des, const int des_pageId);
 
-    RC copyedUpNewChildEntry(void *newChildEntry, const Attribute &attribute, const void *page);
+    RC copyedUpNewChildEntry(void *newChildEntry, const Attribute &attribute, const void *page, const int newPageId);
 
     RC moveNodesToNewPageInLeafNodes(void *ori, void *des, int start_pos, const Attribute &attribute, IXFileHandle &ixFileHandle, const int ori_pageId, const int des_pageId);
 
