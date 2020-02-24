@@ -189,6 +189,7 @@ public:
     // int highKeyLen;
 
     void *highKey;
+    bool highKeyExists = false;
     bool lowKeyInclusive;
     bool highKeyInclusive;
 

@@ -1301,20 +1301,24 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
     //     ix_ScanIterator.highKeyLen = stringLen;
     // }
 
-    int len_low_key = 0;
+    // int len_low_key = 0;
     int len_high_key = 0;
-    if (attribute.type == TypeInt || attribute.type == TypeReal) {
-        len_low_key = sizeof(int);
+    if (highKey != NULL)
+    {
+        ix_ScanIterator.highKeyExists == true;
+        if (attribute.type == TypeInt || attribute.type == TypeReal) {
+        // len_low_key = sizeof(int);
         len_high_key = sizeof(int);
+        }
+        else {
+        // len_low_key = sizeof(int) + *(int *)((char *)lowKey);
+            len_high_key = sizeof(int) + *(int *)((char *)highKey);
+        }
+        // ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
+        ix_ScanIterator.highKey = malloc(PAGE_SIZE);
+    // memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
+        memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
     }
-    else {
-        len_low_key = sizeof(int) + *(int *)((char *)lowKey);
-        len_high_key = sizeof(int) + *(int *)((char *)highKey);
-    }
-    ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
-    ix_ScanIterator.highKey = malloc(PAGE_SIZE);
-    memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
-    memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
 
 
     if(lowKey == NULL){
@@ -1739,7 +1743,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         first_keyIndex = first_keyIndex + 1;
     }
 
-    if(highKey == NULL){
+    if(highKeyExists == false){
         free(page);
         return success;
     }
