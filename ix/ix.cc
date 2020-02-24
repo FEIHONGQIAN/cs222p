@@ -1302,24 +1302,42 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
     // }
 
     // int len_low_key = 0;
+//
+    int len_low_key = 0;
     int len_high_key = 0;
-    if (highKey != NULL)
-    {
-        ix_ScanIterator.highKeyExists == true;
-        if (attribute.type == TypeInt || attribute.type == TypeReal) {
-        // len_low_key = sizeof(int);
+    if(attribute.type == TypeInt || attribute.type == TypeReal){
         len_high_key = sizeof(int);
+        len_low_key =  sizeof(int);
+        if(lowKey == NULL){
+            ix_ScanIterator.lowKey = NULL;
+        }else{
+            ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
+            memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
         }
-        else {
-        // len_low_key = sizeof(int) + *(int *)((char *)lowKey);
-            len_high_key = sizeof(int) + *(int *)((char *)highKey);
-        }
-        // ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
-        ix_ScanIterator.highKey = malloc(PAGE_SIZE);
-    // memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
-        memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
-    }
 
+        if(highKey == NULL){
+            ix_ScanIterator.highKey = NULL;
+        }else{
+            ix_ScanIterator.highKey = malloc(PAGE_SIZE);
+            memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
+        }
+    }else{
+        if(lowKey == NULL){
+            ix_ScanIterator.lowKey = NULL;
+        }else{
+            len_low_key = sizeof(int) + *(int *)((char *)lowKey);
+            ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
+            memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
+        }
+
+        if(highKey == NULL){
+            ix_ScanIterator.highKey = NULL;
+        }else{
+            ix_ScanIterator.highKey = malloc(PAGE_SIZE);
+            len_high_key = sizeof(int) + *(int *)((char *)highKey);
+            memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
+        }
+    }
 
     if(lowKey == NULL){
         void * page = malloc(PAGE_SIZE);
@@ -1743,7 +1761,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         first_keyIndex = first_keyIndex + 1;
     }
 
-    if(highKeyExists == false){
+    if(highKey == NULL){
         free(page);
         return success;
     }
@@ -1770,6 +1788,8 @@ if(highKeyInclusive){
 RC IX_ScanIterator::close()
 {
 //    return -1;
+    free(highKey);
+    free(lowKey);
     return success;
 }
 
