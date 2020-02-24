@@ -1279,27 +1279,42 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 //    ix_ScanIterator.highKey = highKey;
     ix_ScanIterator.lowKeyInclusive = lowKeyInclusive;
     ix_ScanIterator.highKeyInclusive = highKeyInclusive;
-    if (attribute.type == TypeInt) {
-        ix_ScanIterator.highKeyLen = 4;
-        int intVal = 0;
-        memcpy(&intVal, highKey, sizeof(int));
-        ix_ScanIterator.highKeyInt = intVal;
-    }
-    else if (attribute.type == TypeReal) {
-        float floatVal = 0.0;
-        memcpy(&floatVal, highKey, sizeof(float));
-        ix_ScanIterator.highKeyFloat = floatVal;
+    // if (attribute.type == TypeInt) {
+    //     ix_ScanIterator.highKeyLen = 4;
+    //     int intVal = 0;
+    //     memcpy(&intVal, highKey, sizeof(int));
+    //     ix_ScanIterator.highKeyInt = intVal;
+    // }
+    // else if (attribute.type == TypeReal) {
+    //     float floatVal = 0.0;
+    //     memcpy(&floatVal, highKey, sizeof(float));
+    //     ix_ScanIterator.highKeyFloat = floatVal;
+    // }
+    // else {
+    //     std::string stringVal = "";
+    //     int stringLen = 0;
+    //     memcpy(&stringLen, highKey, sizeof(int));
+    //     for(int i = 0; i < stringLen; i++) {
+    //         stringVal += *((char *)highKey + sizeof(int) + i);
+    //     }
+    //     ix_ScanIterator.highKeyString = stringVal;
+    //     ix_ScanIterator.highKeyLen = stringLen;
+    // }
+
+    int len_low_key = 0;
+    int len_high_key = 0;
+    if (attribute.type == TypeInt || attribute.type == TypeReal) {
+        len_low_key = sizeof(int);
+        len_high_key = sizeof(int);
     }
     else {
-        std::string stringVal = "";
-        int stringLen = 0;
-        memcpy(&stringLen, highKey, sizeof(int));
-        for(int i = 0; i < stringLen; i++) {
-            stringVal += *((char *)highKey + sizeof(int) + i);
-        }
-        ix_ScanIterator.highKeyString = stringVal;
-        ix_ScanIterator.highKeyLen = stringLen;
+        len_low_key = sizeof(int) + *(int *)((char *)lowKey);
+        len_high_key = sizeof(int) + *(int *)((char *)highKey);
     }
+    ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
+    ix_ScanIterator.highKey = malloc(PAGE_SIZE);
+    memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
+    memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
 
 
     if(lowKey == NULL){
@@ -1664,22 +1679,22 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         free(page);
         return fail;
     }
-    auto *highKey = malloc(PAGE_SIZE);
-    if (attribute.type == TypeInt) {
-        int intHighKey = highKeyInt;
-        memcpy(highKey, &intHighKey, sizeof(int));
-    }
-    else if(attribute.type == TypeReal) {
-        float floatHighKey = highKeyFloat;
-        memcpy(highKey, &floatHighKey, sizeof(float));
-    }
-    else {
-        int stringHighKeyLen = highKeyLen;
-        memcpy(highKey, &stringHighKeyLen, sizeof(int));
-        for(int i = 0; i < stringHighKeyLen; i++) {
-            memcpy(((char *)highKey + sizeof(int) + i), &highKeyString[i], 1);
-        }
-    }
+//    auto *highKey = malloc(PAGE_SIZE);
+//    if (attribute.type == TypeInt) {
+//        int intHighKey = highKeyInt;
+//        memcpy(highKey, &intHighKey, sizeof(int));
+//    }
+//    else if(attribute.type == TypeReal) {
+//        float floatHighKey = highKeyFloat;
+//        memcpy(highKey, &floatHighKey, sizeof(float));
+//    }
+//    else {
+//        int stringHighKeyLen = highKeyLen;
+//        memcpy(highKey, &stringHighKeyLen, sizeof(int));
+//        for(int i = 0; i < stringHighKeyLen; i++) {
+//            memcpy(((char *)highKey + sizeof(int) + i), &highKeyString[i], 1);
+//        }
+//    }
 
     rid.pageNum = first_rid.pageNum;
     rid.slotNum = first_rid.slotNum;
