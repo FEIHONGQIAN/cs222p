@@ -934,7 +934,8 @@ RC IndexManager::findInsertedPosInLeafPage(const void *page, const Attribute &at
             break;
         }
     }
-    if (i == getSlotNum(page)) {
+    if (i == getSlotNum(page))
+    {
         res = i - 1;
     }
     return res;
@@ -1143,7 +1144,97 @@ RC IndexManager::initializeNonLeafNodes(void *page, IXFileHandle &ixFileHandle)
 
 RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid)
 {
-    return -1;
+    void *page = malloc(PAGE_SIZE);
+    int rc = ixFileHandle.fileHandle.readPage(0, page);
+    if (rc == fail)
+    {
+        free(page);
+        return fail;
+    }
+    int root_page_id = *(int *)((char *)page);
+    memset(page, 0, PAGE_SIZE);
+
+    rc = ixFileHandle.fileHandle.readPage(root_page_id, page);
+    if (rc == fail)
+    {
+        free(page);
+        return fail;
+    }
+    //stop until get the leaf page
+    int child_page_id = -1;
+    while (getNodeType(page) != 0)
+    {
+        child_page_id = getSubtree(page, attribute, key);
+        memset(page, 0, PAGE_SIZE);
+        rc = ixFileHandle.fileHandle.readPage(child_page_id, page);
+        if (rc == fail)
+        {
+            free(page);
+            return fail;
+        }
+    }
+
+    //get child id
+    int slotNum = getSlotNum(page);
+    int target = 0;
+    for (; target < slotNum; target++)
+    {
+        if (compare(page, attribute, key, target, false) == 0)
+        {
+            break;
+        }
+    }
+
+    if (target == slotNum)
+    {
+        free(page);
+        std::cout << "cannot find key in leaf nodes" << std::endl;
+        return fail;
+    }
+
+    //delete this node
+    void *tempPage = malloc(PAGE_SIZE);
+    void *dummyEntry = malloc(PAGE_SIZE);            //null pointer indicator + child page + key
+    *(int *)((char *)dummyEntry) = -1;               // 有
+    *(int *)((char *)dummyEntry + sizeof(int)) = -1; //child page
+
+    memcpy(tempPage, page, PAGE_SIZE);
+    memset(page, 0, PAGE_SIZE);
+    memcpy((char *)page + PAGE_SIZE - 4 * sizeof(int), (char *)tempPage + PAGE_SIZE - 4 * sizeof(int), sizeof(int));
+    *(int *)((char *)page + PAGE_SIZE - 3 * sizeof(int)) = 0;
+    *(int *)((char *)page + PAGE_SIZE - 2 * sizeof(int)) = PAGE_SIZE - 4 * sizeof(int);
+    memcpy((char *)page + PAGE_SIZE - 1 * sizeof(int), (char *)tempPage + PAGE_SIZE - 1 * sizeof(int), sizeof(int));
+
+    void *insertKey = malloc(PAGE_SIZE);
+    RID insertRid;
+    int len = 0;
+    for (int i = 0; i < slotNum; i++)
+    {
+        if (i != target)
+        {
+            getKey(tempPage, insertKey, i, attribute, false, len);
+            getRID(tempPage, insertRid, i);
+            rc = insertIntoLeafNodes(ixFileHandle, attribute, insertKey, insertRid, dummyEntry, page, child_page_id);
+            if (rc == fail)
+            {
+                std::cout << "insertIntoLeafnodes failed in delete entry" << std::endl;
+                free(insertKey);
+                free(page);
+                free(tempPage);
+                free(dummyEntry);
+                return fail;
+            }
+            memset(insertKey, 0, PAGE_SIZE);
+        }
+    }
+
+    ixFileHandle.writePage(child_page_id, page);
+
+    free(insertKey);
+    free(page);
+    free(tempPage);
+    free(dummyEntry);
+    return success;
 }
 
 RC IndexManager::scan(IXFileHandle &ixFileHandle,
@@ -1154,7 +1245,49 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
                       bool highKeyInclusive,
                       IX_ScanIterator &ix_ScanIterator)
 {
-    return -1;
+    ix_ScanIterator.ixFileHandle = ixFileHandle;
+    ix_ScanIterator.attribute = attribute;
+    ix_ScanIterator.lowKey = lowKey;
+    ix_ScanIterator.highKey = highKey;
+    ix_ScanIterator.lowKeyInclusive = lowKeyInclusive;
+    ix_ScanIterator.highKeyInclusive = highKeyInclusive;
+
+    ix_ScanIterator.findStartPointForScan();
+}
+RC IX_ScanIterator::findLeafNodes(IXFileHandle ixFileHandle, void *page, const *lowKey, bool lowKeyInclusive, int rootPageNum, int currentPageNum)
+{
+    void *page = malloc(PAGE_SIZE);
+    int rc = ixFileHandle.fileHandle.readPage(currentPageNum, page);
+    if (rc == fail)
+    {
+        free(page);
+        return fail;
+    }
+
+    int pageType = im->getNodeType(page);
+    if (pageType == NonLeafNodeType)
+    {
+    }
+    else if (pageType == LeafNodeType)
+    {
+    }
+    else
+    {
+        std::cout << "should not enter into this iteration" << std::endl;
+        free(page);
+        return fail;
+    }
+}
+void IX_ScanIterator::findStartPointForScan()
+{
+    int rootPageNum = im->getRootPage(ixFileHandle);
+    if (rootPageNum <= 0)
+    {
+        std::cout << "Invalid page number in scan iterator function" << std::endl;
+        return;
+    }
+
+    int startPage = -1;
 }
 
 void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute)
