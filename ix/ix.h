@@ -50,9 +50,9 @@ public:
     //add metapage(0), a non leaf page(1), and a leaf page(2)
     RC initialize(const std::string &fileName);
 
-    RC getLeftMostChildOfNonLeafNode(const void *page);
+    RC getLeftMostChildOfNonLeafNode(const void *page) const;
 
-    RC getSlotNum(const void *page);
+    RC getSlotNum(const void *page) const;
 
     RC getFreeSpacePointer(const void *page);
 
@@ -60,11 +60,11 @@ public:
 
     RC updateSlotNum(void *page);
 
-    RC getNodeType(const void *page);
+    RC getNodeType(const void *page) const;
 
     RC updateRootPage(IXFileHandle &ixFileHandle, const int pageNum);
 
-    RC getRootPage(IXFileHandle &ixFileHandle);
+    RC getRootPage(IXFileHandle &ixFileHandle) const;
 
     // Delete an index file.
     RC destroyFile(const std::string &fileName);
@@ -120,9 +120,9 @@ public:
 
     RC initializeNonLeafNodes(void *page, IXFileHandle &ixFileHandle);
 
-    RC getKey(const void *page, void *key, int index, const Attribute &attribute, bool flagForUpdate, int &len);
+    RC getKey(const void *page, void *key, int index, const Attribute &attribute, bool flagForUpdate, int &len) const;
 
-    RC getRID(const void *page, RID &rid, int index);
+    RC getRID(const void *page, RID &rid, int index) const;
 
     RC getFreeSpaceForLeafNodes(const void *page);
 
@@ -141,19 +141,19 @@ public:
             IX_ScanIterator &ix_ScanIterator);
 
     // Print the B+ tree in pre-order (in a JSON record format)
-    void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute);
+    void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const;
 
-    void printLeafNodes(void *page, const Attribute &attribute, std::string &space);
+    void printLeafNodes(void *page, const Attribute &attribute, std::string &space) const;
 
-    void printLeafKey(const void *page, const Attribute &attribute);
+    void printLeafKey(const void *page, const Attribute &attribute) const;
 
-    void printBtree_rec(IXFileHandle &ixfileHandle, std::string &space, int pageNum, const Attribute &attr);
+    void printBtree_rec(IXFileHandle &ixfileHandle, std::string &space, int pageNum, const Attribute &attr) const;
 
-    void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space);
+    void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const;
 
-    void printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space);
+    void printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space) const;
 
-    void printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space);
+    void printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const;
 
 private:
     RecordBasedFileManager *rbfm;

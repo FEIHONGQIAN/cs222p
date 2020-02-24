@@ -79,13 +79,11 @@ RC IndexManager::initialize(const std::string &fileName)
     return success;
 }
 
-RC IndexManager::getLeftMostChildOfNonLeafNode(const void *page)
-{
+RC IndexManager::getLeftMostChildOfNonLeafNode(const void *page) const {
     return *(int *)((char *)page);
 }
 
-RC IndexManager::getSlotNum(const void *page)
-{
+RC IndexManager::getSlotNum(const void *page) const {
     return *(int *)((char *)page + PAGE_SIZE - 3 * sizeof(int));
 }
 
@@ -106,8 +104,7 @@ RC IndexManager::updateFreeSpacePointer(void *page, int offset)
     return success;
 }
 
-RC IndexManager::getNodeType(const void *page)
-{
+RC IndexManager::getNodeType(const void *page) const {
     return *(int *)((char *)page + PAGE_SIZE - 1 * sizeof(int));
 }
 
@@ -850,8 +847,7 @@ RC IndexManager::updateLeafDirectory(void *ori, void *des, const int des_pageId)
     }
     return success;
 }
-RC IndexManager::getKey(const void *page, void *key, int index, const Attribute &attribute, bool flagForUpdate, int &len)
-{
+RC IndexManager::getKey(const void *page, void *key, int index, const Attribute &attribute, bool flagForUpdate, int &len) const {
     int nodeType = getNodeType(page);
     int offset = -1;
     if (nodeType == LeafNodeType)
@@ -885,8 +881,7 @@ RC IndexManager::getKey(const void *page, void *key, int index, const Attribute 
     return success;
 }
 
-RC IndexManager::getRID(const void *page, RID &rid, int index)
-{
+RC IndexManager::getRID(const void *page, RID &rid, int index) const {
     int offset = (index)*entryLenInLeafNodes + sizeof(int);
     rid.pageNum = *(int *)((char *)page + offset);
     rid.slotNum = *(short *)((char *)page + offset + sizeof(int));
@@ -1098,8 +1093,7 @@ RC IndexManager::getChildPageID(const void *page, int index)
     return rid;
 }
 
-RC IndexManager::getRootPage(IXFileHandle &ixFileHandle)
-{
+RC IndexManager::getRootPage(IXFileHandle &ixFileHandle) const {
     void *metapage = malloc(PAGE_SIZE);
     int rc = ixFileHandle.fileHandle.readPage(0, metapage);
     if (rc == fail)
@@ -1448,7 +1442,7 @@ RC IX_ScanIterator::findStartPointForScan(void * page, int &pageNum)
     return success;
 }
 
-void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute)
+void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const
 {
     int rootNum = getRootPage(ixFileHandle);
     std::string space = "";
@@ -1456,8 +1450,7 @@ void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attri
     std::cout << std::endl;
 }
 
-void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, std::string &space, int pageNum, const Attribute &attribute)
-{
+void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, std::string &space, int pageNum, const Attribute &attribute) const {
     //allocate a page space for the read of currentpage.
     void *pageData = malloc(PAGE_SIZE);
     ixFileHandle.fileHandle.readPage(pageNum, pageData);
@@ -1476,13 +1469,11 @@ void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, std::string &space
     free(pageData);
 }
 void IndexManager::printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute,
-                                     std::string &space)
-{
+                                     std::string &space) const {
     printNonLeafNodesKey(page, attribute, space);
     printNonLeafNodesChild(ixFileHandle, page, attribute, space);
 }
-void IndexManager::printLeafKey(const void *page, const Attribute &attribute)
-{
+void IndexManager::printLeafKey(const void *page, const Attribute &attribute) const {
     std::cout << "\"";
     if (attribute.type == TypeInt)
     {
@@ -1510,8 +1501,7 @@ void IndexManager::printLeafKey(const void *page, const Attribute &attribute)
     return;
 }
 
-void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space)
-{
+void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space) const {
     int slotNum = getSlotNum(page);
     std::cout << space << "{" << std::endl;
     space += spaceMargin;
@@ -1528,8 +1518,7 @@ void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attri
     free(key);
     return;
 }
-void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space)
-{
+void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const {
     //get the internal header to know the information including number of entries, free space offset and left child page number.
     //    NoLeafIndexHeader header = getInternalHeader(pageData);
     //    int leftMostPage = -1;
@@ -1559,8 +1548,7 @@ void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void
     space = space.substr(0, space.length() - spaceMargin.length());
     std::cout << space << "}" << std::endl;
 }
-void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::string &space)
-{
+void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::string &space) const {
     int slotNum = getSlotNum(page);
 
     std::vector<RID> ridVec;
