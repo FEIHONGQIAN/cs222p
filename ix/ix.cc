@@ -359,15 +359,25 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
     }
     memcpy((char *)newChildEntry + 2 * sizeof(int), (char *)midKey, len); //copy mid key
 
-    int val = compare(page, attribute, key, mid + 1, true);
+    int val = compare(page, attribute, key, mid, true);
 
+    int offset = (mid + 1) * 2 * sizeof(int);
+    int childpage = *(int *)((char *)page + offset);
     //move mid + 1 nodes to new page
     moveNodesToNewPageInNonLeafNodes(page, newPage, mid + 1, attribute, ixFileHandle, pageNumber, newPageId);
 
     //update new page's left most pointer
-    int offset = (mid + 1) * 2 * sizeof(int);
-    int childpage = *(int *)((char *)page + offset);
+
     *(int *)((char *)newPage) = childpage;
+    // ixFileHandle.
+    rc = ixFileHandle.fileHandle.writePage(newPageId, newPage);
+    if (rc == fail) {
+        // free(midKey);
+        // free(newPage);
+        // free(dummyEntry);
+        return fail;
+    }
+
 
     if (val > 0)
     {
