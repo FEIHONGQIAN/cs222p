@@ -1724,7 +1724,6 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
     int len = 0;
     rc = im->getKey(page, key, first_keyIndex, attribute, false, len);
     rc = im->getRID(page, rid, first_keyIndex);
-
     if(rc == fail){
         free(page);
         return fail;
@@ -1750,15 +1749,10 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
                 return success;
             }
         }
-        // im -> getRID(page, first_rid, 0);
-        // int len = 0;
-        // im -> getKey(page, key, 0, attribute, false, len);
+
         first_keyIndex = 0;
         first_pageNum = nextPage;
     }else{
-        // im -> getRID(page, first_rid, first_keyIndex + 1);
-        // int len = 0;
-        // im -> getKey(page, key, first_keyIndex + 1, attribute, false, len);
         first_keyIndex = first_keyIndex + 1;
     }
 
