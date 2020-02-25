@@ -354,7 +354,7 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
     }
     memcpy((char *)newChildEntry + 2 * sizeof(int), (char *)midKey, len); //copy mid key
 
-    int val = compare(page, attribute, midKey, mid, true);
+    int val = compare(page, attribute, midKey, mid + 1, true);
 
     //move mid + 1 nodes to new page
     moveNodesToNewPageInNonLeafNodes(page, newPage, mid + 1, attribute, ixFileHandle, pageNumber, newPageId);
@@ -1723,7 +1723,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 
     int len = 0;
     rc = im->getKey(page, key, first_keyIndex, attribute, false, len);
-
+    rc = im->getRID(page, rid, first_keyIndex);
     if(rc == fail){
         free(page);
         return fail;
@@ -1749,15 +1749,10 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
                 return success;
             }
         }
-        im -> getRID(page, first_rid, 0);
-        int len = 0;
-        im -> getKey(page, key, 0, attribute, false, len);
+
         first_keyIndex = 0;
         first_pageNum = nextPage;
     }else{
-        im -> getRID(page, first_rid, first_keyIndex + 1);
-        int len = 0;
-        im -> getKey(page, key, first_keyIndex + 1, attribute, false, len);
         first_keyIndex = first_keyIndex + 1;
     }
 
