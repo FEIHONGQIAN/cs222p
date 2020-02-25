@@ -178,7 +178,7 @@ RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, 
     int rc = ixFileHandle.fileHandle.readPage(page_id, page);
     if (rc == fail)
     {
-        std::cout << "Unable to read page in insert() function" << std::endl;
+//        std::cout << "Unable to read page in insert() function" << std::endl;
         free(page);
         return fail;
     }
@@ -309,6 +309,11 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
     *(int *)((char *)dummyEntry) = -1;               // null
     *(int *)((char *)dummyEntry + sizeof(int)) = -1; //child page
 
+    // if (attribute.type == TypeInt || attribute.type == TypeReal) {
+    //     memcpy((char *) dummyEntry)
+    // }
+    memcpy(dummyEntry, newChildEntry, PAGE_SIZE);
+
     initializeNonLeafNodes(newPage, ixFileHandle);
     int newPageId = ixFileHandle.fileHandle.getNumberOfPages() - 1;
     int rc = -1;
@@ -354,7 +359,7 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
     }
     memcpy((char *)newChildEntry + 2 * sizeof(int), (char *)midKey, len); //copy mid key
 
-    int val = compare(page, attribute, midKey, mid + 1, true);
+    int val = compare(page, attribute, key, mid + 1, true);
 
     //move mid + 1 nodes to new page
     moveNodesToNewPageInNonLeafNodes(page, newPage, mid + 1, attribute, ixFileHandle, pageNumber, newPageId);
@@ -990,16 +995,16 @@ RC IndexManager::compare(const void *page, const Attribute &attribute, const voi
         // int insertedKey = *(int *)((char *)key);
         int insertedKey = -1;
         memcpy(&insertedKey, (char *)key, sizeof(int));
-        if (insertedKey == -1)
-        {
-            std::cout << "error in compare function, unable to get the correct INT key value" << std::endl;
-        }
+        // if (insertedKey == -1)
+        // {
+        //     std::cout << "error in compare function, unable to get the correct INT key value" << std::endl;
+        // }
         int recordedKey = -1;
         memcpy(&recordedKey, (char *)page + start_pos + index * entry_len, sizeof(int));
-        if (recordedKey == -1)
-        {
-            std::cout << "error in compare function, unable to get the correct INT recordKey value" << std::endl;
-        }
+        // if (recordedKey == -1)
+        // {
+        //     std::cout << "error in compare function, unable to get the correct INT recordKey value" << std::endl;
+        // }
         // int recordedKey = *(int *)((char *)page + start_pos + index * entry_len);
         return compareInt(insertedKey, recordedKey);
     }
