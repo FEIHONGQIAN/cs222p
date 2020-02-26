@@ -143,19 +143,19 @@ public:
     // Print the B+ tree in pre-order (in a JSON record format)
     void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const;
 
-    void printLeafNodes(void *page, const Attribute &attribute, std::string &space) const;
+    void printLeafNodes(void *page, const Attribute &attribute) const;
 
     void printLeafKey(const void *page, const Attribute &attribute) const;
 
     void printNonLeafKey(const void *page, const Attribute &attribute) const;
 
-    void printBtree_rec(IXFileHandle &ixfileHandle, std::string &space, int pageNum, const Attribute &attr) const;
+    void printBtree_rec(IXFileHandle &ixfileHandle, int pageNum, const Attribute &attr) const;
 
-    void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const;
+    void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute) const;
 
-    void printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space) const;
+    void printNonLeafNodesKey(const void *page, const Attribute &attribute) const;
 
-    void printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const;
+    void printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute) const;
 
 private:
     RecordBasedFileManager *rbfm;

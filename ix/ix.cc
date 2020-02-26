@@ -1538,12 +1538,11 @@ RC IX_ScanIterator::findStartPointForScan(void * page, int &pageNum)
 void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const
 {
     int rootNum = getRootPage(ixFileHandle);
-    std::string space = "";
-    printBtree_rec(ixFileHandle, space, rootNum, attribute);
+    printBtree_rec(ixFileHandle, rootNum, attribute);
     std::cout << std::endl;
 }
 
-void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, std::string &space, int pageNum, const Attribute &attribute) const {
+void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, int pageNum, const Attribute &attribute) const {
     //allocate a page space for the read of currentpage.
     void *pageData = malloc(PAGE_SIZE);
     ixFileHandle.fileHandle.readPage(pageNum, pageData);
@@ -1553,18 +1552,17 @@ void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, std::string &space
     int nodeType = getNodeType(pageData);
     if (nodeType == LeafNodeType)
     {
-        printLeafNodes(pageData, attribute, space);
+        printLeafNodes(pageData, attribute);
     }
     else
     {
-        printNonLeafNodes(ixFileHandle, pageData, attribute, space);
+        printNonLeafNodes(ixFileHandle, pageData, attribute);
     }
     free(pageData);
 }
-void IndexManager::printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute,
-                                     std::string &space) const {
-    printNonLeafNodesKey(page, attribute, space);
-    printNonLeafNodesChild(ixFileHandle, page, attribute, space);
+void IndexManager::printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute) const {
+    printNonLeafNodesKey(page, attribute);
+    printNonLeafNodesChild(ixFileHandle, page, attribute);
 }
 void IndexManager::printLeafKey(const void *page, const Attribute &attribute) const {
     std::cout << "\"";
@@ -1600,13 +1598,13 @@ void IndexManager::printNonLeafKey(const void *page, const Attribute &attribute)
     {
         int keyVal = -1;
         memcpy(&keyVal, page, sizeof(int));
-        std::cout << keyVal << "\"";
+        std::cout << keyVal << "\", ";
     }
     else if (attribute.type == TypeReal)
     {
         float keyVal = -1.0;
         memcpy(&keyVal, page, sizeof(float));
-        std::cout << keyVal << "\"";
+        std::cout << keyVal << "\", ";
     }
     else
     {
@@ -1617,31 +1615,30 @@ void IndexManager::printNonLeafKey(const void *page, const Attribute &attribute)
         {
             keyVal += *((char *)page + sizeof(int) + i);
         }
-        std::cout << keyVal << "\"";
+        std::cout << keyVal << "\", ";
     }
     return;
 }
-void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space) const {
+void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attribute) const {
     int slotNum = getSlotNum(page);
     if(slotNum == 0) {
         return ;
     }
-    std::cout << space << "{" << std::endl;
-    space += spaceMargin;
-    std::cout << space << "\"keys\": [";
+    std::cout  << "{" << std::endl;
+    std::cout << "\"keys\": [";
     void *key = malloc(PAGE_SIZE);
     int len = 0; // Non use in this function, acted as a parameter passed to function getKey
     for (int i = 0; i < slotNum; i++)
     {
         getKey(page, key, i, attribute, true, len);
         printNonLeafKey(key, attribute);
-        std::cout << "\",";
+//        std::cout << "\",";
     }
     std::cout << "]," << std::endl;
     free(key);
     return;
 }
-void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const {
+void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute) const {
     //get the internal header to know the information including number of entries, free space offset and left child page number.
     //    NoLeafIndexHeader header = getInternalHeader(pageData);
     //    int leftMostPage = -1;
@@ -1650,11 +1647,10 @@ void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void
     int slotNum = getSlotNum(page);
     //print the first left child page by calling the header.leftChildPage.
     if (slotNum != 0) {
-        std::cout << space << "\"children\":[" << std::endl;
-        space += space;
+        std::cout << "\"children\":[" << std::endl;
     }
 
-    printBtree_rec(ixFileHandle, space, leftMostPage, attribute);
+    printBtree_rec(ixFileHandle, leftMostPage, attribute);
     //    std::cout << ",";
 
     //use loop and recursion to print all the other childPages by calling the printBtree_rec and traversing the index entry.
@@ -1666,18 +1662,16 @@ void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void
         //        cout << "{";
         int nextLevelPageNum = -1;
         memcpy(&nextLevelPageNum, (char *)page + (i + 1) * 2 * sizeof(int), sizeof(int));
-        printBtree_rec(ixFileHandle, space, nextLevelPageNum, attribute);
+        printBtree_rec(ixFileHandle, nextLevelPageNum, attribute);
         //        cout << "}";
     }
     if (slotNum != 0) {
-        space = space.substr(0, space.length() - spaceMargin.length());
-        std::cout << space << "]" << std::endl;
-        space = space.substr(0, space.length() - spaceMargin.length());
-        std::cout << space << "}," << std::endl;
+        std::cout  << "]" << std::endl;
+        std::cout  << "}," << std::endl;
     }
 
 }
-void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::string &space) const {
+void IndexManager::printLeafNodes(void *page, const Attribute &attribute) const {
     int slotNum = getSlotNum(page);
 
     std::vector<RID> ridVec;
@@ -1687,7 +1681,7 @@ void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::s
     void *key = malloc(PAGE_SIZE);
     // Temp is used to store the key for last iteration
     void *prev = malloc(PAGE_SIZE);
-    std::cout << space << "{\"keys\": [";
+    std::cout  << "{\"keys\": [";
 
     for (int i = 0; i < slotNum; i++)
     {
@@ -1708,9 +1702,13 @@ void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::s
         else
         {
             printLeafKey(prev, attribute);
+            int index = 0;
             for (auto item : ridVec)
             {
-                std::cout << "(" << item.pageNum << "," << item.slotNum << "), ";
+                std::cout << "(" << item.pageNum << "," << item.slotNum << ")";
+                if (index != ridVec.size() - 1)
+                    std::cout << ", ";
+                index++;
             }
             std::cout << "]\",";
             ridVec.clear();
@@ -1722,9 +1720,14 @@ void IndexManager::printLeafNodes(void *page, const Attribute &attribute, std::s
         }
     }
     printLeafKey(key, attribute);
+    int kk = 0;
     for (auto item : ridVec)
     {
-        std::cout << "(" << item.pageNum << "," << item.slotNum << "), ";
+        std::cout << "(" << item.pageNum << "," << item.slotNum << ")";
+        if (kk != ridVec.size() - 1) {
+            std::cout << ", ";
+        }
+        kk++;
     }
     std::cout << "]\",";
     std::cout << "]}," << std::endl;
