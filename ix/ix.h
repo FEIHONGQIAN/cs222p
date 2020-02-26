@@ -147,6 +147,8 @@ public:
 
     void printLeafKey(const void *page, const Attribute &attribute) const;
 
+    void printNonLeafKey(const void *page, const Attribute &attribute) const;
+
     void printBtree_rec(IXFileHandle &ixfileHandle, std::string &space, int pageNum, const Attribute &attr) const;
 
     void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute, std::string &space) const;

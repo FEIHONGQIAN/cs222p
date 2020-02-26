@@ -361,14 +361,15 @@ RC IndexManager::splitNonLeafNodes(IXFileHandle &ixFileHandle, void *page, const
 
     int val = compare(page, attribute, key, mid, true);
 
-    int offset = (mid + 1) * 2 * sizeof(int);
-    int childpage = *(int *)((char *)page + offset);
+    // int offset = (mid + 1) * 2 * sizeof(int);
+    // int childpage = *(int *)((char *)page + offset);
+    //  git *(int *)((char *)newPage) = childpage;
+
     //move mid + 1 nodes to new page
     moveNodesToNewPageInNonLeafNodes(page, newPage, mid + 1, attribute, ixFileHandle, pageNumber, newPageId);
 
     //update new page's left most pointer
 
-    *(int *)((char *)newPage) = childpage;
     // ixFileHandle.
     rc = ixFileHandle.fileHandle.writePage(newPageId, newPage);
     if (rc == fail) {
@@ -744,6 +745,10 @@ RC IndexManager::moveNodesToNewPageInNonLeafNodes(void *ori, void *des, int star
         insertIntoNonLeafNodes(ixFileHandle, attribute, dummyEntry, ori, ori_pageId);
     }
 
+    //     int offset = start_pos * 2 * sizeof(int);
+    // int childpage = *(int *)((char *)tempPage + offset);
+    //     *(int *)((char *)newPage) = childpage;
+    memcpy(des, (char *)tempPage + start_pos * 2 * sizeof(int), sizeof(int));
     for (int i = start_pos; i < slotNum; i++)
     {
         //getKey
@@ -1589,6 +1594,33 @@ void IndexManager::printLeafKey(const void *page, const Attribute &attribute) co
     return;
 }
 
+void IndexManager::printNonLeafKey(const void *page, const Attribute &attribute) const {
+    std::cout << "\"";
+    if (attribute.type == TypeInt)
+    {
+        int keyVal = -1;
+        memcpy(&keyVal, page, sizeof(int));
+        std::cout << keyVal << "\"";
+    }
+    else if (attribute.type == TypeReal)
+    {
+        float keyVal = -1.0;
+        memcpy(&keyVal, page, sizeof(float));
+        std::cout << keyVal << "\"";
+    }
+    else
+    {
+        int keyLen = -1;
+        memcpy(&keyLen, page, sizeof(int));
+        std::string keyVal = "";
+        for (int i = 0; i < keyLen; i++)
+        {
+            keyVal += *((char *)page + sizeof(int) + i);
+        }
+        std::cout << keyVal << "\"";
+    }
+    return;
+}
 void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attribute, std::string &space) const {
     int slotNum = getSlotNum(page);
     if(slotNum == 0) {
@@ -1602,7 +1634,7 @@ void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attri
     for (int i = 0; i < slotNum; i++)
     {
         getKey(page, key, i, attribute, true, len);
-        printLeafKey(key, attribute);
+        printNonLeafKey(key, attribute);
         std::cout << "\",";
     }
     std::cout << "]," << std::endl;
