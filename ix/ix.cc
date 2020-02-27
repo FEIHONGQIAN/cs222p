@@ -1519,6 +1519,7 @@ RC IX_ScanIterator::findStartPointForScan(void * page, int &pageNum)
     {
         return fail;
     }
+    ixF->fileHandle.readPageCounter--;
     // unsigned int a = 0, b = 0, c = 0;
     // ixF->fileHandle.collectCounterValues(a, b, c);
 
@@ -1642,7 +1643,7 @@ void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attri
     {
         getKey(page, key, i, attribute, true, len);
         printNonLeafKey(key, attribute);
-       std::cout << "\",";
+    //    std::cout << "\",";
     }
     std::cout << "]," << std::endl;
     free(key);
