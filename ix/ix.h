@@ -179,38 +179,24 @@ public:
 
     friend class IndexManager;
     IXFileHandle *ixF;
-//    IXFileHandle tempFileHandle;
     Attribute attribute;
     void *lowKey;
 
     void *newPage;
-    // int lowKeyInt;
-    // float lowKeyFloat;
-    // std::string lowKeyString;
-    // int lowKeyLen;
-
-    // int highKeyInt;
-    // float highKeyFloat;
-    // std::string highKeyString;
-    // int highKeyLen;
-
     void *highKey;
     bool highKeyExists = false;
     bool lowKeyInclusive;
     bool highKeyInclusive;
 
-//    void * first_key;
     RID first_rid;
     int first_pageNum = -1;
     int prev_pageNum = -1;
     int first_keyIndex = -1;
-//    bool found_firstKey = false;
 
     IndexManager *im;
 
-    RC findStartPointForScan(void * page, int &pageNum);
-    RC findFirstKey(void * page, RID &rid, void *key, int &pageNum);
-//    void findLeafNodes(IXFileHandle ixFileHandle, void *page, const void *lowKey, bool lowKeyInclusive);
+    RC findStartPointForScan(void *page, int &pageNum);
+    RC findFirstKey(void *page, RID &rid, void *key, int &pageNum);
 
     // Get next matching entry
     RC getNextEntry(RID &rid, void *key);
@@ -218,7 +204,5 @@ public:
     // Terminate index scan
     RC close();
 };
-
-
 
 #endif
