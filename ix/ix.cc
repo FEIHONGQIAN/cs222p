@@ -157,7 +157,7 @@ RC IndexManager::insertEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
 
     int root_page_num = *(int *)((char *)page);
 
-    rc = insert(ixFileHandle, attribute, key, rid, newchildentry, root_page_num);
+    rc = insert(ixFileHandle, attribute, key, rid, newchildentry, root_page_num, true);
 
     if (rc == fail)
     {
@@ -172,11 +172,11 @@ RC IndexManager::insertEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
     return success;
 }
 
-RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newchildentry, int page_id)
+RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newchildentry, int page_id, bool isRoot)
 {
     void *page = malloc(PAGE_SIZE);
     int rc = ixFileHandle.fileHandle.readPage(page_id, page);
-    if (getSlotNum(page) == 0) {
+    if (isRoot) {
         ixFileHandle.fileHandle.readPageCounter--;
     }
     if (rc == fail)

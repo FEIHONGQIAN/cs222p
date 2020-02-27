@@ -80,7 +80,7 @@ public:
     RC insertEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
 
     //recurively insert, used in insertEntry
-    RC insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newchildentry, int page_id);
+    RC insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newchildentry, int page_id, bool isRoot = false);
 
     //choose subtree
     RC getSubtree(const void *page, const Attribute &attribute, const void *key);
