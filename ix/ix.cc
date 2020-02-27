@@ -1806,7 +1806,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 
         if(rc == fail){
             first_pageNum = -1;
-            free(newPage);
+//            free(newPage);
             return success;
         }
         while(im -> getSlotNum(newPage) == 0){
