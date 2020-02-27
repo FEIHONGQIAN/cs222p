@@ -176,7 +176,7 @@ RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, 
 {
     void *page = malloc(PAGE_SIZE);
     int rc = ixFileHandle.fileHandle.readPage(page_id, page);
-    if (isRoot) {
+    if (isRoot && getSlotNum(page) == 0) {
         ixFileHandle.fileHandle.readPageCounter--;
     }
     if (rc == fail)
@@ -1394,6 +1394,8 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
     }else{ //存在low key
         void *page = malloc(PAGE_SIZE);
         int rc = ixFileHandle.fileHandle.readPage(0, page);
+        std::cout << "bbb" << ixFileHandle.fileHandle.readPageCounter <<  std::endl;
+
         if (rc == fail)
         {
             free(page);
@@ -1403,6 +1405,8 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         memset(page, 0, PAGE_SIZE);
 
         rc = ixFileHandle.fileHandle.readPage(root_page_id, page);
+        std::cout << "aaa" << ixFileHandle.fileHandle.readPageCounter <<  std::endl;
+
 
         if (rc == fail)
         {
@@ -1418,6 +1422,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 
             memset(page, 0, PAGE_SIZE);
             rc = ixFileHandle.fileHandle.readPage(child_page_id, page);
+            std::cout << "hahahaa" << ixFileHandle.fileHandle.readPageCounter <<  std::endl;
             if (rc == fail)
             {
                 free(page);
@@ -1550,15 +1555,11 @@ void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attri
     std::cout << std::endl;
 }
 void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, int pageNum, const Attribute &attribute, bool isRoot) const {
-    //allocate a page space for the read of currentpage.
     void *pageData = malloc(PAGE_SIZE);
     ixFileHandle.fileHandle.readPage(pageNum, pageData);
     if(isRoot) {
         ixFileHandle.ixReadPageCounter--;
     }
-
-
-    // int nodeType = *(int *)((char *)pageData + PAGE_SIZE - 1 * sizeof(int));
 
     int nodeType = getNodeType(pageData);
     if (nodeType == LeafNodeType)
@@ -1643,35 +1644,26 @@ void IndexManager::printNonLeafNodesKey(const void *page, const Attribute &attri
     {
         getKey(page, key, i, attribute, true, len);
         printNonLeafKey(key, attribute);
-    //    std::cout << "\",";
     }
     std::cout << "]," << std::endl;
     free(key);
     return;
 }
 void IndexManager::printNonLeafNodesChild(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute) const {
-    //get the internal header to know the information including number of entries, free space offset and left child page number.
-    //    NoLeafIndexHeader header = getInternalHeader(pageData);
-    //    int leftMostPage = -1;
-    //    memcpy(&leftMostPage, page, sizeof(int));
     int leftMostPage = getLeftMostChildOfNonLeafNode(page);
     int slotNum = getSlotNum(page);
-    //print the first left child page by calling the header.leftChildPage.
     if (slotNum != 0) {
         std::cout << "\"children\":[" << std::endl;
     }
 
     printBtree_rec(ixFileHandle, leftMostPage, attribute );
-       // std::cout << ",";
 
-    //use loop and recursion to print all the other childPages by calling the printBtree_rec and traversing the index entry.
     for (int i = 0; i < slotNum; i++)
     {
 
         int nextLevelPageNum = -1;
         memcpy(&nextLevelPageNum, (char *)page + (i + 1) * 2 * sizeof(int), sizeof(int));
         printBtree_rec(ixFileHandle, nextLevelPageNum, attribute);
-        //        cout << "}";
     }
     if (slotNum != 0) {
         std::cout  << "]" << std::endl;
@@ -1756,7 +1748,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 //    void *newPage = malloc(PAGE_SIZE);
     // std::cout << "the counter is: " << ixF->fileHandle.readPageCounter << std::endl;
     int rc;
-    if (prev_pageNum == -1 || prev_pageNum != first_pageNum) {
+    if (prev_pageNum == -1 ||  prev_pageNum != first_pageNum) {
         rc = ixF->fileHandle.readPage(first_pageNum, newPage);
         prev_pageNum = first_pageNum;
         if(rc == fail){
