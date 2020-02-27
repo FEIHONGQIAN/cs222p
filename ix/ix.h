@@ -150,7 +150,7 @@ public:
 
     void printNonLeafKey(const void *page, const Attribute &attribute) const;
 
-    void printBtree_rec(IXFileHandle &ixfileHandle, int pageNum, const Attribute &attr) const;
+    void printBtree_rec(IXFileHandle &ixfileHandle, int pageNum, const Attribute &attr, bool isRoot = true) const;
 
     void printNonLeafNodes(IXFileHandle &ixFileHandle, const void *page, const Attribute &attribute) const;
 
