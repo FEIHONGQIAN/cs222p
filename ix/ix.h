@@ -44,6 +44,7 @@ class IndexManager
 public:
     static IndexManager &instance();
 
+    IX_ScanIterator *ixScan;
     // Create an index file.
     RC createFile(const std::string &fileName);
 
@@ -177,9 +178,12 @@ public:
     ~IX_ScanIterator();
 
     friend class IndexManager;
-    IXFileHandle ixF;
+    IXFileHandle *ixF;
+//    IXFileHandle tempFileHandle;
     Attribute attribute;
     void *lowKey;
+
+    void *newPage;
     // int lowKeyInt;
     // float lowKeyFloat;
     // std::string lowKeyString;
@@ -198,6 +202,7 @@ public:
 //    void * first_key;
     RID first_rid;
     int first_pageNum = -1;
+    int prev_pageNum = -1;
     int first_keyIndex = -1;
 //    bool found_firstKey = false;
 

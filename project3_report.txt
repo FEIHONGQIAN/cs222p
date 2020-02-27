@@ -1,37 +1,58 @@
 1. Basic information
-Team #:
-Github Repo Link:
-Student 1 UCI NetID:
-Student 1 Name:
-Student 2 UCI NetID (if applicable):
-Student 2 Name (if applicable):
+Team #: 6
+Github Repo Link: https://github.com/UCI-Chenli-teaching/cs222p-winter20-team-6
+Student 1 UCI NetID: songh9
+Student 1 Name: Han Song
+Student 2 UCI NetID (if applicable): feihongq
+Student 2 Name (if applicable): Feihong Qian
 
 
 2. Meta-data page in an index file
 - Show your meta-data page of an index design if you have any. 
+The Meta-data page store page number of the root page. Use INT to store this number.
 
 
 3. Index Entry Format
 - Show your index entry design (structure). 
+We use alternative 2 (Key/Rid).
+For TypeInt and TypeReal, each entry is composed of the int or real value followed by Rid, each entry takes 10 bytes.
+For TypeVarChar, entry is composed of two parts. The first part is varCharOffset + Rid (10 bytes). Here, varCharOffset is int type, it stores the pageOffset to get 
+the varChar. The second part is the length + the characters.
 
 
 4. Page Format
 - Show your internal-page (non-leaf node) design.
-
+non-leaf entry format:
+For TypeInt and TypeReal, each entry is composed of the int or real value (alias key) followed by ChildPageID pointed to next level page whose key is larger or equal to the key, each entry takes 8 bytes.
+For TypeVarChar, entry is composed of two parts. The first part is varCharOffset + ChildPageID pointed to next level whose key is larger or equal to the key. Here, varCharOffset is int type, it stores the pageOffset to get 
+the varChar. The second part is the length + the characters.
+4 bytes mostLeftChildPageID (INT, point to child Page when the searched key is less than all the records) + a list of non-leaf entry (8 bytes entry) + 4 bytes slotNumber (INT, how many slots in this page) + 4 bytes freeSpaceOffSetPointer (INT, used for TypeVarChar, Indicate the offset of the next 
+inserted record should end at) + 4 bytes nodeType (INT, 1 for non-leaf, 0 for leaf)
 - Show your leaf-page (leaf node) design.
+A list of index entry (10 bytes entry for TypeInt and TypeReal, more bytes for TypeVarChar) + 4 bytes Next leafPageID (INT) + 4 bytes slotNumber (INT, how many slots in this page) + 4 bytes freeSpaceOffSetPointer (INT, used for TypeVarChar, Indicate the offset of the next 
+inserted record should end at) + 4 bytes nodeType (INT, 1 for non-leaf, 0 for leaf)
 
 
 5. Implementation Detail
 - Have you added your own source file (.cc or .h)?
-
+No.
 - Have you implemented non-lazy deletion? Choose Yes or No: 
-
+No.
 - Have you implemented duplicated key handling that can span multiple pages? Choose Yes or No: 
+No.
   If yes, please explain briefly how you have implemented this feature.
 
 - Other implementation details:
-
+We followed the algorithm given by the textbook. The format of newChildEntry is as follows:
+4 bytes nullIndicator (0 for nonNULL, -1 for NULL) + 4 bytes childPageID (INT, page id for next level, come from the next downside level iteration, 
+if nullIndicator is NULL, ignored it) + record (the same as parameter key for insertEntry method, if nullIndicator is NULL, ignore)
 
 6. Other (optional)
 - Freely use this section to tell us about things that are related to the project 3, but not related to the other sections (optional)
+We followed the insertion algorithm given in textbook. Just briefly discussed split algorithm.
+For Leaf Nodes split, we used copied up way, move all entries following the mid to a new page, then insert the key to correct page (old one or new one) and then
+let the newChildEntry to be the middle one and passed it to upper recursive level.
+
+For Non Leaf Nodes split, we used popped up way, move all entries following the mid to a new page, then insert the key to correct page and pop the middle out 
+and assign newChildEntry to be the middle one.
 
