@@ -36,6 +36,7 @@ public:
     unsigned getNumberOfPages();
 
     FileHandle fileHandle;
+    IX_ScanIterator *ixScan;
 };
 
 class IndexManager
@@ -44,7 +45,9 @@ class IndexManager
 public:
     static IndexManager &instance();
 
-    IX_ScanIterator *ixScan;
+//    IX_ScanIterator *ixScan;
+
+    IXFileHandle *ixFF;
     // Create an index file.
     RC createFile(const std::string &fileName);
 
@@ -173,7 +176,7 @@ class IX_ScanIterator
 public:
     // Constructor
     IX_ScanIterator();
-
+    bool isOpen = false;
     // Destructor
     ~IX_ScanIterator();
 
@@ -192,6 +195,8 @@ public:
     int first_pageNum = -1;
     int prev_pageNum = -1;
     int first_keyIndex = -1;
+
+    bool isStop = false;
 
     IndexManager *im;
 

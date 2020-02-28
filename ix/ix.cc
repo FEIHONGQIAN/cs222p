@@ -1167,7 +1167,6 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
         free(page);
         return fail;
     }
-
     //delete this node
     void *tempPage = malloc(PAGE_SIZE);
     void *dummyEntry = malloc(PAGE_SIZE);            //null pointer indicator + child page + key
@@ -1204,7 +1203,20 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
     }
 
     ixFileHandle.writePage(child_page_id, page);
-
+//    scan(IXFileHandle &ixFileHandle,
+//    const Attribute &attribute,
+//    const void *lowKey,
+//    const void *highKey,
+//    bool lowKeyInclusive,
+//    bool highKeyInclusive,
+//    IX_ScanIterator &ix_ScanIterator)
+    if (ixFileHandle.ixScan->isOpen) {
+//        std::cout << "hahaha" << std::endl;
+        scan(ixFileHandle, ixFileHandle.ixScan->attribute, ixFileHandle.ixScan->lowKey, ixFileHandle.ixScan->highKey, ixFileHandle.ixScan->lowKeyInclusive, ixFileHandle.ixScan->highKeyInclusive, *(ixFileHandle.ixScan));
+//        scan(ixFileHandle, attribute, )
+    }
+//    printBtree(ixFileHandle, ixFileHandle.ixScan->attribute);
+//    printBtree(ixFileHandle, )
     free(insertKey);
     free(page);
     free(tempPage);
@@ -1220,95 +1232,107 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
                       bool highKeyInclusive,
                       IX_ScanIterator &ix_ScanIterator)
 {
+    ixFileHandle.ixScan = &(ix_ScanIterator);
     ix_ScanIterator.ixF = &(ixFileHandle);
-    ix_ScanIterator.attribute = attribute;
-    ix_ScanIterator.newPage = malloc(PAGE_SIZE);
-    //    ix_ScanIterator.lowKey = lowKey;
-    //    ix_ScanIterator.highKey = highKey;
-    ix_ScanIterator.lowKeyInclusive = lowKeyInclusive;
-    ix_ScanIterator.highKeyInclusive = highKeyInclusive;
-    // if (attribute.type == TypeInt) {
-    //     ix_ScanIterator.highKeyLen = 4;
-    //     int intVal = 0;
-    //     memcpy(&intVal, highKey, sizeof(int));
-    //     ix_ScanIterator.highKeyInt = intVal;
-    // }
-    // else if (attribute.type == TypeReal) {
-    //     float floatVal = 0.0;
-    //     memcpy(&floatVal, highKey, sizeof(float));
-    //     ix_ScanIterator.highKeyFloat = floatVal;
-    // }
-    // else {
-    //     std::string stringVal = "";
-    //     int stringLen = 0;
-    //     memcpy(&stringLen, highKey, sizeof(int));
-    //     for(int i = 0; i < stringLen; i++) {
-    //         stringVal += *((char *)highKey + sizeof(int) + i);
-    //     }
-    //     ix_ScanIterator.highKeyString = stringVal;
-    //     ix_ScanIterator.highKeyLen = stringLen;
-    // }
 
-    // int len_low_key = 0;
-    //
-    int len_low_key = 0;
-    int len_high_key = 0;
-    if (attribute.type == TypeInt || attribute.type == TypeReal)
-    {
-        len_high_key = sizeof(int);
-        len_low_key = sizeof(int);
-        if (lowKey == NULL)
+    if (!ix_ScanIterator.isOpen) {
+        ix_ScanIterator.isOpen = true;
+        ix_ScanIterator.attribute = attribute;
+        ix_ScanIterator.newPage = malloc(PAGE_SIZE);
+        //    ix_ScanIterator.lowKey = lowKey;
+        //    ix_ScanIterator.highKey = highKey;
+        ix_ScanIterator.lowKeyInclusive = lowKeyInclusive;
+        ix_ScanIterator.highKeyInclusive = highKeyInclusive;
+        // if (attribute.type == TypeInt) {
+        //     ix_ScanIterator.highKeyLen = 4;
+        //     int intVal = 0;
+        //     memcpy(&intVal, highKey, sizeof(int));
+        //     ix_ScanIterator.highKeyInt = intVal;
+        // }
+        // else if (attribute.type == TypeReal) {
+        //     float floatVal = 0.0;
+        //     memcpy(&floatVal, highKey, sizeof(float));
+        //     ix_ScanIterator.highKeyFloat = floatVal;
+        // }
+        // else {
+        //     std::string stringVal = "";
+        //     int stringLen = 0;
+        //     memcpy(&stringLen, highKey, sizeof(int));
+        //     for(int i = 0; i < stringLen; i++) {
+        //         stringVal += *((char *)highKey + sizeof(int) + i);
+        //     }
+        //     ix_ScanIterator.highKeyString = stringVal;
+        //     ix_ScanIterator.highKeyLen = stringLen;
+        // }
+
+        // int len_low_key = 0;
+        //
+        int len_low_key = 0;
+        int len_high_key = 0;
+        if (attribute.type == TypeInt || attribute.type == TypeReal)
         {
-            ix_ScanIterator.lowKey = NULL;
+            len_high_key = sizeof(int);
+            len_low_key = sizeof(int);
+            if (lowKey == NULL)
+            {
+                ix_ScanIterator.lowKey = NULL;
+            }
+            else
+            {
+                ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
+                memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
+            }
+
+            if (highKey == NULL)
+            {
+                ix_ScanIterator.highKey = NULL;
+            }
+            else
+            {
+                ix_ScanIterator.highKey = malloc(PAGE_SIZE);
+                memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
+            }
         }
         else
         {
-            ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
-            memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
-        }
+            if (lowKey == NULL)
+            {
+                ix_ScanIterator.lowKey = NULL;
+            }
+            else
+            {
+                len_low_key = sizeof(int) + *(int *)((char *)lowKey);
+                ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
+                memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
+            }
 
-        if (highKey == NULL)
-        {
-            ix_ScanIterator.highKey = NULL;
-        }
-        else
-        {
-            ix_ScanIterator.highKey = malloc(PAGE_SIZE);
-            memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
+            if (highKey == NULL)
+            {
+                ix_ScanIterator.highKey = NULL;
+            }
+            else
+            {
+                ix_ScanIterator.highKey = malloc(PAGE_SIZE);
+                len_high_key = sizeof(int) + *(int *)((char *)highKey);
+                memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
+            }
         }
     }
-    else
-    {
-        if (lowKey == NULL)
-        {
-            ix_ScanIterator.lowKey = NULL;
-        }
-        else
-        {
-            len_low_key = sizeof(int) + *(int *)((char *)lowKey);
-            ix_ScanIterator.lowKey = malloc(PAGE_SIZE);
-            memcpy(ix_ScanIterator.lowKey, lowKey, len_low_key);
-        }
 
-        if (highKey == NULL)
-        {
-            ix_ScanIterator.highKey = NULL;
-        }
-        else
-        {
-            ix_ScanIterator.highKey = malloc(PAGE_SIZE);
-            len_high_key = sizeof(int) + *(int *)((char *)highKey);
-            memcpy(ix_ScanIterator.highKey, highKey, len_high_key);
-        }
+    if (ix_ScanIterator.isStop) {
+
+        return success;
     }
 
-    if (ix_ScanIterator.lowKey == NULL)
+
+    if (lowKey == nullptr)
     {
         void *page = malloc(PAGE_SIZE);
         int pageNum = -1;
         int rc = ix_ScanIterator.findStartPointForScan(page, pageNum);
         if (rc == fail)
         {
+//            ix_ScanIterator.isStop = true;
             free(page);
             return fail;
         }
@@ -1319,6 +1343,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 
         if (rc == fail)
         {
+//            ix_ScanIterator.isStop = true;
             free(page);
             free(key);
             return fail;
@@ -1338,6 +1363,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 
         if (rc == fail)
         {
+//            ix_ScanIterator.isStop = true;
             free(page);
             return fail;
         }
@@ -1362,6 +1388,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
             rc = ixFileHandle.fileHandle.readPage(child_page_id, page);
             if (rc == fail)
             {
+//                ix_ScanIterator.isStop = true;
                 free(page);
                 return fail;
             }
@@ -1393,6 +1420,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         {
             free(page);
             // std::cout << "cannot find key in leaf nodes" << std::endl;
+//            ix_ScanIterator.isStop = true;
             return fail;
         }
 
@@ -1708,10 +1736,16 @@ IX_ScanIterator::~IX_ScanIterator()
 
 RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 {
+//    if (isStop) {
+//        return IX_EOF;
+//    }
+    // if (first_pageNum == -2) {
+    //     return IX_EOF;
+    // }
     //    void *newPage = malloc(PAGE_SIZE);
     // std::cout << "the counter is: " << ixF->fileHandle.readPageCounter << std::endl;
     int rc;
-    if (prev_pageNum == -1 || prev_pageNum != first_pageNum)
+    if ((prev_pageNum == -1 || prev_pageNum != first_pageNum) || isOpen)
     {
         rc = ixF->fileHandle.readPage(first_pageNum, newPage);
         prev_pageNum = first_pageNum;
@@ -1772,7 +1806,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 
         if (rc == fail)
         {
-            first_pageNum = -1;
+            first_pageNum = -2;
             //            free(newPage);
             return success;
         }
@@ -1780,14 +1814,14 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         {
             memset(newPage, 0, PAGE_SIZE);
             nextPage = im->getNextPageForLeafNode(newPage);
-            //            rc = ixF->fileHandle.readPage(nextPage, newPage);
+            rc = ixF->fileHandle.readPage(nextPage, newPage);
             ixF->fileHandle.readPageCounter--;
 
             //            ixF.fileHandle.readPageCounter++;
 
             if (rc == fail)
             {
-                first_pageNum = -1;
+                first_pageNum = -2;
                 free(newPage);
                 return success;
             }
@@ -1812,7 +1846,8 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
     {
         if (im->compare(newPage, attribute, highKey, first_keyIndex, false) < 0)
         {
-            first_pageNum = -1;
+            first_pageNum = -2;
+            isStop = true;
             // free(newPage);
             return success;
         }
@@ -1821,7 +1856,8 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
     {
         if (im->compare(newPage, attribute, highKey, first_keyIndex, false) <= 0)
         {
-            first_pageNum = -1;
+            first_pageNum = -2;
+            isStop = true;
             // free(newPage);
             return success;
         }
@@ -1834,6 +1870,8 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 RC IX_ScanIterator::close()
 {
     //    return -1;
+   isStop = false;
+    isOpen = false;
     free(newPage);
     free(highKey);
     free(lowKey);
