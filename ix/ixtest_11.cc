@@ -36,7 +36,11 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     for (unsigned i = 0; i <= numOfTuples; i++) {
         key = i;
         rid.pageNum = key + 1;
+<<<<<<< HEAD
         rid.slotNum = key + 2;
+=======
+        rid.slotNum = (key + 2) % (SHRT_MAX);
+>>>>>>> origin/finished-project3
 
         rc = indexManager.insertEntry(ixFileHandle, attribute, &key, rid);
         assert(rc == success && "indexManager::insertEntry() should not fail.");
@@ -53,10 +57,17 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     // Iterate
     std::cout << std::endl;
     while (ix_ScanIterator.getNextEntry(rid, &key) == success) {
+<<<<<<< HEAD
         if (rid.pageNum != key + 1 || rid.slotNum != key + 2) {
             std::cout << "Wrong entries output... The test failed." << std::endl;
             rc = ix_ScanIterator.close();
             rc = indexManager.closeFile(ixFileHandle);
+=======
+        if (rid.pageNum != key + 1 || rid.slotNum != (key + 2) % (SHRT_MAX)) {
+            std::cout << "Wrong entries output... The test failed." << std::endl;
+            ix_ScanIterator.close();
+            indexManager.closeFile(ixFileHandle);
+>>>>>>> origin/finished-project3
             return fail;
         }
         outRecordNum += 1;
@@ -68,8 +79,13 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     // Inconsistency?
     if (inRecordNum != outRecordNum || inRecordNum == 0 || outRecordNum == 0) {
         std::cout << "Wrong entries output... The test failed." << std::endl;
+<<<<<<< HEAD
         rc = ix_ScanIterator.close();
         rc = indexManager.closeFile(ixFileHandle);
+=======
+        ix_ScanIterator.close();
+        indexManager.closeFile(ixFileHandle);
+>>>>>>> origin/finished-project3
         return fail;
     }
 
@@ -79,7 +95,11 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     for (unsigned i = 5; i <= numOfTuples; i += 10) {
         key = i;
         rid.pageNum = key + 1;
+<<<<<<< HEAD
         rid.slotNum = key + 2;
+=======
+        rid.slotNum = (key + 2) % (SHRT_MAX);
+>>>>>>> origin/finished-project3
 
         rc = indexManager.deleteEntry(ixFileHandle, attribute, &key, rid);
         assert(rc == success && "indexManager::deleteEntry() should not fail.");
@@ -101,10 +121,17 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     // Iterate
     outRecordNum = 0;
     while (ix_ScanIterator.getNextEntry(rid, &key) == success) {
+<<<<<<< HEAD
         if (rid.pageNum != key + 1 || rid.slotNum != key + 2) {
             std::cout << "Wrong entries output... The test failed." << std::endl;
             rc = ix_ScanIterator.close();
             rc = indexManager.closeFile(ixFileHandle);
+=======
+        if (rid.pageNum != key + 1 || rid.slotNum != (key + 2) % (SHRT_MAX)) {
+            std::cout << "Wrong entries output... The test failed." << std::endl;
+            ix_ScanIterator.close();
+            indexManager.closeFile(ixFileHandle);
+>>>>>>> origin/finished-project3
             return fail;
         }
         outRecordNum += 1;
@@ -119,8 +146,13 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     if ((inRecordNum - deletedRecordNum) != outRecordNum || inRecordNum == 0 || deletedRecordNum == 0 ||
         outRecordNum == 0) {
         std::cout << "Wrong entries output... The test failed." << std::endl;
+<<<<<<< HEAD
         rc = ix_ScanIterator.close();
         rc = indexManager.closeFile(ixFileHandle);
+=======
+        ix_ScanIterator.close();
+        indexManager.closeFile(ixFileHandle);
+>>>>>>> origin/finished-project3
         return fail;
     }
 
@@ -130,7 +162,11 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     for (unsigned i = 5; i <= numOfTuples; i += 10) {
         key = i;
         rid.pageNum = key + 1;
+<<<<<<< HEAD
         rid.slotNum = key + 2;
+=======
+        rid.slotNum = (key + 2) % (SHRT_MAX);
+>>>>>>> origin/finished-project3
 
         rc = indexManager.insertEntry(ixFileHandle, attribute, &key, rid);
         assert(rc == success && "indexManager::insertEntry() should not fail.");
@@ -152,10 +188,17 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     std::cout << std::endl;
     outRecordNum = 0;
     while (ix_ScanIterator.getNextEntry(rid, &key) == success) {
+<<<<<<< HEAD
         if (rid.pageNum != key + 1 || rid.slotNum != key + 2) {
             std::cout << "Wrong entries output... The test failed." << std::endl;
             rc = ix_ScanIterator.close();
             rc = indexManager.closeFile(ixFileHandle);
+=======
+        if (rid.pageNum != key + 1 || rid.slotNum != (key + 2) % (SHRT_MAX)) {
+            std::cout << "Wrong entries output... The test failed." << std::endl;
+            ix_ScanIterator.close();
+            indexManager.closeFile(ixFileHandle);
+>>>>>>> origin/finished-project3
             return fail;
         }
         outRecordNum += 1;
@@ -170,9 +213,15 @@ int testCase_11(const std::string &indexFileName, const Attribute &attribute) {
     if ((inRecordNum - deletedRecordNum + reInsertedRecordNum) != outRecordNum || inRecordNum == 0
         || reInsertedRecordNum == 0 || outRecordNum == 0) {
         std::cout << "Wrong entries output... The test failed." << std::endl;
+<<<<<<< HEAD
         rc = ix_ScanIterator.close();
         rc = indexManager.closeFile(ixFileHandle);
         rc = indexManager.destroyFile(indexFileName);
+=======
+        ix_ScanIterator.close();
+        indexManager.closeFile(ixFileHandle);
+        indexManager.destroyFile(indexFileName);
+>>>>>>> origin/finished-project3
         return fail;
     }
 
@@ -209,4 +258,7 @@ int main() {
         return fail;
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/finished-project3
