@@ -1421,7 +1421,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
             free(page);
             // std::cout << "cannot find key in leaf nodes" << std::endl;
 //            ix_ScanIterator.isStop = true;
-            return fail;
+            return success;
         }
 
         int len = 0;
