@@ -1210,7 +1210,7 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
 //    bool lowKeyInclusive,
 //    bool highKeyInclusive,
 //    IX_ScanIterator &ix_ScanIterator)
-    if (ixFileHandle.ixScan->isOpen) {
+    if ( ixFileHandle.ixScan != NULL && ixFileHandle.ixScan->isOpen) {
 //        std::cout << "hahaha" << std::endl;
         scan(ixFileHandle, ixFileHandle.ixScan->attribute, ixFileHandle.ixScan->lowKey, ixFileHandle.ixScan->highKey, ixFileHandle.ixScan->lowKeyInclusive, ixFileHandle.ixScan->highKeyInclusive, *(ixFileHandle.ixScan));
 //        scan(ixFileHandle, attribute, )

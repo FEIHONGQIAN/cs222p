@@ -36,7 +36,7 @@ public:
     unsigned getNumberOfPages();
 
     FileHandle fileHandle;
-    IX_ScanIterator *ixScan;
+    IX_ScanIterator *ixScan = NULL;
 };
 
 class IndexManager
