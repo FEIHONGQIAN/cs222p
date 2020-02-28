@@ -1161,7 +1161,6 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
             }
         }
     }
-
     if (target == slotNum)
     {
         free(page);
@@ -1203,20 +1202,9 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
     }
 
     ixFileHandle.writePage(child_page_id, page);
-//    scan(IXFileHandle &ixFileHandle,
-//    const Attribute &attribute,
-//    const void *lowKey,
-//    const void *highKey,
-//    bool lowKeyInclusive,
-//    bool highKeyInclusive,
-//    IX_ScanIterator &ix_ScanIterator)
     if ( ixFileHandle.ixScan != NULL && ixFileHandle.ixScan->isOpen) {
-//        std::cout << "hahaha" << std::endl;
         scan(ixFileHandle, ixFileHandle.ixScan->attribute, ixFileHandle.ixScan->lowKey, ixFileHandle.ixScan->highKey, ixFileHandle.ixScan->lowKeyInclusive, ixFileHandle.ixScan->highKeyInclusive, *(ixFileHandle.ixScan));
-//        scan(ixFileHandle, attribute, )
     }
-//    printBtree(ixFileHandle, ixFileHandle.ixScan->attribute);
-//    printBtree(ixFileHandle, )
     free(insertKey);
     free(page);
     free(tempPage);
@@ -1239,34 +1227,9 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         ix_ScanIterator.isOpen = true;
         ix_ScanIterator.attribute = attribute;
         ix_ScanIterator.newPage = malloc(PAGE_SIZE);
-        //    ix_ScanIterator.lowKey = lowKey;
-        //    ix_ScanIterator.highKey = highKey;
         ix_ScanIterator.lowKeyInclusive = lowKeyInclusive;
         ix_ScanIterator.highKeyInclusive = highKeyInclusive;
-        // if (attribute.type == TypeInt) {
-        //     ix_ScanIterator.highKeyLen = 4;
-        //     int intVal = 0;
-        //     memcpy(&intVal, highKey, sizeof(int));
-        //     ix_ScanIterator.highKeyInt = intVal;
-        // }
-        // else if (attribute.type == TypeReal) {
-        //     float floatVal = 0.0;
-        //     memcpy(&floatVal, highKey, sizeof(float));
-        //     ix_ScanIterator.highKeyFloat = floatVal;
-        // }
-        // else {
-        //     std::string stringVal = "";
-        //     int stringLen = 0;
-        //     memcpy(&stringLen, highKey, sizeof(int));
-        //     for(int i = 0; i < stringLen; i++) {
-        //         stringVal += *((char *)highKey + sizeof(int) + i);
-        //     }
-        //     ix_ScanIterator.highKeyString = stringVal;
-        //     ix_ScanIterator.highKeyLen = stringLen;
-        // }
 
-        // int len_low_key = 0;
-        //
         int len_low_key = 0;
         int len_high_key = 0;
         if (attribute.type == TypeInt || attribute.type == TypeReal)
@@ -1343,7 +1306,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 
         if (rc == fail)
         {
-//            ix_ScanIterator.isStop = true;
             free(page);
             free(key);
             return fail;
@@ -1352,9 +1314,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         ix_ScanIterator.first_rid.pageNum = rid.pageNum;
         ix_ScanIterator.first_pageNum = pageNum;
         ix_ScanIterator.first_keyIndex = 0;
-        //
-        //        // printf("after scan");
-        //        // std::cout << *(float *)((char *) key) << std::endl;
     }
     else
     { //存在low key
@@ -1363,7 +1322,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
 
         if (rc == fail)
         {
-//            ix_ScanIterator.isStop = true;
             free(page);
             return fail;
         }
@@ -1388,7 +1346,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
             rc = ixFileHandle.fileHandle.readPage(child_page_id, page);
             if (rc == fail)
             {
-//                ix_ScanIterator.isStop = true;
                 free(page);
                 return fail;
             }
@@ -1419,8 +1376,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         if (target == slotNum)
         {
             free(page);
-            // std::cout << "cannot find key in leaf nodes" << std::endl;
-//            ix_ScanIterator.isStop = true;
             return success;
         }
 
@@ -1430,7 +1385,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         ix_ScanIterator.first_keyIndex = target;
     }
 
-    //    ixFileHandle = *(ix_ScanIterator.ixF);
     return success;
 }
 RC IX_ScanIterator::findFirstKey(void *page, RID &rid, void *key, int &pageNum)
@@ -1442,7 +1396,6 @@ RC IX_ScanIterator::findFirstKey(void *page, RID &rid, void *key, int &pageNum)
         memset(page, 0, PAGE_SIZE);
         if (newPageId == -1)
         {
-            // std::cout << "cannot find first key" << std::endl;
             return fail;
         }
 
@@ -1470,7 +1423,6 @@ RC IX_ScanIterator::findFirstKey(void *page, RID &rid, void *key, int &pageNum)
 
         if (newPageId == -1)
         {
-            // std::cout << "cannot find first key" << std::endl;
             return fail;
         }
         else
@@ -1514,7 +1466,6 @@ RC IX_ScanIterator::findStartPointForScan(void *page, int &pageNum)
         child_page_id = *(int *)((char *)page);
         if (child_page_id < 0)
         {
-            // std::cout << "cannot find left most leaf page" << std::endl;
             return fail;
         }
         memset(page, 0, PAGE_SIZE);
@@ -1736,14 +1687,6 @@ IX_ScanIterator::~IX_ScanIterator()
 
 RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 {
-//    if (isStop) {
-//        return IX_EOF;
-//    }
-    // if (first_pageNum == -2) {
-    //     return IX_EOF;
-    // }
-    //    void *newPage = malloc(PAGE_SIZE);
-    // std::cout << "the counter is: " << ixF->fileHandle.readPageCounter << std::endl;
     int rc;
     if ((prev_pageNum == -1 || prev_pageNum != first_pageNum) || isOpen)
     {
@@ -1751,36 +1694,9 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         prev_pageNum = first_pageNum;
         if (rc == fail)
         {
-            //            free(newPage);
             return fail;
         }
     }
-
-    //    if (prev_pageNum == -1) {
-    //        rc = ixF->fileHandle.readPage(first_pageNum, newPage);
-    //        prev_pageNum = first_pageNum;
-    //        if(rc == fail){
-    ////            free(newPage);
-    //            return fail;
-    //        }
-    //    }
-
-    //    auto *highKey = malloc(PAGE_SIZE);
-    //    if (attribute.type == TypeInt) {
-    //        int intHighKey = highKeyInt;
-    //        memcpy(highKey, &intHighKey, sizeof(int));
-    //    }
-    //    else if(attribute.type == TypeReal) {
-    //        float floatHighKey = highKeyFloat;
-    //        memcpy(highKey, &floatHighKey, sizeof(float));
-    //    }
-    //    else {
-    //        int stringHighKeyLen = highKeyLen;
-    //        memcpy(highKey, &stringHighKeyLen, sizeof(int));
-    //        for(int i = 0; i < stringHighKeyLen; i++) {
-    //            memcpy(((char *)highKey + sizeof(int) + i), &highKeyString[i], 1);
-    //        }
-    //    }
 
     rid.pageNum = first_rid.pageNum;
     rid.slotNum = first_rid.slotNum;
@@ -1799,33 +1715,38 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
     if (first_keyIndex == slotNum - 1)
     {
         int nextPage = im->getNextPageForLeafNode(newPage);
-        rc = ixF->fileHandle.readPage(nextPage, newPage);
         prev_pageNum++;
-        //        ixF.fileHandle.readPageCounter++;
-        //        // std::cout << "ixF counter" << ixF->fileHandle.readPageCounter << std::endl;
-
-        if (rc == fail)
-        {
+        if(nextPage == -1){
             first_pageNum = -2;
-            //            free(newPage);
             return success;
         }
-        while (im->getSlotNum(newPage) == 0)
-        {
-            memset(newPage, 0, PAGE_SIZE);
-            nextPage = im->getNextPageForLeafNode(newPage);
-            rc = ixF->fileHandle.readPage(nextPage, newPage);
-            ixF->fileHandle.readPageCounter--;
-
-            //            ixF.fileHandle.readPageCounter++;
-
-            if (rc == fail)
-            {
-                first_pageNum = -2;
-                free(newPage);
-                return success;
-            }
-        }
+//        rc = ixF->fileHandle.readPage(nextPage, newPage);
+//        prev_pageNum++;
+//        //        ixF.fileHandle.readPageCounter++;
+//        //        // std::cout << "ixF counter" << ixF->fileHandle.readPageCounter << std::endl;
+//
+//        if (rc == fail)
+//        {
+//            first_pageNum = -2;
+//            //            free(newPage);
+//            return success;
+//        }
+//        while (im->getSlotNum(newPage) == 0)
+//        {
+//            memset(newPage, 0, PAGE_SIZE);
+//            nextPage = im->getNextPageForLeafNode(newPage);
+//            rc = ixF->fileHandle.readPage(nextPage, newPage);
+//            ixF->fileHandle.readPageCounter--;
+//
+//            //            ixF.fileHandle.readPageCounter++;
+//
+//            if (rc == fail)
+//            {
+//                first_pageNum = -2;
+//                free(newPage);
+//                return success;
+//            }
+//        }
 
         first_keyIndex = 0;
         first_pageNum = nextPage;
@@ -1837,7 +1758,6 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 
     if (highKey == NULL)
     {
-        // free(newPage);
         return success;
     }
     //highKey != null
@@ -1858,12 +1778,10 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         {
             first_pageNum = -2;
             isStop = true;
-            // free(newPage);
             return success;
         }
     }
 
-    // free(newPage);
     return success;
 }
 
