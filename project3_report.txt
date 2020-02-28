@@ -56,3 +56,6 @@ let the newChildEntry to be the middle one and passed it to upper recursive leve
 For Non Leaf Nodes split, we used popped up way, move all entries following the mid to a new page, then insert the key to correct page and pop the middle out 
 and assign newChildEntry to be the middle one.
 
+As for the shape of B-tree, we basically select the mid one as the one to be popped or copied. If there are some duplicates for the one we choose, we check 
+from mid to right and check from mid to left and try to split evenly.
+
