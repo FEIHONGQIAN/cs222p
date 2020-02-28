@@ -43,7 +43,7 @@ RC IndexManager::initialize(const std::string &fileName)
     rc = ixFileHandle.fileHandle.appendPage(metapage);
     if (rc == fail)
     {
-        rbfm->closeFile(ixFileHandle.fileHandle);
+        //rbfm->closeFile(ixFileHandle.fileHandle);
         free(metapage);
         return fail;
     }
@@ -58,7 +58,7 @@ RC IndexManager::initialize(const std::string &fileName)
     rc = ixFileHandle.fileHandle.appendPage(metapage);                                      //append first
     if (rc == fail)
     {
-        rbfm->closeFile(ixFileHandle.fileHandle);
+        //rbfm->closeFile(ixFileHandle.fileHandle);
         free(metapage);
         return fail;
     }
@@ -70,12 +70,12 @@ RC IndexManager::initialize(const std::string &fileName)
     if (rc == fail)
     {
         free(metapage);
-        rbfm->closeFile(ixFileHandle.fileHandle);
+        //rbfm->closeFile(ixFileHandle.fileHandle);
         return fail;
     }
 
     free(metapage);
-    rbfm->closeFile(ixFileHandle.fileHandle);
+    //rbfm->closeFile(ixFileHandle.fileHandle);
     return success;
 }
 
@@ -1688,7 +1688,7 @@ IX_ScanIterator::~IX_ScanIterator()
 RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 {
     int rc;
-    if ((prev_pageNum == -1 || prev_pageNum != first_pageNum) || isOpen)
+    if ((prev_pageNum == -1 || prev_pageNum != first_pageNum) || isOpen || first_keyIndex == 0)
     {
         rc = ixF->fileHandle.readPage(first_pageNum, newPage);
         prev_pageNum = first_pageNum;
@@ -1697,6 +1697,29 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
             return fail;
         }
     }
+    if (highKey != NULL)
+    {
+        if (highKeyInclusive)
+        {
+            if (im->compare(newPage, attribute, highKey, first_keyIndex, false) < 0)
+            {
+                first_pageNum = -2;
+                isStop = true;
+                // free(newPage);
+                return fail;
+            }
+        }
+        else
+        {
+            if (im->compare(newPage, attribute, highKey, first_keyIndex, false) <= 0)
+            {
+                first_pageNum = -2;
+                isStop = true;
+                return fail;
+            }
+        }
+    }
+
 
     rid.pageNum = first_rid.pageNum;
     rid.slotNum = first_rid.slotNum;
@@ -1716,38 +1739,6 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
     {
         int nextPage = im->getNextPageForLeafNode(newPage);
         prev_pageNum++;
-        if(nextPage == -1){
-            first_pageNum = -2;
-            return success;
-        }
-//        rc = ixF->fileHandle.readPage(nextPage, newPage);
-//        prev_pageNum++;
-//        //        ixF.fileHandle.readPageCounter++;
-//        //        // std::cout << "ixF counter" << ixF->fileHandle.readPageCounter << std::endl;
-//
-//        if (rc == fail)
-//        {
-//            first_pageNum = -2;
-//            //            free(newPage);
-//            return success;
-//        }
-//        while (im->getSlotNum(newPage) == 0)
-//        {
-//            memset(newPage, 0, PAGE_SIZE);
-//            nextPage = im->getNextPageForLeafNode(newPage);
-//            rc = ixF->fileHandle.readPage(nextPage, newPage);
-//            ixF->fileHandle.readPageCounter--;
-//
-//            //            ixF.fileHandle.readPageCounter++;
-//
-//            if (rc == fail)
-//            {
-//                first_pageNum = -2;
-//                free(newPage);
-//                return success;
-//            }
-//        }
-
         first_keyIndex = 0;
         first_pageNum = nextPage;
     }
@@ -1756,31 +1747,6 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
         first_keyIndex = first_keyIndex + 1;
     }
 
-    if (highKey == NULL)
-    {
-        return success;
-    }
-    //highKey != null
-
-    if (highKeyInclusive)
-    {
-        if (im->compare(newPage, attribute, highKey, first_keyIndex, false) < 0)
-        {
-            first_pageNum = -2;
-            isStop = true;
-            // free(newPage);
-            return success;
-        }
-    }
-    else
-    {
-        if (im->compare(newPage, attribute, highKey, first_keyIndex, false) <= 0)
-        {
-            first_pageNum = -2;
-            isStop = true;
-            return success;
-        }
-    }
 
     return success;
 }
