@@ -3,12 +3,9 @@
 #include "ix.h"
 #include "ix_test_util.h"
 
-<<<<<<< HEAD
-RC closeWithFail(const string &indexFileName1, const string &indexFileName2, IXFileHandle &ixFileHandle1,
-=======
 RC closeWithFail(const std::string &indexFileName1, const std::string &indexFileName2, IXFileHandle &ixFileHandle1,
->>>>>>> origin/finished-project3
-                 IXFileHandle &ixFileHandle2, IX_ScanIterator &ix_ScanIterator1, IX_ScanIterator &ix_ScanIterator2) {
+                 IXFileHandle &ixFileHandle2, IX_ScanIterator &ix_ScanIterator1, IX_ScanIterator &ix_ScanIterator2)
+{
     ix_ScanIterator1.close();
     ix_ScanIterator2.close();
 
@@ -21,14 +18,16 @@ RC closeWithFail(const std::string &indexFileName1, const std::string &indexFile
     return fail;
 }
 
-int testCase_p2(const std::string &indexFileName1, const std::string &indexFileName2, const Attribute &attribute) {
+int testCase_p2(const std::string &indexFileName1, const std::string &indexFileName2, const Attribute &attribute)
+{
 
     // insert 30,000 entries to two indexes
     // scan and delete
     // insert 20,000 entries to two indexes
     // scan
 
-    std::cout << std::endl << "***** In IX Test Private Case 2 *****" << std::endl;
+    std::cout << std::endl
+              << "***** In IX Test Private Case 2 *****" << std::endl;
 
     RID rid;
     RID rid2;
@@ -51,7 +50,6 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     rc = indexManager.createFile(indexFileName2);
     assert(rc == success && "indexManager::createFile() should not fail.");
 
-
     // open the index files
     rc = indexManager.openFile(indexFileName1, ixFileHandle1);
     assert(rc == success && "indexManager::openFile() should not fail.");
@@ -59,10 +57,10 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     rc = indexManager.openFile(indexFileName2, ixFileHandle2);
     assert(rc == success && "indexManager::openFile() should not fail.");
 
-
     // Prepare key entries
     numOfTuples = 20000;
-    for (int i = 0; i < numOfTuples; i++) {
+    for (int i = 0; i < numOfTuples; i++)
+    {
         A[i] = i;
     }
 
@@ -70,7 +68,8 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     std::shuffle(A, A + numOfTuples, std::mt19937(std::random_device()()));
 
     // Insert entries
-    for (int i = 0; i < numOfTuples; i++) {
+    for (int i = 0; i < numOfTuples; i++)
+    {
         key = A[i];
         rid.pageNum = i + 1;
         rid.slotNum = i + 1;
@@ -93,9 +92,10 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
 
     // scan & delete
     count = 0;
-    while (ix_ScanIterator1.getNextEntry(rid, &key) == success) {
-        if (ix_ScanIterator2.getNextEntry(rid2, &key2) != success
-            || rid.pageNum != rid2.pageNum) {
+    while (ix_ScanIterator1.getNextEntry(rid, &key) == success)
+    {
+        if (ix_ScanIterator2.getNextEntry(rid2, &key2) != success || rid.pageNum != rid2.pageNum)
+        {
             std::cout << "Wrong entries output...failure" << std::endl;
             return closeWithFail(indexFileName1, indexFileName2, ixFileHandle1, ixFileHandle2, ix_ScanIterator1,
                                  ix_ScanIterator2);
@@ -110,11 +110,11 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
 
         count++;
     }
-    if (count != 5001) {
+    if (count != 5001)
+    {
         std::cout << count << " - Wrong entries output...failure" << std::endl;
         return closeWithFail(indexFileName1, indexFileName2, ixFileHandle1, ixFileHandle2, ix_ScanIterator1,
                              ix_ScanIterator2);
-
     }
 
     // close scan
@@ -124,19 +124,16 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     rc = ix_ScanIterator2.close();
     assert(rc == success && "IX_ScanIterator::close() should not fail.");
 
-
     // insert more entries Again
     numOfTuples = 30000;
-    for (int i = 0; i < numOfTuples; i++) {
+    for (int i = 0; i < numOfTuples; i++)
+    {
         B[i] = 20000 + i;
     }
-<<<<<<< HEAD
-    std::random_shuffle(B, B + numOfTuples);
-=======
     std::shuffle(B, B + numOfTuples, std::mt19937(std::random_device()()));
->>>>>>> origin/finished-project3
 
-    for (int i = 0; i < numOfTuples; i++) {
+    for (int i = 0; i < numOfTuples; i++)
+    {
         key = B[i];
         rid.pageNum = i + 20001;
         rid.slotNum = i + 20001;
@@ -158,20 +155,24 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     assert(rc == success && "indexManager::scan() should not fail.");
 
     count = 0;
-    while (ix_ScanIterator1.getNextEntry(rid, &key) == success) {
-        if (ix_ScanIterator2.getNextEntry(rid2, &key) != success) {
+    while (ix_ScanIterator1.getNextEntry(rid, &key) == success)
+    {
+        if (ix_ScanIterator2.getNextEntry(rid2, &key) != success)
+        {
             std::cout << "Wrong entries output...failure" << std::endl;
             return closeWithFail(indexFileName1, indexFileName2, ixFileHandle1, ixFileHandle2, ix_ScanIterator1,
                                  ix_ScanIterator2);
         }
-        if (rid.pageNum > 20000 && B[rid.pageNum - 20001] > 35000) {
+        if (rid.pageNum > 20000 && B[rid.pageNum - 20001] > 35000)
+        {
             std::cout << "Wrong entries output...failure" << std::endl;
             return closeWithFail(indexFileName1, indexFileName2, ixFileHandle1, ixFileHandle2, ix_ScanIterator1,
                                  ix_ScanIterator2);
         }
         count++;
     }
-    if (count != 30000) {
+    if (count != 30000)
+    {
         std::cout << count << " - Wrong entries output...failure" << std::endl;
         return closeWithFail(indexFileName1, indexFileName2, ixFileHandle1, ixFileHandle2, ix_ScanIterator1,
                              ix_ScanIterator2);
@@ -191,7 +192,6 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     rc = indexManager.closeFile(ixFileHandle2);
     assert(rc == success && "indexManager::closeFile() should not fail.");
 
-
     // Destroy Index
     rc = indexManager.destroyFile(indexFileName1);
     assert(rc == success && "indexManager::destroyFile() should not fail.");
@@ -202,7 +202,8 @@ int testCase_p2(const std::string &indexFileName1, const std::string &indexFileN
     return success;
 }
 
-int main() {
+int main()
+{
 
     const std::string indexAgeFileName1 = "private_age_idx1";
     const std::string indexAgeFileName2 = "private_age_idx2";
@@ -214,17 +215,14 @@ int main() {
     indexManager.destroyFile(indexAgeFileName1);
     indexManager.destroyFile(indexAgeFileName2);
 
-    if (testCase_p2(indexAgeFileName1, indexAgeFileName2, attrAge) == success) {
+    if (testCase_p2(indexAgeFileName1, indexAgeFileName2, attrAge) == success)
+    {
         std::cout << "***** IX Test Private Case 2 finished. The result will be examined. *****" << std::endl;
         return success;
-    } else {
+    }
+    else
+    {
         std::cout << "***** [FAIL] IX Test Private Case 2 failed. *****" << std::endl;
         return fail;
     }
-
 }
-<<<<<<< HEAD
- 
-=======
- 
->>>>>>> origin/finished-project3
