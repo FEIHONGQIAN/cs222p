@@ -348,14 +348,14 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
 
     switch (type_enum)
     {
-    case 0:
-        attr.type = TypeInt;
-        break;
-    case 1:
-        attr.type = TypeReal;
-        break;
-    default:
-        attr.type = TypeVarChar;
+        case 0:
+            attr.type = TypeInt;
+            break;
+        case 1:
+            attr.type = TypeReal;
+            break;
+        default:
+            attr.type = TypeVarChar;
     }
 
     //get the length of the attribute

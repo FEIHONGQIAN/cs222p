@@ -5,22 +5,14 @@
 #include <string>
 
 #include "../rbf/rbfm.h"
-<<<<<<< HEAD
-
-# define IX_EOF (-1)  // end of the index scan
-=======
 #include "../rbf/pfm.h"
 
 #define IX_EOF (-1) // end of the index scan
->>>>>>> origin/finished-project3
 
 class IX_ScanIterator;
 
 class IXFileHandle;
 
-<<<<<<< HEAD
-class IndexManager {
-=======
 class IXFileHandle
 {
 public:
@@ -49,17 +41,11 @@ public:
 
 class IndexManager
 {
->>>>>>> origin/finished-project3
 
 public:
     static IndexManager &instance();
 
-<<<<<<< HEAD
-    // Create an index file.
-    RC createFile(const std::string &fileName);
-
-=======
-//    IX_ScanIterator *ixScan;
+    //    IX_ScanIterator *ixScan;
 
     IXFileHandle *ixFF;
     // Create an index file.
@@ -84,7 +70,6 @@ public:
 
     RC getRootPage(IXFileHandle &ixFileHandle) const;
 
->>>>>>> origin/finished-project3
     // Delete an index file.
     RC destroyFile(const std::string &fileName);
 
@@ -97,8 +82,6 @@ public:
     // Insert an entry into the given index that is indicated by the given ixFileHandle.
     RC insertEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
 
-<<<<<<< HEAD
-=======
     //recurively insert, used in insertEntry
     RC insert(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid, void *newchildentry, int page_id, bool isRoot = false);
 
@@ -149,7 +132,6 @@ public:
 
     RC getFreeSpaceForNonLeafNodes(const void *page);
 
->>>>>>> origin/finished-project3
     // Delete an entry from the given index that is indicated by the given ixFileHandle.
     RC deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid);
 
@@ -165,49 +147,6 @@ public:
     // Print the B+ tree in pre-order (in a JSON record format)
     void printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const;
 
-<<<<<<< HEAD
-protected:
-    IndexManager() = default;                                                   // Prevent construction
-    ~IndexManager() = default;                                                  // Prevent unwanted destruction
-    IndexManager(const IndexManager &) = default;                               // Prevent construction by copying
-    IndexManager &operator=(const IndexManager &) = default;                    // Prevent assignment
-
-};
-
-class IX_ScanIterator {
-public:
-
-    // Constructor
-    IX_ScanIterator();
-
-    // Destructor
-    ~IX_ScanIterator();
-
-    // Get next matching entry
-    RC getNextEntry(RID &rid, void *key);
-
-    // Terminate index scan
-    RC close();
-};
-
-class IXFileHandle {
-public:
-
-    // variables to keep counter for each operation
-    unsigned ixReadPageCounter;
-    unsigned ixWritePageCounter;
-    unsigned ixAppendPageCounter;
-
-    // Constructor
-    IXFileHandle();
-
-    // Destructor
-    ~IXFileHandle();
-
-    // Put the current counter values of associated PF FileHandles into variables
-    RC collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount);
-
-=======
     void printLeafNodes(void *page, const Attribute &attribute) const;
 
     void printLeafKey(const void *page, const Attribute &attribute) const;
@@ -269,7 +208,6 @@ public:
 
     // Terminate index scan
     RC close();
->>>>>>> origin/finished-project3
 };
 
 #endif
