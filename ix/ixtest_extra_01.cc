@@ -1,7 +1,8 @@
 #include "ix.h"
 #include "ix_test_util.h"
 
-int testCase_extra_1(const string &indexFileName, const Attribute &attribute) {
+int testCase_extra_1(const std::string &indexFileName, const Attribute &attribute)
+{
     // Checks whether duplicated entries spanning multiple page are handled properly or not.
     //
     // Functions tested
@@ -13,7 +14,8 @@ int testCase_extra_1(const string &indexFileName, const Attribute &attribute) {
     // 6. CloseIndex
     // 7. DestroyIndex
     // NOTE: "**" signifies the new functions being tested in this test case.
-    std::cout << std::endl << "***** In IX Test Extra Case 01 *****" << std::endl;
+    std::cout << std::endl
+              << "***** In IX Test Extra Case 01 *****" << std::endl;
 
     RID rid;
     unsigned numOfTuples = 2000;
@@ -34,7 +36,8 @@ int testCase_extra_1(const string &indexFileName, const Attribute &attribute) {
 
     // insert entry
     key = compVal1;
-    for (unsigned i = 1; i <= numOfTuples; i++) {
+    for (unsigned i = 1; i <= numOfTuples; i++)
+    {
         rid.pageNum = i;
         rid.slotNum = i;
 
@@ -43,7 +46,8 @@ int testCase_extra_1(const string &indexFileName, const Attribute &attribute) {
     }
 
     key = compVal2;
-    for (unsigned i = numOfTuples; i < numOfTuples + numExtra; i++) {
+    for (unsigned i = numOfTuples; i < numOfTuples + numExtra; i++)
+    {
         rid.pageNum = i;
         rid.slotNum = i - 5;
 
@@ -57,20 +61,24 @@ int testCase_extra_1(const string &indexFileName, const Attribute &attribute) {
 
     // iterate
     count = 0;
-    while (ix_ScanIterator.getNextEntry(rid, &key) == success) {
+    while (ix_ScanIterator.getNextEntry(rid, &key) == success)
+    {
         count++;
 
-        if (rid.pageNum != rid.slotNum) {
+        if (rid.pageNum != rid.slotNum)
+        {
             std::cout << "Wrong entries output... The test failed" << std::endl;
         }
 
-        if (count % 100 == 0) {
+        if (count % 100 == 0)
+        {
             std::cout << count << " - Returned rid: " << rid.pageNum << " " << rid.slotNum << std::endl;
         }
     }
 
     std::cout << "Number of scanned entries: " << count << std::endl;
-    if (count != numOfTuples) {
+    if (count != numOfTuples)
+    {
         std::cout << "Wrong entries output... The test failed" << std::endl;
         rc = ix_ScanIterator.close();
         rc = indexManager.closeFile(ixFileHandle);
@@ -93,7 +101,8 @@ int testCase_extra_1(const string &indexFileName, const Attribute &attribute) {
     return success;
 }
 
-int main() {
+int main()
+{
 
     const std::string indexFileName = "age_idx";
     Attribute attrAge;
@@ -101,13 +110,14 @@ int main() {
     attrAge.name = "age";
     attrAge.type = TypeInt;
 
-    if (testCase_extra_1(indexFileName, attrAge) == success) {
+    if (testCase_extra_1(indexFileName, attrAge) == success)
+    {
         std::cout << "IX_Test Case Extra 01 finished. The result will be examined." << std::endl;
         return success;
-    } else {
+    }
+    else
+    {
         std::cout << "IX_Test Case Extra 01 failed." << std::endl;
         return fail;
     }
-
 }
-

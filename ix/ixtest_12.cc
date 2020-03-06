@@ -1,7 +1,8 @@
 #include "ix.h"
 #include "ix_test_util.h"
 
-int testCase_12(const std::string &indexFileName, const Attribute &attribute) {
+int testCase_12(const std::string &indexFileName, const Attribute &attribute)
+{
     // Checks whether deleting an entry after getNextEntry() in a scan is handled properly or not.
     //    An example:
     //    IX_ScanIterator ix_ScanIterator;
@@ -20,7 +21,8 @@ int testCase_12(const std::string &indexFileName, const Attribute &attribute) {
     // 6. CloseIndex File
     // 7. DestroyIndex File
     // NOTE: "**" signifies the new functions being tested in this test case.
-    std::cout << std::endl << "***** In IX Test Case 12 *****" << std::endl;
+    std::cout << std::endl
+              << "***** In IX Test Case 12 *****" << std::endl;
 
     RID rid;
     IXFileHandle ixFileHandle;
@@ -40,13 +42,10 @@ int testCase_12(const std::string &indexFileName, const Attribute &attribute) {
     // Insert entries
     key = compVal;
 
-    for (unsigned i = 1; i <= numOfTuples; i++) {
+    for (unsigned i = 1; i <= numOfTuples; i++)
+    {
         rid.pageNum = i;
-<<<<<<< HEAD
-        rid.slotNum = i;
-=======
         rid.slotNum = i % (SHRT_MAX);
->>>>>>> origin/finished-project3
 
         rc = indexManager.insertEntry(ixFileHandle, attribute, &key, rid);
         assert(rc == success && "indexManager::insertEntry() should not fail.");
@@ -58,10 +57,12 @@ int testCase_12(const std::string &indexFileName, const Attribute &attribute) {
 
     // Delete entries in IndexScan Iterator
     unsigned count = 0;
-    while (ix_ScanIterator.getNextEntry(rid, &key) == success) {
+    while (ix_ScanIterator.getNextEntry(rid, &key) == success)
+    {
         count++;
 
-        if (count % 100 == 0) {
+        if (count % 100 == 0)
+        {
             std::cout << count << " - Returned rid: " << rid.pageNum << " " << rid.slotNum << std::endl;
         }
         RC rc = indexManager.deleteEntry(ixFileHandle, attribute, &key, rid);
@@ -77,18 +78,13 @@ int testCase_12(const std::string &indexFileName, const Attribute &attribute) {
     assert(rc == success && "indexManager::scan() should not fail.");
 
     // iterate - should fail
-    while (ix_ScanIterator.getNextEntry(rid, &key) == success) {
+    while (ix_ScanIterator.getNextEntry(rid, &key) == success)
+    {
         std::cout << "Wrong entry returned: " << rid.pageNum << " " << rid.slotNum << " --- The test failed."
                   << std::endl;
-<<<<<<< HEAD
-        rc = ix_ScanIterator.close();
-        rc = indexManager.closeFile(ixFileHandle);
-        rc = indexManager.destroyFile(indexFileName);
-=======
         ix_ScanIterator.close();
         indexManager.closeFile(ixFileHandle);
         indexManager.destroyFile(indexFileName);
->>>>>>> origin/finished-project3
         return fail;
     }
 
@@ -105,10 +101,10 @@ int testCase_12(const std::string &indexFileName, const Attribute &attribute) {
     assert(rc == success && "indexManager::destroyFile() should not fail.");
 
     return success;
-
 }
 
-int main() {
+int main()
+{
 
     const std::string indexFileName = "height_idx";
     Attribute attrHeight;
@@ -119,16 +115,14 @@ int main() {
     indexManager.destroyFile("height_idx");
 
     RC result = testCase_12(indexFileName, attrHeight);
-    if (result == success) {
+    if (result == success)
+    {
         std::cout << "***** IX Test Case 12 finished. The result will be examined. *****" << std::endl;
         return success;
-    } else {
+    }
+    else
+    {
         std::cout << "***** [FAIL] IX Test Case 12 failed. *****" << std::endl;
         return fail;
     }
-
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/finished-project3

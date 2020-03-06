@@ -348,14 +348,14 @@ RC RelationManager::filterAttributeFromColumnRecord(const void *column, std::vec
 
     switch (type_enum)
     {
-        case 0:
-            attr.type = TypeInt;
-            break;
-        case 1:
-            attr.type = TypeReal;
-            break;
-        default:
-            attr.type = TypeVarChar;
+    case 0:
+        attr.type = TypeInt;
+        break;
+    case 1:
+        attr.type = TypeReal;
+        break;
+    default:
+        attr.type = TypeVarChar;
     }
 
     //get the length of the attribute
@@ -806,4 +806,26 @@ void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFie
     }
 
     *recordSize = offset;
+}
+
+// QE IX related
+RC RelationManager::createIndex(const std::string &tableName, const std::string &attributeName)
+{
+    return -1;
+}
+
+RC RelationManager::destroyIndex(const std::string &tableName, const std::string &attributeName)
+{
+    return -1;
+}
+
+RC RelationManager::indexScan(const std::string &tableName,
+                              const std::string &attributeName,
+                              const void *lowKey,
+                              const void *highKey,
+                              bool lowKeyInclusive,
+                              bool highKeyInclusive,
+                              RM_IndexScanIterator &rm_IndexScanIterator)
+{
+    return -1;
 }
