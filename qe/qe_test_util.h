@@ -9,7 +9,7 @@ const int fail = -1;
 #include <fstream>
 #include <iostream>
 
-#include <std::vector>
+#include <vector>
 
 #include <cstdlib>
 #include <cstdio>
@@ -394,7 +394,7 @@ int createGroupTable()
     std::cout << std::endl
               << "****Create Group Table****" << std::endl;
 
-    std::std::vector<Attribute> attrs;
+    std::vector<Attribute> attrs;
 
     Attribute attr;
     attr.name = "A";
@@ -514,7 +514,7 @@ void prepareRightTuple(int attributeCount, unsigned char *nullAttributesIndicato
 
 // Prepare the tuple to left var char table in the format conforming to Insert/Update/ReadTuple and readAttribute
 void prepareLeftVarCharTuple(int attributeCount, unsigned char *nullAttributesIndicator, int a, int length,
-                             const string b, void *buf)
+                             const std::string b, void *buf)
 {
     int offset = 0;
 
@@ -550,7 +550,7 @@ void prepareLeftVarCharTuple(int attributeCount, unsigned char *nullAttributesIn
 }
 
 // Prepare the tuple to right var char table in the format conforming to Insert/Update/ReadTuple and readAttribute
-void prepareRightVarCharTuple(int attributeCount, unsigned char *nullAttributesIndicator, int length, const string &b,
+void prepareRightVarCharTuple(int attributeCount, unsigned char *nullAttributesIndicator, int length, const std::string &b,
                               float c, void *buf)
 {
     int offset = 0;
@@ -595,7 +595,7 @@ int populateLeftTable()
     void *buf = malloc(bufSize);
 
     // GetAttributes
-    std::std::vector<Attribute> attrs;
+    std::vector<Attribute> attrs;
     rc = rm.getAttributes("left", attrs);
     assert(rc == success && "RelationManager::getAttributes() should not fail.");
 
@@ -635,7 +635,7 @@ int populateLeftTable2()
     void *buf = malloc(bufSize);
 
     // GetAttributes
-    std::std::vector<Attribute> attrs;
+    std::vector<Attribute> attrs;
     rc = rm.getAttributes("left2", attrs);
     assert(rc == success && "RelationManager::getAttributes() should not fail.");
 
@@ -1036,7 +1036,7 @@ int populateLeftVarCharTable()
         int a = i + 20;
 
         int length = (i % 26) + 1;
-        string b = string(length, '\0');
+        std::string b = std::string(length, '\0');
         for (int j = 0; j < length; j++)
         {
             b[j] = 96 + length;
@@ -1078,7 +1078,7 @@ int populateRightVarCharTable()
 
         // Prepare the tuple data for insertion
         int length = (i % 26) + 1;
-        string b = string(length, '\0');
+        std::string b = std::string(length, '\0');
         for (int j = 0; j < length; j++)
         {
             b[j] = 96 + length;

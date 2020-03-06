@@ -1,8 +1,4 @@
 #include "ix.h"
-<<<<<<< HEAD
-
-IndexManager &IndexManager::instance() {
-=======
 #include <stdio.h>
 #include <string.h>
 
@@ -17,35 +13,10 @@ const std::string spaceMargin = "    ";
 
 IndexManager &IndexManager::instance()
 {
->>>>>>> origin/finished-project3
     static IndexManager _index_manager = IndexManager();
     return _index_manager;
 }
 
-<<<<<<< HEAD
-RC IndexManager::createFile(const std::string &fileName) {
-    return -1;
-}
-
-RC IndexManager::destroyFile(const std::string &fileName) {
-    return -1;
-}
-
-RC IndexManager::openFile(const std::string &fileName, IXFileHandle &ixFileHandle) {
-    return -1;
-}
-
-RC IndexManager::closeFile(IXFileHandle &ixFileHandle) {
-    return -1;
-}
-
-RC IndexManager::insertEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid) {
-    return -1;
-}
-
-RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attribute, const void *key, const RID &rid) {
-    return -1;
-=======
 RC IndexManager::createFile(const std::string &fileName)
 {
     int rc = rbfm->createFile(fileName);
@@ -1239,7 +1210,6 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
     free(tempPage);
     free(dummyEntry);
     return success;
->>>>>>> origin/finished-project3
 }
 
 RC IndexManager::scan(IXFileHandle &ixFileHandle,
@@ -1248,30 +1218,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
                       const void *highKey,
                       bool lowKeyInclusive,
                       bool highKeyInclusive,
-<<<<<<< HEAD
-                      IX_ScanIterator &ix_ScanIterator) {
-    return -1;
-}
-
-void IndexManager::printBtree(IXFileHandle &ixFileHandle, const Attribute &attribute) const {
-}
-
-IX_ScanIterator::IX_ScanIterator() {
-}
-
-IX_ScanIterator::~IX_ScanIterator() {
-}
-
-RC IX_ScanIterator::getNextEntry(RID &rid, void *key) {
-    return -1;
-}
-
-RC IX_ScanIterator::close() {
-    return -1;
-}
-
-IXFileHandle::IXFileHandle() {
-=======
                       IX_ScanIterator &ix_ScanIterator)
 {
     ixFileHandle.ixScan = &(ix_ScanIterator);
@@ -1692,8 +1638,8 @@ void IndexManager::printLeafNodes(void *page, const Attribute &attribute) const
             getRID(page, rid, i);
             ridVec.push_back(rid);
         }
-        // pop all the rid in vector to the console
-        // Copy key to temp for next comparison
+            // pop all the rid in vector to the console
+            // Copy key to temp for next comparison
         else
         {
             printLeafKey(prev, attribute);
@@ -1808,7 +1754,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
 RC IX_ScanIterator::close()
 {
     //    return -1;
-   isStop = false;
+    isStop = false;
     isOpen = false;
     free(newPage);
     free(highKey);
@@ -1818,21 +1764,11 @@ RC IX_ScanIterator::close()
 
 IXFileHandle::IXFileHandle()
 {
->>>>>>> origin/finished-project3
     ixReadPageCounter = 0;
     ixWritePageCounter = 0;
     ixAppendPageCounter = 0;
 }
 
-<<<<<<< HEAD
-IXFileHandle::~IXFileHandle() {
-}
-
-RC IXFileHandle::collectCounterValues(unsigned &readPageCount, unsigned &writePageCount, unsigned &appendPageCount) {
-    return -1;
-}
-
-=======
 IXFileHandle::~IXFileHandle()
 {
 }
@@ -1857,4 +1793,3 @@ RC IXFileHandle::collectCounterValues(unsigned &readPageCount, unsigned &writePa
 {
     return fileHandle.collectCounterValues(readPageCount, writePageCount, appendPageCount);
 }
->>>>>>> origin/finished-project3
