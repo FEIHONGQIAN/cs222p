@@ -123,6 +123,8 @@ RC Iterator::getContentInRecord(void *data, void *content, int index, int &recor
     }
 
     memcpy((char *)content, (char *)buffer + start, end - start);
+
+    free(buffer);
     recordSize = end - start;
 }
 

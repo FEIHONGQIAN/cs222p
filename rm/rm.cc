@@ -393,7 +393,7 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
         return fail;
     FileHandle fileHandle;
     int rc = 0;
-    rc = rbfm->openFile(tableName, fileHandle);
+    rc = RecordBasedFileManager::instance().openFile(tableName, fileHandle);
     if (rc == fail)
         return fail;
     std::vector<Attribute> recordDescriptor;
@@ -402,17 +402,17 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
     rc = rbfm->insertRecord(fileHandle, recordDescriptor, data, rid);
     if (rc == fail)
     {
-        rc = rbfm->closeFile(fileHandle);
+        rc = RecordBasedFileManager::instance().closeFile(fileHandle);
         return fail;
     }
     rc = insertEntries(tableName, data, rid, recordDescriptor);
     if (rc == fail)
     {
-        rc = rbfm->closeFile(fileHandle);
+        rc = RecordBasedFileManager::instance().closeFile(fileHandle);
         return fail;
     }
 
-    rc = rbfm->closeFile(fileHandle);
+    rc = RecordBasedFileManager::instance().closeFile(fileHandle);
     if (rc == fail)
         return fail;
     return success;
@@ -426,15 +426,14 @@ RC RelationManager::insertEntries(const std::string &tableName, const void *data
         if(recordSize == 0) continue;
 
         std::string file_name;
-        file_name.append(tableName).append("+").append(recordDescriptor[i].name);
+        file_name += tableName + "+" + recordDescriptor[i].name;
 
         IXFileHandle ixFileHandle;
         FileHandle fileHandle;
-        ix -> createFile(file_name); //如果存在，那就不create一个新的，否则create一个新的file
-        int rc = rbfm -> openFile(file_name, fileHandle); //打开indexFile
+//        IndexManager::instance().createFile(file_name); //如果存在，那就不create一个新的，否则create一个新的file
+        int rc = RecordBasedFileManager::instance().openFile(file_name, fileHandle); //打开indexFile
         if(rc == fail){
-            free(attribute);
-            return fail;
+            continue;
         }
 
         ixFileHandle.fileHandle = fileHandle;
@@ -461,7 +460,7 @@ RC RelationManager::insertEntries(const std::string &tableName, const void *data
             free(key);
         }
 
-        ix -> closeFile(ixFileHandle);
+        IndexManager::instance().closeFile(ixFileHandle);
         memset(attribute, 0, PAGE_SIZE);
     }
     free(attribute);
@@ -983,19 +982,15 @@ void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFie
 RC RelationManager::createIndex(const std::string &tableName, const std::string &attributeName)
 {
     std::string index_file_name;
-    index_file_name.append(tableName).append(attributeName);
-    const std::string file = "left+B";
+    index_file_name += tableName + "+" + attributeName;
 
     FileHandle fileHandle;
-//    std::cout << index_file_name << std::endl;
-//    std::cout << file << std::endl;
-    int rc = ix->createFile(file);
-    std::cout << "here" << std::endl;
+    int rc = IndexManager::instance().createFile(index_file_name);
     if(rc == fail){
         return fail;
     }
 
-    rc = rbfm->openFile("Indexes", fileHandle);
+    rc = RecordBasedFileManager::instance().openFile("Indexes", fileHandle);
 
     std::vector<Attribute> indexDescriptor;
     createIndexDescriptor(indexDescriptor);
@@ -1019,7 +1014,7 @@ RC RelationManager::createIndex(const std::string &tableName, const std::string 
         return fail;
     }
 
-    rc = rbfm->closeFile(fileHandle);
+    rc = RecordBasedFileManager::instance().closeFile(fileHandle);
     if(rc == fail){
         return fail;
     }
@@ -1262,7 +1257,7 @@ RC RelationManager::indexScan(const std::string &tableName,
 {
     int rc = 0;
     FileHandle fileHandle;
-    rc= rbfm->openFile(tableName + "+" + attributeName, fileHandle);
+    rc= RecordBasedFileManager::instance().openFile(tableName + "+" + attributeName, fileHandle);
     rm_IndexScanIterator.ixFileHandle.fileHandle = fileHandle;
 
     if (rc == fail)

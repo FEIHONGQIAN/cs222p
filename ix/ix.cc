@@ -32,7 +32,7 @@ RC IndexManager::createFile(const std::string &fileName)
 RC IndexManager::initialize(const std::string &fileName)
 {
     IXFileHandle ixFileHandle;
-    int rc = rbfm->openFile(fileName, ixFileHandle.fileHandle);
+    int rc = RecordBasedFileManager::instance().openFile(fileName, ixFileHandle.fileHandle);
     if (rc == fail)
         return fail;
 
@@ -126,7 +126,7 @@ RC IndexManager::destroyFile(const std::string &fileName)
 
 RC IndexManager::openFile(const std::string &fileName, IXFileHandle &ixFileHandle)
 {
-    int rc = rbfm->openFile(fileName, ixFileHandle.fileHandle);
+    int rc = RecordBasedFileManager::instance().openFile(fileName, ixFileHandle.fileHandle);
 
     if (rc == fail)
         return fail;
@@ -135,7 +135,7 @@ RC IndexManager::openFile(const std::string &fileName, IXFileHandle &ixFileHandl
 
 RC IndexManager::closeFile(IXFileHandle &ixFileHandle)
 {
-    int rc = rbfm->closeFile(ixFileHandle.fileHandle);
+    int rc = RecordBasedFileManager::instance().closeFile(ixFileHandle.fileHandle);
     if (rc == fail)
         return fail;
     return success;
