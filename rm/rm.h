@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../rbf/rbfm.h"
+#include "../ix/ix.h"
 
 #define RM_EOF (-1) // end of a scan operator
 
@@ -27,11 +28,15 @@ public:
 // RM_IndexScanIterator is an iterator to go through index entries
 class RM_IndexScanIterator {
 public:
+    FileHandle fileHandle;
+    IXFileHandle ixFileHandle;
+    IX_ScanIterator ix_ScanIterator;
+//    IndexManager *ix;
     RM_IndexScanIterator() {};    // Constructor
     ~RM_IndexScanIterator() {};    // Destructor
 
     // "key" follows the same format as in IndexManager::insertEntry()
-    RC getNextEntry(RID &rid, void *key) { return RM_EOF; };    // Get next matching entry
+    RC getNextEntry(RID &rid, void *key);    // Get next matching entry
     RC close() { return -1; };                        // Terminate index scan
 };
 // Relation Manager
@@ -55,6 +60,9 @@ public:
     RC deleteTable(const std::string &tableName);
 
     RC getAttributes(const std::string &tableName, std::vector<Attribute> &attrs);
+
+    RC getAttributesForIndex(const std::string &tableName, const std::string &attributeName, Attribute &attr);
+
 
     RC insertTuple(const std::string &tableName, const void *data, RID &rid);
 
@@ -98,6 +106,9 @@ public:
     RC appendString(std::string &s, const void *record, int start_pos, int len);
     RC filterAttributeFromColumnRecord(const void *column, std::vector<Attribute> &attrs);
 
+    RC filterAttributeFromColumnRecordForIndex(const void *column,  const std::string &attributeName, Attribute &attr);
+
+
     // Extra credit work (10 points)
     RC addAttribute(const std::string &tableName, const Attribute &attr);
 
@@ -117,6 +128,8 @@ public:
                  RM_IndexScanIterator &rm_IndexScanIterator);
 private:
     RecordBasedFileManager *rbfm;
+    IndexManager *ix;
+
 
 protected:
     RelationManager();                                   // Prevent construction

@@ -1035,7 +1035,138 @@ RC RelationManager::destroyIndex(const std::string &tableName, const std::string
     rbfm -> closeFile(fileHandle);
     return success;
 }
+RC RelationManager::getAttributesForIndex(const std::string &tableName, const std::string &attributeName, Attribute &attr) {
 
+    int rc = 0;
+    bool flag = false;
+    void *currentPage = malloc(PAGE_SIZE);
+    void *column = malloc(PAGE_SIZE);
+    void *table_name = malloc(PAGE_SIZE);
+    void *column_name = malloc(PAGE_SIZE);
+
+    FileHandle fileHandle;
+    rbfm->openFile("Columns", fileHandle);
+
+    int pageNum = fileHandle.getNumberOfPages();
+    for (int i = 0; i < pageNum; i++)
+    { //for each page
+        fileHandle.readPage(i, currentPage);
+        for (int j = 0; j < rbfm->getSlotNumber(currentPage); j++)
+        { //read each record
+            int column_len = *(short *)((char *)currentPage + PAGE_SIZE - 2 * sizeof(int) -
+                                        (j + 1) * 2 * sizeof(short));
+            int column_start = *(short *)((char *)currentPage + PAGE_SIZE - 2 * sizeof(int) -
+                                          (j + 1) * 2 * sizeof(short) + sizeof(short));
+            memcpy((char *)column, (char *)currentPage + column_start, column_len); //copy the column record
+
+            int start = *(short *)((char *)column + 5 * sizeof(short)); //table_name_start_pos
+            int len = *(short *)((char *)column + 6 * sizeof(short)) -
+                      *(short *)((char *)column + 5 * sizeof(short)); //table_name_len
+
+            memcpy((char *)table_name, (char *)column + start, len); //copy the table_name
+            std::string recordedTableName;
+            rc = appendString(recordedTableName, table_name, 0, len);
+
+            int ColumnNameStart = *(short *)((char *)column + 1 * sizeof(short)); //table_name_start_pos
+            int ColumnNameLen = *(short *)((char *)column + 2 * sizeof(short)) -
+                      *(short *)((char *)column + 1 * sizeof(short)); //table_name_len
+
+            memcpy((char *)column_name, (char *)column + ColumnNameStart, ColumnNameLen); //copy the table_name
+            std::string recordColumnName;
+            rc = appendString(recordColumnName, column_name, 0, ColumnNameLen);
+
+            if (rc == fail)
+            {
+                free(currentPage);
+                free(column);
+                free(table_name);
+                free(column_name);
+                rbfm->closeFile(fileHandle);
+                return fail;
+            }
+            //Format: fieldCount + offset + table_id, table_name, column_name, column_type, column_length, column_position, table_version
+            //use the recorded table_name of each column record to match the given table_nam. if so, get the attribute of this table.
+            if (recordedTableName == tableName && attributeName ==  recordColumnName)
+            {
+                rc = filterAttributeFromColumnRecordForIndex(column, attributeName,attr);
+                if (rc == fail)
+                {
+                    free(currentPage);
+                    free(column);
+                    free(table_name);
+                    free(column_name);
+                    rbfm->closeFile(fileHandle);
+
+                    return fail;
+                }
+                flag = true;
+                break;
+            }
+
+
+            memset((char *)column, 0, PAGE_SIZE);
+            memset((char *)table_name, 0, PAGE_SIZE);
+            memset((char *)column_name, 0, PAGE_SIZE);
+        }
+        memset((char *)currentPage, 0, PAGE_SIZE);
+    }
+
+    free(currentPage);
+    free(column);
+    free(table_name);
+    free(column_name);
+    rbfm->closeFile(fileHandle);
+
+    if (flag)
+        return success;
+    return fail;
+}
+
+RC RelationManager::filterAttributeFromColumnRecordForIndex(const void *column, const std::string &attributeName,
+                                                            Attribute &attr) {
+//    Attribute attr;
+    int start_pos = *(short *)((char *)column + 1 * sizeof(short)); //start pos of each attribute (we only need column_name, column_type, column_length)
+    int len = *(short *)((char *)column + 2 * sizeof(short)) - start_pos;
+
+    //get the name of the attribute
+    std::string name;
+    int rc = appendString(name, column, start_pos, len);
+    if (rc == fail)
+    {
+        return fail;
+    }
+    attr.name = name;
+
+    //get the type of the attribute
+    start_pos += len;
+    len = sizeof(int);
+    void *type_enum_address = malloc(sizeof(AttrType));
+    memcpy((char *)type_enum_address, (char *)column + start_pos, sizeof(AttrType));
+    int type_enum = *(AttrType *)((char *)type_enum_address);
+    free(type_enum_address);
+
+    switch (type_enum)
+    {
+        case 0:
+            attr.type = TypeInt;
+            break;
+        case 1:
+            attr.type = TypeReal;
+            break;
+        default:
+            attr.type = TypeVarChar;
+    }
+
+    //get the length of the attribute
+    start_pos += len;
+    auto *attr_length_addr = malloc(sizeof(AttrLength));
+    memcpy((char *)attr_length_addr, (char *)column + start_pos, sizeof(AttrLength));
+    attr.length = *(AttrLength *)((char *)attr_length_addr);
+    free(attr_length_addr);
+
+//    attrs.push_back(attr);
+    return success;
+}
 RC RelationManager::indexScan(const std::string &tableName,
                               const std::string &attributeName,
                               const void *lowKey,
@@ -1044,5 +1175,35 @@ RC RelationManager::indexScan(const std::string &tableName,
                               bool highKeyInclusive,
                               RM_IndexScanIterator &rm_IndexScanIterator)
 {
-    return -1;
+     int rc = 0;
+
+    rc=ix->openFile(tableName + '+' + attributeName, rm_IndexScanIterator.ixFileHandle);
+//    rc = rbfm->openFile(tableName, rm_IndexScanIterator.fileHandle);
+    if (rc == fail)
+        return fail;
+//    std::vector<Attribute> recordDescriptor;
+
+    Attribute attr;
+//    getAttributes(const std::string &tableName, Attribute &attr);
+    getAttributesForIndex(tableName, attributeName, attr);
+//    getattributesForIndex(tableName,attributeName, attr);
+//    getAttributes(tableName, recordDescriptor);
+//    RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
+//                                    const std::string &conditionAttribute, const CompOp compOp, const void *value,
+//                                    const std::vector<std::string> &attributeNames, RBFM_ScanIterator &rbfm_ScanIterator)
+//    rc = rbfm->scan(rm_ScanIterator.fileHandle, recordDescriptor, conditionAttribute, compOp, value, attributeNames, rm_ScanIterator.rbfmScanIterator);
+//    RC scan(IXFileHandle &ixFileHandle,
+//            const Attribute &attribute,
+//            const void *lowKey,
+//            const void *highKey,
+//            bool lowKeyInclusive,
+//            bool highKeyInclusive,
+//            IX_ScanIterator &ix_ScanIterator);
+    rc = ix->scan(rm_IndexScanIterator.ixFileHandle, attr, lowKey, highKey, lowKeyInclusive, highKeyInclusive, rm_IndexScanIterator.ix_ScanIterator);
+    if (rc == fail)
+        return fail;
+    return success;
+}
+RC RM_IndexScanIterator::getNextEntry(RID &rid, void *key) {
+    return  ix_ScanIterator.getNextEntry(rid, key);
 }
