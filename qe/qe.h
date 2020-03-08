@@ -37,6 +37,14 @@ public:
     virtual void getAttributes(std::vector<Attribute> &attrs) const = 0;
 
     virtual ~Iterator() = default;;
+
+    RC getContentInRecord(void * data, void * content, int index, int &recordSize);
+
+    RecordBasedFileManager *rbfm;
+    bool processWithTypeInt(int left, CompOp compOp, int right);
+    bool processWithTypeReal(float left, CompOp compOp, float right);
+    bool processWithTypeVarChar(std::string left, CompOp compOp, std::string right);
+    RC appendString(std::string &s, const void *record, int start_pos, int len);
 };
 
 class TableScan : public Iterator {
@@ -171,12 +179,18 @@ public:
            const Condition &condition     // Selection condition
     );
 
+    Iterator *input;
+    Condition cond;
+    std::vector<Attribute> attrs;
+
     ~Filter() override {};
 
-    RC getNextTuple(void *data) override { return QE_EOF; };
+//    RC getNextTuple(void *data) override { return QE_EOF; };
+    RC getNextTuple(void *data) override ;
 
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override {};
+//    void getAttributes(std::vector<Attribute> &attrs) const override {};
+    void getAttributes(std::vector<Attribute> &attrs) const override ;
 };
 
 class Project : public Iterator {
