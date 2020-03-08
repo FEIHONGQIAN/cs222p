@@ -118,6 +118,10 @@ public:
 
     RC destroyIndex(const std::string &tableName, const std::string &attributeName);
 
+    RC getContentInRecord(std::vector<Attribute> descriptor, const void *data, void *content, int index, int &recordSize);
+
+    RC insertEntries(const std::string &tableName, const void *data, RID &rid, std::vector<Attribute> recordDescriptor);
+
     // indexScan returns an iterator to allow the caller to go through qualified entries in index
     RC indexScan(const std::string &tableName,
                  const std::string &attributeName,

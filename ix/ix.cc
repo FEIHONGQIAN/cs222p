@@ -1303,7 +1303,6 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
         RID rid;
         void *key = malloc(PAGE_SIZE);
         rc = ix_ScanIterator.findFirstKey(page, rid, key, pageNum);
-
         if (rc == fail)
         {
             free(page);

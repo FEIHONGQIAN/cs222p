@@ -397,46 +397,72 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
     if (rc == fail)
         return fail;
     std::vector<Attribute> recordDescriptor;
-
     getAttributes(tableName, recordDescriptor);
+
     rc = rbfm->insertRecord(fileHandle, recordDescriptor, data, rid);
-
-//    int nullFieldsIndicatorActualSize = ceil((double)recordDescriptor.size() / CHAR_BIT);
-//    int offset = nullFieldsIndicatorActualSize;
-//    for(int i = 0; i < recordDescriptor.size(); i++){
-//        if(recordDescriptor[i].type == TypeInt || recordDescriptor[i].type == TypeReal){
-//            int size = sizeof(int);
-//            void * key = malloc(size);
-//            memcpy((char *) key, (char *)data + offset, size);
-//            offset += sizeof(int);
-//
-////            ix -> insertEntry(ixFileHandle, recordDescriptor[i], key, rid);
-//            free(key);
-//        }else{
-//            int size = sizeof(int);
-//            size += *(int *)((char *)data + offset);
-//            void * key = malloc(size);
-//            memcpy((char *) key, (char *)data + offset, size);
-//            offset += size;
-//
-//            std::string file_name = tableName + "+" + recordDescriptor[i].name;
-//            int rc = createIndex(tableName, recordDescriptor[i].name);
-//            IXFileHandle ixFileHandle;
-//            ix -> openFile(file_name, ixFileHandle);
-//            ix -> insertEntry(ixFileHandle, recordDescriptor[i], key, rid);
-//            ix -> closeFile(ixFileHandle);
-//            free(key);
-//        }
-//    }
-
     if (rc == fail)
     {
         rc = rbfm->closeFile(fileHandle);
         return fail;
     }
+    rc = insertEntries(tableName, data, rid, recordDescriptor);
+    if (rc == fail)
+    {
+        rc = rbfm->closeFile(fileHandle);
+        return fail;
+    }
+
     rc = rbfm->closeFile(fileHandle);
     if (rc == fail)
         return fail;
+    return success;
+}
+RC RelationManager::insertEntries(const std::string &tableName, const void *data, RID &rid, std::vector<Attribute> recordDescriptor){
+    void * attribute = malloc(PAGE_SIZE);
+    for(int i = 0; i < recordDescriptor.size(); i++){
+        int recordSize = 0;
+        getContentInRecord(recordDescriptor, data, attribute, i, recordSize);
+
+        if(recordSize == 0) continue;
+
+        std::string file_name = tableName + "+" + recordDescriptor[i].name;
+        IXFileHandle ixFileHandle;
+        FileHandle fileHandle;
+        ix -> createFile(file_name); //如果存在，那就不create一个新的，否则create一个新的file
+        int rc = rbfm -> openFile(file_name, fileHandle); //打开indexFile
+        if(rc == fail){
+            free(attribute);
+            return fail;
+        }
+
+        ixFileHandle.fileHandle = fileHandle;
+
+        if(recordDescriptor[i].type == TypeInt || recordDescriptor[i].type == TypeReal){
+            rc = ix -> insertEntry(ixFileHandle, recordDescriptor[i], attribute, rid);
+            if(rc == fail){
+                free(attribute);
+                std::cout << "Insert Int or Real Entry Failed" << std::endl;
+                return fail;
+            }
+        }else{
+            void * key = malloc(PAGE_SIZE);
+            memcpy((char *)key, &recordSize, sizeof(int));
+            memcpy((char *)key + sizeof(int), attribute, recordSize);
+            rc = ix -> insertEntry(ixFileHandle, recordDescriptor[i], key, rid);
+            if(rc == fail){
+                free(attribute);
+                free(key);
+                std::cout << "Insert Varchar Entry Failed" << std::endl;
+                return fail;
+            }
+
+            free(key);
+        }
+
+        ix -> closeFile(ixFileHandle);
+        memset(attribute, 0, PAGE_SIZE);
+    }
+    free(attribute);
     return success;
 }
 
@@ -551,6 +577,27 @@ RC RM_ScanIterator::getTotalslot(const std::string &tableName)
     rc = rbfmScanIterator.getTotalSlotNumber(fileHandle);
     rbfm->closeFile(fileHandle);
     return rc;
+}
+
+RC RelationManager::getContentInRecord(std::vector<Attribute> descriptor, const void *data, void *content, int index, int &recordSize) {
+    void *buffer = malloc(PAGE_SIZE);
+    rbfm->transformData(descriptor,data, buffer);
+    short start = -1, end = -1;
+    short fieldCount = *(short *)((char *)buffer);
+
+    if(index == 0){
+        start = sizeof(short) + fieldCount * sizeof(short);
+        end = *(short *)((char *)buffer + sizeof(short));
+    }else{
+        start = *(short *)((char *)buffer + sizeof(short) + (index - 1) * sizeof(short));
+        end = *(short *)((char *)buffer + sizeof(short) + (index) * sizeof(short));
+    }
+
+    if(end != start){
+        memcpy((char *)content, (char *)buffer + start, end - start);
+    }
+    free(buffer);
+    recordSize = end - start;
 }
 RC RelationManager::scan(const std::string &tableName,
                          const std::string &conditionAttribute,
@@ -971,6 +1018,7 @@ RC RelationManager::createIndex(const std::string &tableName, const std::string 
 
     return success;
 }
+
 RC RelationManager::findFileName(FileHandle fileHandle, RID rid, std::string fileName, const std::string &tableName, const std::string &attributeName){
     int rc = 0;
     void * page = malloc(PAGE_SIZE);
