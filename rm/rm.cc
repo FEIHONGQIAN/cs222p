@@ -1,4 +1,5 @@
 #include "rm.h"
+#include "../ix/ix.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -30,14 +31,22 @@ RC RelationManager::createCatalog()
     rc = rbfm->createFile("Columns");
     if (rc == fail)
         return fail;
-
+    rc = rbfm->createFile("Indexes");
+    if(rc == fail){
+        return fail;
+    }
     std::string table = "Tables";
     std::string column = "Columns";
+    std::string index = "Indexes";
+
     rc = createCatalogTables(table);
     if (rc == fail)
         return fail;
     rc = createCatalogColumns(column);
     if (rc == fail)
+        return fail;
+    rc = createCatalogIndexes(index);
+    if(rc == fail)
         return fail;
     return success;
 }
@@ -50,7 +59,7 @@ RC RelationManager::deleteCatalog()
     rc = rbfm->destroyFile("Columns");
     if (rc == fail)
         return fail;
-
+    rc = rbfm->destroyFile("Indexes");
     return success;
 }
 
@@ -62,7 +71,7 @@ RC RelationManager::createTable(const std::string &tableName, const std::vector<
     if (rc == fail)
         return fail;
 
-    if (tableName != "Tables" && tableName != "Columns")
+    if (tableName != "Tables" && tableName != "Columns" && tableName != "Indexes")
     {
         rc = rbfm->createFile(tableName);
         if (rc == fail)
@@ -145,7 +154,7 @@ void RelationManager::addTableOfTables(FileHandle &fileHandle, const int table_c
 
 RC RelationManager::deleteTable(const std::string &tableName)
 {
-    if (tableName == "Tables" || tableName == "Columns")
+    if (tableName == "Tables" || tableName == "Columns" || tableName == "Indexes")
         return fail;
     rbfm->destroyFile(tableName);
 
@@ -589,6 +598,25 @@ RC RelationManager::createTableDescriptor(std::vector<Attribute> &descriptor)
     return success;
 }
 
+RC RelationManager::createIndexDescriptor(std::vector<Attribute> &descriptor) {
+    Attribute attr;
+    attr.name = "table_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength)50;
+    descriptor.push_back(attr);
+
+    attr.name = "attribute_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength)50;
+    descriptor.push_back(attr);
+
+    attr.name = "file_name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength)50;
+    descriptor.push_back(attr);
+
+    return success;
+}
 RC RelationManager::createColumnDescriptor(std::vector<Attribute> &descriptor)
 {
 
@@ -641,6 +669,27 @@ RC RelationManager::createCatalogTables(std::string &tableName)
     attrs.push_back(attr);
 
     attr.name = "table-name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength)50;
+    attrs.push_back(attr);
+
+    attr.name = "file-name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength)50;
+    attrs.push_back(attr);
+
+    return createTable(tableName, attrs);
+}
+
+RC RelationManager::createCatalogIndexes(std::string &tableName) {
+    std::vector<Attribute> attrs;
+    Attribute attr;
+    attr.name = "table-name";
+    attr.type = TypeVarChar;
+    attr.length = (AttrLength)50;
+    attrs.push_back(attr);
+
+    attr.name = "attribute-name";
     attr.type = TypeVarChar;
     attr.length = (AttrLength)50;
     attrs.push_back(attr);
@@ -735,6 +784,50 @@ void RelationManager::prepareTableRecord(int fieldCount, unsigned char *nullFiel
     *recordSize = offset;
 }
 
+void RelationManager::prepareIndexRecord(int fieldCount, unsigned char *nullFieldsIndicator,
+                                         const int table_name_length, const std::string &table_name,
+                                         const int attribute_name_length, const std::string &attribute_name,
+                                         const int file_name_length, const std::string &file_name, void *buffer, int *recordSize){
+    int offset = 0;
+
+    // Null-indicators
+    bool nullBit = false;
+    int nullFieldsIndicatorActualSize = ceil((double)fieldCount / CHAR_BIT);
+    ;
+
+    // Null-indicator for the fields
+    memcpy((char *)buffer + offset, nullFieldsIndicator, nullFieldsIndicatorActualSize);
+    offset += nullFieldsIndicatorActualSize;
+
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)7;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &table_name_length, sizeof(int));
+        offset += sizeof(int);
+        memcpy((char *)buffer + offset, table_name.c_str(), table_name_length);
+        offset += table_name_length;
+    }
+
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)6;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &attribute_name_length, sizeof(int));
+        offset += sizeof(int);
+        memcpy((char *)buffer + offset, attribute_name.c_str(), attribute_name_length);
+        offset += attribute_name_length;
+    }
+
+    nullBit = nullFieldsIndicator[0] & (unsigned)1 << (unsigned)5;
+    if (!nullBit)
+    {
+        memcpy((char *)buffer + offset, &file_name_length, sizeof(int));
+        offset += sizeof(int);
+        memcpy((char *)buffer + offset, file_name.c_str(), file_name_length);
+        offset += file_name_length;
+    }
+
+    *recordSize = offset;
+}
 void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id,
                                           const int column_name_length, const std::string &column_name,
                                           const int column_type, const int column_length, const int column_position,
@@ -811,12 +904,136 @@ void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFie
 // QE IX related
 RC RelationManager::createIndex(const std::string &tableName, const std::string &attributeName)
 {
-    return -1;
-}
+    std::string index_file_name = tableName + "+" + attributeName;
+    FileHandle fileHandle;
+    int rc = rbfm->createFile(index_file_name);
+    if(rc == fail){
+        return fail;
+    }
 
+    rc = rbfm->openFile("Indexes", fileHandle);
+
+    std::vector<Attribute> indexDescriptor;
+    createIndexDescriptor(indexDescriptor);
+    RID rid;
+    int recordSize = 0;
+    void *index = malloc(PAGE_SIZE);
+
+    int nullFieldsIndicatorActualSize = ceil((double)indexDescriptor.size() / CHAR_BIT);
+    auto *nullsIndicator = (unsigned char *)malloc(nullFieldsIndicatorActualSize);
+    memset(nullsIndicator, 0, nullFieldsIndicatorActualSize);
+
+    prepareIndexRecord(indexDescriptor.size(), nullsIndicator, tableName.length(), tableName, attributeName.length(), attributeName,
+            index_file_name.length(), index_file_name, index, &recordSize);
+
+    rc = rbfm->insertRecord(fileHandle, indexDescriptor, index, rid);
+
+    free(index);
+    free(nullsIndicator);
+
+    if(rc == fail){
+        return fail;
+    }
+
+    rc = rbfm->closeFile(fileHandle);
+    if(rc == fail){
+        return fail;
+    }
+
+    return success;
+}
+RC RelationManager::findFileName(FileHandle fileHandle, RID rid, std::string fileName, const std::string &tableName, const std::string &attributeName){
+    int rc = 0;
+    void * page = malloc(PAGE_SIZE);
+    void * record = malloc(PAGE_SIZE);
+    void * table_name = malloc(PAGE_SIZE);
+    void * attribute_name = malloc(PAGE_SIZE);
+    void * file_name = malloc(PAGE_SIZE);
+
+    int pageNum = fileHandle.getNumberOfPages();
+    for(int i = 0; i < pageNum; i++){
+        rc = fileHandle.readPage(pageNum, page);
+        if(rc == fail){
+            free(page);
+            free(record);
+            free(table_name);
+            free(attribute_name);
+            free(file_name);
+
+            return fail;
+        }
+
+        int slotNum = rbfm -> getSlotNumber(page);
+        for(int j = 0; j < slotNum; j++){
+            int len = *(short *)((char *)page + PAGE_SIZE - 2 * sizeof(int) - (j + 1) * 2 * sizeof(short));
+            int start = *(short *)((char *)page + PAGE_SIZE - 2 * sizeof(int) - (j + 1) * 2 * sizeof(short) +
+                                   sizeof(short));
+            memcpy((char *)record, (char *)page + start, len);
+
+            std::string t, a, f;
+            start = 4 * sizeof(short);
+            len = *(short *)((char *)record + 1 * sizeof(short)) - start;
+            memcpy((char *)table_name, (char *)record + start, len);
+            appendString(t, table_name, 0, len);
+
+            start = *(short *)((char *)record + 1 * sizeof(short));
+            len = *(short *)((char *)record + 2 * sizeof(short)) - start;
+            memcpy((char *)attribute_name, (char *)record + start, len);
+            appendString(a, attribute_name, 0, len);
+
+            if(t == tableName && a == attributeName){
+                start = *(short *)((char *)record + 2 * sizeof(short));
+                len = *(short *)((char *)record + 3 * sizeof(short)) - start;
+                memcpy((char *)file_name, (char *)record + start, len);
+                appendString(f, file_name, 0, len);
+
+                free(page);
+                free(record);
+                free(table_name);
+                free(attribute_name);
+                free(file_name);
+
+                fileName = f;
+                rid.pageNum = i;
+                rid.slotNum = j + 1;
+                return success;
+            }
+        }
+    }
+
+    free(page);
+    free(record);
+    free(table_name);
+    free(attribute_name);
+    free(file_name);
+    return fail;
+}
 RC RelationManager::destroyIndex(const std::string &tableName, const std::string &attributeName)
 {
-    return -1;
+    FileHandle fileHandle;
+    int rc = rbfm->openFile("Indexes", fileHandle);
+    if(rc == fail){
+        return fail;
+    }
+    std::vector<Attribute> indexDescriptor;
+    createIndexDescriptor(indexDescriptor);
+
+    std::string fileName;
+    RID rid;
+
+    rc = findFileName(fileHandle, rid, fileName, tableName, attributeName);
+    if(rc == fail){
+        return fail;
+    }
+
+    int rc1 = rbfm -> destroyFile(fileName);
+    int rc2 = rbfm -> deleteRecord(fileHandle, indexDescriptor, rid);
+    if(rc1 == fail || rc2 == fail){
+        return fail;
+    }
+
+    rbfm -> closeFile(fileHandle);
+    return success;
 }
 
 RC RelationManager::indexScan(const std::string &tableName,

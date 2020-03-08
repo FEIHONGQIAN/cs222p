@@ -48,6 +48,8 @@ public:
 
     RC createCatalogColumns(std::string &tableName);
 
+    RC createCatalogIndexes(std::string &tableName);
+
     RC createTable(const std::string &tableName, const std::vector<Attribute> &attrs);
 
     RC deleteTable(const std::string &tableName);
@@ -81,11 +83,17 @@ public:
     void addTableOfColumns(FileHandle &fileHandle, const int table_counter, const std::string &tableName, const std::vector<Attribute> &attrs);
     RC createTableDescriptor(std::vector<Attribute> &descriptor);
     RC createColumnDescriptor(std::vector<Attribute> &descriptor);
+    RC createIndexDescriptor(std::vector<Attribute> &descriptor);
     void prepareTableRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int table_name_length, const std::string &table_name,
                             const int file_name_length, const std::string &file_name, const int table_version, void *buffer, int *recordSize);
     void prepareColumnRecord(int fieldCount, unsigned char *nullFieldsIndicator, const int table_id, const int column_name_length,
                              const std::string &column_name, const int column_type, const int column_length, const int column_position, const int table_name_length, const std::string &table_name, const int table_version, void *buffer, int *recordSize);
+    void prepareIndexRecord(int fieldCount, unsigned char *nullFieldsIndicator,
+                                             const int table_name_length, const std::string &table_name,
+                                             const int attribute_name_length, const std::string &attribute_name,
+                                             const int file_name_length, const std::string &file_name, void *buffer, int *recordSize);
 
+    RC findFileName(FileHandle fileHandle, RID rid, std::string fileName, const std::string &tableName, const std::string &attributeName);
     RC deleteRecordInTableOrColumn(const std::string &tableName, FileHandle &fileHandle, std::vector<Attribute> descriptor, int flag);
     RC appendString(std::string &s, const void *record, int start_pos, int len);
     RC filterAttributeFromColumnRecord(const void *column, std::vector<Attribute> &attrs);
