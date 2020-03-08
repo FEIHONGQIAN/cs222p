@@ -400,6 +400,35 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
 
     getAttributes(tableName, recordDescriptor);
     rc = rbfm->insertRecord(fileHandle, recordDescriptor, data, rid);
+
+//    int nullFieldsIndicatorActualSize = ceil((double)recordDescriptor.size() / CHAR_BIT);
+//    int offset = nullFieldsIndicatorActualSize;
+//    for(int i = 0; i < recordDescriptor.size(); i++){
+//        if(recordDescriptor[i].type == TypeInt || recordDescriptor[i].type == TypeReal){
+//            int size = sizeof(int);
+//            void * key = malloc(size);
+//            memcpy((char *) key, (char *)data + offset, size);
+//            offset += sizeof(int);
+//
+////            ix -> insertEntry(ixFileHandle, recordDescriptor[i], key, rid);
+//            free(key);
+//        }else{
+//            int size = sizeof(int);
+//            size += *(int *)((char *)data + offset);
+//            void * key = malloc(size);
+//            memcpy((char *) key, (char *)data + offset, size);
+//            offset += size;
+//
+//            std::string file_name = tableName + "+" + recordDescriptor[i].name;
+//            int rc = createIndex(tableName, recordDescriptor[i].name);
+//            IXFileHandle ixFileHandle;
+//            ix -> openFile(file_name, ixFileHandle);
+//            ix -> insertEntry(ixFileHandle, recordDescriptor[i], key, rid);
+//            ix -> closeFile(ixFileHandle);
+//            free(key);
+//        }
+//    }
+
     if (rc == fail)
     {
         rc = rbfm->closeFile(fileHandle);
@@ -1175,31 +1204,20 @@ RC RelationManager::indexScan(const std::string &tableName,
                               bool highKeyInclusive,
                               RM_IndexScanIterator &rm_IndexScanIterator)
 {
-     int rc = 0;
+    int rc = 0;
+    FileHandle fileHandle;
+    rc= rbfm->openFile(tableName + "+" + attributeName, fileHandle);
+    rm_IndexScanIterator.ixFileHandle.fileHandle = fileHandle;
 
-    rc=ix->openFile(tableName + '+' + attributeName, rm_IndexScanIterator.ixFileHandle);
-//    rc = rbfm->openFile(tableName, rm_IndexScanIterator.fileHandle);
     if (rc == fail)
         return fail;
-//    std::vector<Attribute> recordDescriptor;
-
     Attribute attr;
-//    getAttributes(const std::string &tableName, Attribute &attr);
     getAttributesForIndex(tableName, attributeName, attr);
-//    getattributesForIndex(tableName,attributeName, attr);
-//    getAttributes(tableName, recordDescriptor);
-//    RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attribute> &recordDescriptor,
-//                                    const std::string &conditionAttribute, const CompOp compOp, const void *value,
-//                                    const std::vector<std::string> &attributeNames, RBFM_ScanIterator &rbfm_ScanIterator)
-//    rc = rbfm->scan(rm_ScanIterator.fileHandle, recordDescriptor, conditionAttribute, compOp, value, attributeNames, rm_ScanIterator.rbfmScanIterator);
-//    RC scan(IXFileHandle &ixFileHandle,
-//            const Attribute &attribute,
-//            const void *lowKey,
-//            const void *highKey,
-//            bool lowKeyInclusive,
-//            bool highKeyInclusive,
-//            IX_ScanIterator &ix_ScanIterator);
-    rc = ix->scan(rm_IndexScanIterator.ixFileHandle, attr, lowKey, highKey, lowKeyInclusive, highKeyInclusive, rm_IndexScanIterator.ix_ScanIterator);
+    IXFileHandle ixFileHandle;
+    rc = ix->scan(ixFileHandle, attr, lowKey, highKey, lowKeyInclusive, highKeyInclusive, rm_IndexScanIterator.ix_ScanIterator);
+    rm_IndexScanIterator.ixFileHandle = ixFileHandle;
+
+
     if (rc == fail)
         return fail;
     return success;
