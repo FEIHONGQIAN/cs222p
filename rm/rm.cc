@@ -425,7 +425,9 @@ RC RelationManager::insertEntries(const std::string &tableName, const void *data
 
         if(recordSize == 0) continue;
 
-        std::string file_name = tableName + "+" + recordDescriptor[i].name;
+        std::string file_name;
+        file_name.append(tableName).append("+").append(recordDescriptor[i].name);
+
         IXFileHandle ixFileHandle;
         FileHandle fileHandle;
         ix -> createFile(file_name); //如果存在，那就不create一个新的，否则create一个新的file
@@ -980,9 +982,15 @@ void RelationManager::prepareColumnRecord(int fieldCount, unsigned char *nullFie
 // QE IX related
 RC RelationManager::createIndex(const std::string &tableName, const std::string &attributeName)
 {
-    std::string index_file_name = tableName + "+" + attributeName;
+    std::string index_file_name;
+    index_file_name.append(tableName).append(attributeName);
+    const std::string file = "left+B";
+
     FileHandle fileHandle;
-    int rc = rbfm->createFile(index_file_name);
+//    std::cout << index_file_name << std::endl;
+//    std::cout << file << std::endl;
+    int rc = ix->createFile(file);
+    std::cout << "here" << std::endl;
     if(rc == fail){
         return fail;
     }
