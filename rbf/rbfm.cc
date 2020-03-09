@@ -359,7 +359,6 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
 
     int i = sizeof(short);
     std::vector<short> offsetOfField;
-
     for (int j = 0; j < fieldCount; j++)
     {
         offsetOfField.push_back(*(short *)((char *)contentOfRecords + i));
@@ -377,7 +376,6 @@ void RecordBasedFileManager::prepareRecord(void *buffer, const std::vector<Attri
 
     memcpy((char *)buffer + offset, nullFieldsIndicator, ceil((double)fieldCount / CHAR_BIT));
     offset += ceil((double)fieldCount / CHAR_BIT);
-
     for (int i = 0; i < fieldCount; i++)
     {
         if (offsetOfField[i] == -1)

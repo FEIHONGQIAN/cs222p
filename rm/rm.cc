@@ -5,6 +5,8 @@
 
 const int success = 0;
 const int fail = -1;
+const int SLOT_NUMBER_SPACE_SIZE = 4;
+const int FREE_SPACE_SIZE = 4;
 
 RelationManager &RelationManager::instance()
 {
@@ -418,7 +420,8 @@ RC RelationManager::insertTuple(const std::string &tableName, const void *data, 
         return fail;
     return success;
 }
-RC RelationManager::insertEntries(const std::string &tableName, const void *data, RID &rid, std::vector<Attribute> recordDescriptor){
+
+RC RelationManager::insertEntries(const std::string &tableName, const void *data, const RID &rid, std::vector<Attribute> recordDescriptor){
     void * attribute = malloc(PAGE_SIZE);
     for(int i = 0; i < recordDescriptor.size(); i++){
         int recordSize = 0;
@@ -473,22 +476,87 @@ RC RelationManager::deleteTuple(const std::string &tableName, const RID &rid)
         return fail;
     FileHandle fileHandle;
     int rc = 0;
-    rc = rbfm->openFile(tableName, fileHandle);
+    rc = RecordBasedFileManager::instance().openFile(tableName, fileHandle);
     if (rc == fail)
     {
         return fail;
     }
     std::vector<Attribute> recordDescriptor;
     getAttributes(tableName, recordDescriptor);
+
+    void * data = malloc(PAGE_SIZE);
+    rbfm->readRecord(fileHandle, recordDescriptor, rid, data);
+
     rc = rbfm->deleteRecord(fileHandle, recordDescriptor, rid);
     if (rc == fail)
     {
-        rc = rbfm->closeFile(fileHandle);
+        free(data);
+        RecordBasedFileManager::instance().closeFile(fileHandle);
         return fail;
     }
-    rc = rbfm->closeFile(fileHandle);
-    if (rc == fail)
+
+    rc = deleteEntries(tableName, data, rid, recordDescriptor);
+    if(rc == fail){
+        free(data);
+        RecordBasedFileManager::instance().closeFile(fileHandle);
         return fail;
+    }
+    rc = RecordBasedFileManager::instance().closeFile(fileHandle);
+    if (rc == fail){
+        free(data);
+        return fail;
+    }
+
+    free(data);
+    return success;
+}
+
+RC RelationManager::deleteEntries(const std::string &tableName, const void *data, const RID &rid, std::vector<Attribute> recordDescriptor){
+    void * attribute = malloc(PAGE_SIZE);
+    for(int i = 0; i < recordDescriptor.size(); i++){
+        int recordSize = 0;
+        getContentInRecord(recordDescriptor, data, attribute, i, recordSize);
+
+        if(recordSize == 0) continue;
+
+        std::string file_name;
+        file_name += tableName + "+" + recordDescriptor[i].name;
+
+        IXFileHandle ixFileHandle;
+        FileHandle fileHandle;
+
+        int rc = RecordBasedFileManager::instance().openFile(file_name, fileHandle); //打开indexFile
+        if(rc == fail){
+            continue;
+        }
+
+        ixFileHandle.fileHandle = fileHandle;
+        if(recordDescriptor[i].type == TypeInt || recordDescriptor[i].type == TypeReal){
+            rc = ix -> deleteEntry(ixFileHandle, recordDescriptor[i], attribute, rid);
+            if(rc == fail){
+                free(attribute);
+                std::cout << "Insert Int or Real Entry Failed" << std::endl;
+                return fail;
+            }
+        }else{
+            void * key = malloc(PAGE_SIZE);
+            memcpy((char *)key, &recordSize, sizeof(int));
+            memcpy((char *)key + sizeof(int), attribute, recordSize);
+            rc = ix -> deleteEntry(ixFileHandle, recordDescriptor[i], key, rid);
+            if(rc == fail){
+                free(attribute);
+                free(key);
+                std::cout << "Insert Varchar Entry Failed" << std::endl;
+                return fail;
+            }
+
+            free(key);
+        }
+
+        IndexManager::instance().closeFile(ixFileHandle);
+        memset(attribute, 0, PAGE_SIZE);
+    }
+    free(attribute);
     return success;
 }
 
@@ -499,20 +567,32 @@ RC RelationManager::updateTuple(const std::string &tableName, const void *data, 
 
     FileHandle fileHandle;
     int rc = 0;
-    rc = rbfm->openFile(tableName, fileHandle);
+    rc = RecordBasedFileManager::instance().openFile(tableName, fileHandle);
     if (rc == fail)
         return fail;
     std::vector<Attribute> recordDescriptor;
     getAttributes(tableName, recordDescriptor);
+
+    void * record = malloc(PAGE_SIZE);
+    rbfm -> readRecord(fileHandle, recordDescriptor, rid, record);
+    deleteEntries(tableName, record, rid, recordDescriptor);
+
     rc = rbfm->updateRecord(fileHandle, recordDescriptor, data, rid);
+    insertEntries(tableName, data, rid, recordDescriptor);
+
     if (rc == fail)
     {
-        rc = rbfm->closeFile(fileHandle);
+        free(record);
+        rc = RecordBasedFileManager::instance().closeFile(fileHandle);
         return fail;
     }
-    rc = rbfm->closeFile(fileHandle);
-    if (rc == fail)
+    rc = RecordBasedFileManager::instance().closeFile(fileHandle);
+    if (rc == fail){
+        free(record);
         return fail;
+    }
+
+    free(record);
     return success;
 }
 
@@ -600,6 +680,7 @@ RC RelationManager::getContentInRecord(std::vector<Attribute> descriptor, const 
     free(buffer);
     recordSize = end - start;
 }
+
 RC RelationManager::scan(const std::string &tableName,
                          const std::string &conditionAttribute,
                          const CompOp compOp,
@@ -1121,10 +1202,13 @@ RC RelationManager::findFileName(FileHandle fileHandle, RID rid, std::string fil
 RC RelationManager::destroyIndex(const std::string &tableName, const std::string &attributeName)
 {
     FileHandle fileHandle;
-    int rc = rbfm->openFile("Indexes", fileHandle);
+    int rc = RecordBasedFileManager::instance().openFile("Indexes", fileHandle);
     if(rc == fail){
         return fail;
     }
+
+    RecordBasedFileManager::instance().destroyFile(tableName + "+" + attributeName);
+
     std::vector<Attribute> indexDescriptor;
     createIndexDescriptor(indexDescriptor);
 
@@ -1136,13 +1220,14 @@ RC RelationManager::destroyIndex(const std::string &tableName, const std::string
         return fail;
     }
 
-    int rc1 = rbfm -> destroyFile(fileName);
+    int rc1 = RecordBasedFileManager::instance().destroyFile(fileName);
     int rc2 = rbfm -> deleteRecord(fileHandle, indexDescriptor, rid);
+
     if(rc1 == fail || rc2 == fail){
         return fail;
     }
 
-    rbfm -> closeFile(fileHandle);
+    RecordBasedFileManager::instance().closeFile(fileHandle);
     return success;
 }
 RC RelationManager::getAttributesForIndex(const std::string &tableName, const std::string &attributeName, Attribute &attr) {
