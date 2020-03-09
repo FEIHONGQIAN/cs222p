@@ -312,7 +312,7 @@ RC Project::getNextTuple(void *data) {
 //    free(returnedData);
     free(nullFieldsIndicator);
     free(projectData);
-
+    return success;
 }
 
 void Project::getAttributes(std::vector<Attribute> &attrs) const {

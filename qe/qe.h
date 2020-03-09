@@ -132,7 +132,6 @@ public:
         // Call rm indexScan to get iterator
         iter = new RM_IndexScanIterator();
         rm.indexScan(tableName, attrName, NULL, NULL, true, true, *iter);
-
         // Set alias
         if (alias) this->tableName = alias;
     };

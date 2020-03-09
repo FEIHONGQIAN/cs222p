@@ -181,7 +181,7 @@ public:
     ~IX_ScanIterator();
 
     friend class IndexManager;
-    IXFileHandle *ixF;
+    IXFileHandle ixF;
     Attribute attribute;
     void *lowKey;
 

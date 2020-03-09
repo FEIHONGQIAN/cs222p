@@ -178,10 +178,10 @@ RC IndexManager::insert(IXFileHandle &ixFileHandle, const Attribute &attribute, 
 {
     void *page = malloc(PAGE_SIZE);
     int rc = ixFileHandle.fileHandle.readPage(page_id, page);
-    if (isRoot && getSlotNum(page) == 0)
-    {
-        ixFileHandle.fileHandle.readPageCounter--;
-    }
+//    if (isRoot && getSlotNum(page) == 0)
+//    {
+//        ixFileHandle.fileHandle.readPageCounter--;
+//    }
     if (rc == fail)
     {
         free(page);
@@ -1128,10 +1128,10 @@ RC IndexManager::deleteEntry(IXFileHandle &ixFileHandle, const Attribute &attrib
         free(page);
         return fail;
     }
-    if (getSlotNum(page) == 0)
-    {
-        ixFileHandle.fileHandle.readPageCounter--;
-    }
+//    if (getSlotNum(page) == 0)
+//    {
+//        ixFileHandle.fileHandle.readPageCounter--;
+//    }
     //stop until get the leaf page
     int child_page_id = -1;
     while (getNodeType(page) != 0)
@@ -1221,7 +1221,7 @@ RC IndexManager::scan(IXFileHandle &ixFileHandle,
                       IX_ScanIterator &ix_ScanIterator)
 {
     ixFileHandle.ixScan = &(ix_ScanIterator);
-    ix_ScanIterator.ixF = &(ixFileHandle);
+    ix_ScanIterator.ixF = ixFileHandle;
 
     if (!ix_ScanIterator.isOpen) {
         ix_ScanIterator.isOpen = true;
@@ -1398,7 +1398,7 @@ RC IX_ScanIterator::findFirstKey(void *page, RID &rid, void *key, int &pageNum)
             return fail;
         }
 
-        int rc = ixF->fileHandle.readPage(newPageId, page);
+        int rc = ixF.fileHandle.readPage(newPageId, page);
         if (rc == fail)
         {
             return fail;
@@ -1412,7 +1412,7 @@ RC IX_ScanIterator::findFirstKey(void *page, RID &rid, void *key, int &pageNum)
             {
                 break;
             }
-            rc = ixF->fileHandle.readPage(newPageId, page);
+            rc = ixF.fileHandle.readPage(newPageId, page);
             if (rc == fail)
             {
                 return fail;
@@ -1443,7 +1443,7 @@ RC IX_ScanIterator::findFirstKey(void *page, RID &rid, void *key, int &pageNum)
 }
 RC IX_ScanIterator::findStartPointForScan(void *page, int &pageNum)
 {
-    int rc = ixF->fileHandle.readPage(0, page);
+    int rc = ixF.fileHandle.readPage(0, page);
     if (rc == fail)
     {
         return fail;
@@ -1451,12 +1451,11 @@ RC IX_ScanIterator::findStartPointForScan(void *page, int &pageNum)
     int root_page_id = *(int *)((char *)page);
     memset(page, 0, PAGE_SIZE);
 
-    rc = ixF->fileHandle.readPage(root_page_id, page);
+    rc = ixF.fileHandle.readPage(root_page_id, page);
     if (rc == fail)
     {
         return fail;
     }
-    ixF->fileHandle.readPageCounter--;
 
     //stop until get the leaf page
     int child_page_id = -1;
@@ -1468,7 +1467,7 @@ RC IX_ScanIterator::findStartPointForScan(void *page, int &pageNum)
             return fail;
         }
         memset(page, 0, PAGE_SIZE);
-        rc = ixF->fileHandle.readPage(child_page_id, page);
+        rc = ixF.fileHandle.readPage(child_page_id, page);
         if (rc == fail)
         {
             return fail;
@@ -1488,10 +1487,10 @@ void IndexManager::printBtree_rec(IXFileHandle &ixFileHandle, int pageNum, const
 {
     void *pageData = malloc(PAGE_SIZE);
     ixFileHandle.fileHandle.readPage(pageNum, pageData);
-    if (isRoot)
-    {
-        ixFileHandle.ixReadPageCounter--;
-    }
+//    if (isRoot)
+//    {
+//        ixFileHandle.ixReadPageCounter--;
+//    }
 
     int nodeType = getNodeType(pageData);
     if (nodeType == LeafNodeType)
@@ -1689,7 +1688,7 @@ RC IX_ScanIterator::getNextEntry(RID &rid, void *key)
     int rc;
     if ((prev_pageNum == -1 || prev_pageNum != first_pageNum) || isOpen || first_keyIndex == 0)
     {
-        rc = ixF->fileHandle.readPage(first_pageNum, newPage);
+        rc = ixF.fileHandle.readPage(first_pageNum, newPage);
         prev_pageNum = first_pageNum;
         if (rc == fail)
         {
