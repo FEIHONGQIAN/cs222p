@@ -222,13 +222,13 @@ public:
 
     Iterator *leftIn;
     TableScan *rightIn;
-    TableScan *copiedRightIn;
     Condition condition;
     std::map<int, std::vector<void *>> intMap;
     std::map<float, std::vector<void *>> realMap;
     std::map<std::string, std::vector<void *>> varCharMap;
     std::vector<Attribute> attrsLeft;
     std::vector<Attribute> attrsRight;
+    std::vector<Attribute> attrs;
     std::vector<void *> outputBuffer;
     int outputBufferPointer;
     int left_attr_index, right_attr_index;
@@ -260,14 +260,26 @@ public:
     INLJoin(Iterator *leftIn,           // Iterator of input R
             IndexScan *rightIn,          // IndexScan Iterator of input S
             const Condition &condition   // Join condition
-    ) {};
+    ) ;
+
+    Iterator *leftIn;
+    IndexScan *rightIn;
+    Condition condition;
+    std::vector<Attribute> attrsLeft;
+    std::vector<Attribute> attrsRight;
+    std::vector<Attribute> attrs;
+    int left_attr_index;
+    int right_attr_index;
+    void * left_data_buffer;
 
     ~INLJoin() override = default;
 
-    RC getNextTuple(void *data) override { return QE_EOF; };
-
+    void setAttrIndex();
+    RC getNextTuple(void *data) override ;
+    RC match(void * right_data);
+    void combine(void *leftData, void *rightData, void *data);
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override {};
+    void getAttributes(std::vector<Attribute> &attrs) const override ;
 };
 
 // Optional for everyone. 10 extra-credit points

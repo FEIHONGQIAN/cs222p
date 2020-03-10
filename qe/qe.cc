@@ -22,13 +22,13 @@ RC Filter::getNextTuple(void *data) {
         }
 
         int left_attr_index = -1, right_attr_index = -1;
-        for(int i = 0; i < attrs.size(); i++){
-            if(attrs[i].name == cond.lhsAttr){
+        for(int i = 0; i < attrs.size(); i++) {
+            if (attrs[i].name == cond.lhsAttr) {
                 left_attr_index = i;
             }
 
-            if(cond.bRhsIsAttr){
-                if(attrs[i].name == cond.rhsAttr){
+            if (cond.bRhsIsAttr) {
+                if (attrs[i].name == cond.rhsAttr) {
                     right_attr_index = i;
                 }
             }
@@ -324,7 +324,6 @@ BNLJoin::BNLJoin(Iterator *leftIn, TableScan *rightIn, const Condition &conditio
     this->condition = condition;
     this->numPages = numPages;
     this->flag = false;
-    this->copiedRightIn = this->rightIn;
     this->left_attr_index = -1;
     this->right_attr_index = -1;
     this->outputBufferPointer = 0;
@@ -336,7 +335,12 @@ BNLJoin::BNLJoin(Iterator *leftIn, TableScan *rightIn, const Condition &conditio
     initializeBlock();
 }
 void BNLJoin::getAttributes(std::vector<Attribute> &attrs) const {
-
+    for(int i = 0; i < attrsLeft.size(); i++){
+        attrs.push_back(attrsLeft[i]);
+    }
+    for(int i = 0; i < attrsRight.size(); i++){
+        attrs.push_back(attrsRight[i]);
+    }
 }
 RC BNLJoin::freeBlock() {
     if (attrsLeft[left_attr_index].type == TypeInt) {
@@ -354,7 +358,6 @@ RC BNLJoin::freeBlock() {
                 free(*iterVec);
             }
             iter->second.clear();
-
         }
         realMap.clear();
     }
@@ -386,16 +389,23 @@ void BNLJoin::combine(void *leftData, void *rightData, void *data) {
         }
     }
     auto *contents = malloc(PAGE_SIZE);
-    int totalRecordSize = 0;
+    int left_totalRecordSize = 0;
     for (int i = 0; i != attrsLeft.size(); i++) {
         int recordSize = 0;
         getContentInRecord(leftData, contents, i, recordSize, attrsLeft);
-        totalRecordSize += recordSize;
+        left_totalRecordSize += recordSize;
     }
-    memcpy((char *)data + totalNullFieldINdicatorByte, (char *)leftData + (int)ceil((double) attrsLeft.size() / CHAR_BIT), totalRecordSize);
-    memcpy((char *)data + totalNullFieldINdicatorByte + totalRecordSize, (char *)rightData +(int)ceil((double) attrsRight.size() / CHAR_BIT), PAGE_SIZE - totalNullFieldINdicatorByte - totalRecordSize);
+    memset(contents, 0, PAGE_SIZE);
+    int right_totalRecordSize = 0;
+    for (int i = 0; i != attrsRight.size(); i++) {
+        int recordSize = 0;
+        getContentInRecord(rightData, contents, i, recordSize, attrsRight);
+        right_totalRecordSize += recordSize;
+    }
+    free(contents);
 
-
+    memcpy((char *)data + totalNullFieldINdicatorByte, (char *)leftData + (int)ceil((double) attrsLeft.size() / CHAR_BIT), left_totalRecordSize);
+    memcpy((char *)data + totalNullFieldINdicatorByte + left_totalRecordSize, (char *)rightData +(int)ceil((double) attrsRight.size() / CHAR_BIT), right_totalRecordSize);
 }
 RC BNLJoin::match(void *rightAttr, void *rightData, int rightRecordSize) {
     if (attrsRight[right_attr_index].type == TypeInt) {
@@ -446,7 +456,7 @@ RC BNLJoin::match(void *rightAttr, void *rightData, int rightRecordSize) {
 }
 RC BNLJoin::getNextTuple(void *data) {
     if (outputBuffer.size() > outputBufferPointer) {
-        memcpy(data, outputBuffer[outputBufferPointer], PAGE_SIZE);
+        memcpy(data, outputBuffer[outputBufferPointer], bufSize);
         outputBufferPointer++;
         return success;
     }
@@ -457,6 +467,7 @@ RC BNLJoin::getNextTuple(void *data) {
         outputBuffer.clear();
         outputBufferPointer = 0;
     }
+
     bool flagForMatch = false;
     while(!flagForMatch){
         void * right_data = malloc(PAGE_SIZE);
@@ -568,3 +579,120 @@ RC BNLJoin::initializeBlock() {
     return success;
 }
 
+INLJoin::INLJoin(Iterator *leftIn, IndexScan *rightIn, const Condition &condition) {
+    this -> leftIn = leftIn;
+    this -> rightIn = rightIn;
+    this -> condition = condition;
+    this -> left_data_buffer = malloc(PAGE_SIZE);
+    this-> left_attr_index = -1;
+    this-> right_attr_index = -1;
+
+    this -> leftIn -> getAttributes(attrsLeft);
+    this -> rightIn -> getAttributes(attrsRight);
+
+    this -> leftIn -> getNextTuple(left_data_buffer);
+    setAttrIndex();
+}
+RC INLJoin::getNextTuple(void *data) {
+    bool flagForMatch = false;
+    while(!flagForMatch){
+        void * right_data = malloc(PAGE_SIZE);
+        if(rightIn -> getNextTuple(right_data) == fail){
+            rightIn->setIterator(NULL, NULL, true, true);
+            void * left_data = malloc(PAGE_SIZE);
+            if(leftIn -> getNextTuple(left_data) == fail){
+                //free(left_data_buffer);
+                free(right_data);
+                return QE_EOF;
+            }else{
+                memcpy(left_data_buffer, left_data, PAGE_SIZE);
+            }
+
+            free(left_data);
+        }else{
+            int rc = match(right_data);
+            if(rc == success){
+                combine(left_data_buffer, right_data, data);
+                flagForMatch = true;
+            }
+        }
+        free(right_data);
+    }
+    return success;
+}
+void INLJoin::getAttributes(std::vector<Attribute> &attrs) const {
+    for(int i = 0; i < attrsLeft.size(); i++){
+        attrs.push_back(attrsLeft[i]);
+    }
+    for(int i = 0; i < attrsRight.size(); i++){
+        attrs.push_back(attrsRight[i]);
+    }
+}
+RC INLJoin::match(void * right_data) {
+    void * right_attr = malloc(PAGE_SIZE);
+    void * left_attr = malloc(PAGE_SIZE);
+    int right_recordSize = 0;
+    getContentInRecord(right_data, right_attr, right_attr_index, right_recordSize, attrsRight);
+    int left_recordSize = 0;
+    getContentInRecord(left_data_buffer, left_attr, left_attr_index, left_recordSize, attrsLeft);
+    if(right_recordSize == left_recordSize && memcmp(right_attr, left_attr, right_recordSize) == 0){
+        free(right_attr);
+        free(left_attr);
+        return success;
+    }
+    free(right_attr);
+    free(left_attr);
+    return fail;
+}
+void INLJoin::setAttrIndex() {
+    for(int i = 0; i < attrsLeft.size(); i++){
+        if(attrsLeft[i].name == condition.lhsAttr){
+            this -> left_attr_index = i;
+            break;
+        }
+    }
+    for(int i = 0; i < attrsRight.size(); i++){
+        if(attrsRight[i].name == condition.rhsAttr){
+            this -> right_attr_index = i;
+            break;
+        }
+    }
+}
+void INLJoin::combine(void *leftData, void *rightData, void *data) {
+    int totalNullFieldIndicatorSize = attrsLeft.size() + attrsRight.size();
+    int totalNullFieldINdicatorByte = ceil((double) totalNullFieldIndicatorSize / CHAR_BIT);
+    memset(data, 0, totalNullFieldINdicatorByte);
+    int leftOffset = attrsLeft.size();
+    memcpy(data, leftData,ceil((double)attrsLeft.size() / CHAR_BIT));
+
+    for (int i = 0; i < attrsRight.size(); i++) {
+//        std::cout << "afsergehere" << std::endl;
+        bool nullBit = *((unsigned char *)rightData + i / CHAR_BIT) & (unsigned)1 << (unsigned)(7 - i % CHAR_BIT);
+
+        if (nullBit) {
+            *((unsigned char *)data + (leftOffset + i ) / CHAR_BIT) |= (unsigned)1 << (unsigned)(7 - i % CHAR_BIT);
+        }
+        else {
+            ///////////////
+        }
+    }
+
+    auto *contents = malloc(PAGE_SIZE);
+    int left_totalRecordSize = 0;
+    for (int i = 0; i != attrsLeft.size(); i++) {
+        int recordSize = 0;
+        getContentInRecord(leftData, contents, i, recordSize, attrsLeft);
+        left_totalRecordSize += recordSize;
+    }
+    memset(contents, 0, PAGE_SIZE);
+    int right_totalRecordSize = 0;
+    for (int i = 0; i != attrsRight.size(); i++) {
+        int recordSize = 0;
+        getContentInRecord(rightData, contents, i, recordSize, attrsRight);
+        right_totalRecordSize += recordSize;
+    }
+    free(contents);
+
+    memcpy((char *)data + totalNullFieldINdicatorByte, (char *)leftData + (int)ceil((double) attrsLeft.size() / CHAR_BIT), left_totalRecordSize);
+    memcpy((char *)data + totalNullFieldINdicatorByte + left_totalRecordSize, (char *)rightData +(int)ceil((double) attrsRight.size() / CHAR_BIT), right_totalRecordSize);
+}
