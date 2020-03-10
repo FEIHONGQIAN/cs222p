@@ -4,6 +4,7 @@
 #include "../rbf/rbfm.h"
 #include "../rm/rm.h"
 #include "../ix/ix.h"
+#include <map>
 
 #define QE_EOF (-1)  // end of the index scan
 
@@ -38,7 +39,7 @@ public:
 
     virtual ~Iterator() = default;;
 
-    RC getContentInRecord(void * data, void * content, int index, int &recordSize);
+    RC getContentInRecord(void * data, void * content, int index, int &recordSize, std::vector<Attribute> attrs);
 
     RecordBasedFileManager *rbfm;
     bool processWithTypeInt(int left, CompOp compOp, int right);
@@ -217,14 +218,40 @@ public:
             const Condition &condition,   // Join condition
             const unsigned numPages       // # of pages that can be loaded into memory,
             //   i.e., memory block size (decided by the optimizer)
-    ) {};
+    ) ;
+
+    Iterator *leftIn;
+    TableScan *rightIn;
+    TableScan *copiedRightIn;
+    Condition condition;
+    std::map<int, std::vector<void *>> intMap;
+    std::map<float, std::vector<void *>> realMap;
+    std::map<std::string, std::vector<void *>> varCharMap;
+    std::vector<Attribute> attrsLeft;
+    std::vector<Attribute> attrsRight;
+    std::vector<void *> outputBuffer;
+    int outputBufferPointer;
+    int left_attr_index, right_attr_index;
+
+    unsigned numPages;
+    bool flag;
+    int numRecords = 0;
+
+    void setNumRecords();
+    void setAttrIndex();
+    RC initializeBlock();
+    RC freeBlock();
+
+    RC match(void *rightAttr, void *rightdata, int rightRecordSize);
+
+    void combine(void *leftData, void *rightData, void *data);
 
     ~BNLJoin() override = default;;
 
-    RC getNextTuple(void *data) override { return QE_EOF; };
+    RC getNextTuple(void *data) override;
 
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override {};
+    void getAttributes(std::vector<Attribute> &attrs) const override ;
 };
 
 class INLJoin : public Iterator {
