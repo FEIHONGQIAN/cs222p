@@ -2,6 +2,8 @@
 #include "qe.h"
 #include <stdio.h>
 #include <string.h>
+#include <float.h>
+#include <math.h>
 
 int success = 0, fail = -1, bufSize = 200;
 Filter::Filter(Iterator *input, const Condition &condition)
@@ -833,4 +835,188 @@ void INLJoin::combine(void *leftData, void *rightData, void *data)
 
     memcpy((char *)data + totalNullFieldINdicatorByte, (char *)leftData + (int)ceil((double)attrsLeft.size() / CHAR_BIT), left_totalRecordSize);
     memcpy((char *)data + totalNullFieldINdicatorByte + left_totalRecordSize, (char *)rightData + (int)ceil((double)attrsRight.size() / CHAR_BIT), right_totalRecordSize);
+}
+
+Aggregate::Aggregate(Iterator *input, const Attribute &aggAttr, AggregateOp op)
+{
+    this->input = input;
+    this->aggr = aggAttr;
+    this->op = op;
+    this->flag = false;
+    this->input->getAttributes(attrVec);
+    for (int i = 0; i != attrVec.size(); i++)
+    {
+        if (attrVec[i].name == aggr.name)
+        {
+            this->index = i;
+            break;
+        }
+    }
+}
+RC Aggregate::getNextTuple(void *data)
+{
+    if (flag)
+    {
+        return QE_EOF;
+    }
+    this->flag = true;
+    int intMax = INT_MIN, intMin = INT_MAX, count = 0, intSum = 0;
+    float floatMax = FLT_MIN, floatMin = FLT_MAX, floatSum = 0;
+    void *dataInTuple = malloc(bufSize);
+    while (this->input->getNextTuple(dataInTuple) != QE_EOF)
+    {
+        //        std::cout << "what is the value in tuple" << *(int *)((char *)dataInTuple + 5) << std::endl;
+        void *content = malloc(bufSize);
+        int recordSize = -1;
+        if (aggr.type == TypeInt)
+        {
+            if (op == MAX)
+            {
+                //                std::cout << "what is the size of attrvec" << attrVec.size() << std::endl;
+                getContentInRecord(dataInTuple, content, index, recordSize, attrVec);
+                if (recordSize == 0)
+                {
+                    continue;
+                }
+                count++;
+                int val = 0;
+                memcpy(&val, (char *)content, sizeof(int));
+                //                std::cout << "what is the value for this one" << val <<  std::endl;
+                intMax = std::max(intMax, val);
+            }
+            else if (op == MIN)
+            {
+                getContentInRecord(dataInTuple, content, index, recordSize, attrVec);
+                if (recordSize == 0)
+                {
+                    continue;
+                }
+                count++;
+
+                int val = 0;
+                memcpy(&val, (char *)content, sizeof(int));
+                intMin = std::min(intMin, val);
+            }
+            else if (op == SUM || op == AVG || op == COUNT)
+            {
+                getContentInRecord(dataInTuple, content, index, recordSize, attrVec);
+                if (recordSize == 0)
+                {
+                    continue;
+                }
+                int val = 0;
+                memcpy(&val, (char *)content, sizeof(int));
+                intSum += val;
+                count++;
+            }
+        }
+        else
+        {
+            if (op == MAX)
+            {
+                getContentInRecord(dataInTuple, content, index, recordSize, attrVec);
+                if (recordSize == 0)
+                {
+                    continue;
+                }
+                count++;
+                float val = 0.0;
+                memcpy(&val, (char *)content, sizeof(float));
+                floatMax = std::max(floatMax, val);
+            }
+            else if (op == MIN)
+            {
+                getContentInRecord(dataInTuple, content, index, recordSize, attrVec);
+                if (recordSize == 0)
+                {
+                    continue;
+                }
+                count++;
+
+                float val = 0.0;
+                memcpy(&val, (char *)content, sizeof(float));
+                floatMin = std::min(floatMin, val);
+            }
+            else if (op == SUM || op == AVG || op == COUNT)
+            {
+                getContentInRecord(dataInTuple, content, index, recordSize, attrVec);
+                if (recordSize == 0)
+                {
+                    continue;
+                }
+                float val = 0;
+                memcpy(&val, (char *)content, sizeof(float));
+                floatSum += val;
+                count++;
+            }
+        }
+        free(content);
+    }
+    free(dataInTuple);
+
+    memset(data, 0, 1);
+
+    if (aggr.type == TypeInt)
+    {
+        if (op == MAX)
+        {
+            float intMaxToFloat = (float)intMax;
+            memcpy((char *)data + 1, &intMaxToFloat, sizeof(float));
+        }
+        else if (op == MIN)
+        {
+            float intMinToFloat = (float)intMin;
+            memcpy((char *)data + 1, &intMinToFloat, sizeof(float));
+        }
+        else if (op == COUNT)
+        {
+            float countToFloat = (float)count;
+            memcpy((char *)data + 1, &countToFloat, sizeof(float));
+        }
+        else if (op == SUM)
+        {
+            float intSumToFloat = (float)intSum;
+            memcpy((char *)data + 1, &intSumToFloat, sizeof(float));
+        }
+        else
+        {
+            float intAvg = (float)intSum / count;
+            memcpy((char *)data + 1, &intAvg, sizeof(float));
+        }
+    }
+    else
+    {
+        if (op == MAX)
+        {
+            memcpy((char *)data + 1, &floatMax, sizeof(float));
+        }
+        else if (op == MIN)
+        {
+            memcpy((char *)data + 1, &floatMin, sizeof(float));
+        }
+        else if (op == COUNT)
+        {
+            float countToFloat = (float)count;
+            memcpy((char *)data + 1, &countToFloat, sizeof(float));
+        }
+        else if (op == SUM)
+        {
+            memcpy((char *)data + 1, &floatSum, sizeof(float));
+        }
+        else
+        {
+            float floatAvg = (float)floatSum / count;
+            memcpy((char *)data + 1, &floatAvg, sizeof(float));
+        }
+    }
+    return success;
+}
+
+void Aggregate::getAttributes(std::vector<Attribute> &attrs) const
+{
+    Attribute temp;
+    temp.name = this->op + "(" + this->aggr.name + ")";
+    temp.type = this->aggr.type;
+    temp.length = this->aggr.length;
+    attrs.push_back(temp);
 }
