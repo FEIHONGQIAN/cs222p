@@ -6,10 +6,15 @@
 #include "../ix/ix.h"
 #include <map>
 
-#define QE_EOF (-1)  // end of the index scan
+#define QE_EOF (-1) // end of the index scan
 
-typedef enum {
-    MIN = 0, MAX, COUNT, SUM, AVG
+typedef enum
+{
+    MIN = 0,
+    MAX,
+    COUNT,
+    SUM,
+    AVG
 } AggregateOp;
 
 // The following functions use the following
@@ -17,29 +22,33 @@ typedef enum {
 //    For INT and REAL: use 4 bytes
 //    For VARCHAR: use 4 bytes for the length followed by the characters
 
-struct Value {
-    AttrType type;          // type of value
-    void *data;             // value
+struct Value
+{
+    AttrType type; // type of value
+    void *data;    // value
 };
 
-struct Condition {
-    std::string lhsAttr;        // left-hand side attribute
-    CompOp op;                  // comparison operator
-    bool bRhsIsAttr;            // TRUE if right-hand side is an attribute and not a value; FALSE, otherwise.
-    std::string rhsAttr;        // right-hand side attribute if bRhsIsAttr = TRUE
-    Value rhsValue;             // right-hand side value if bRhsIsAttr = FALSE
+struct Condition
+{
+    std::string lhsAttr; // left-hand side attribute
+    CompOp op;           // comparison operator
+    bool bRhsIsAttr;     // TRUE if right-hand side is an attribute and not a value; FALSE, otherwise.
+    std::string rhsAttr; // right-hand side attribute if bRhsIsAttr = TRUE
+    Value rhsValue;      // right-hand side value if bRhsIsAttr = FALSE
 };
 
-class Iterator {
+class Iterator
+{
     // All the relational operators and access methods are iterators.
 public:
     virtual RC getNextTuple(void *data) = 0;
 
     virtual void getAttributes(std::vector<Attribute> &attrs) const = 0;
 
-    virtual ~Iterator() = default;;
+    virtual ~Iterator() = default;
+    ;
 
-    RC getContentInRecord(void * data, void * content, int index, int &recordSize, std::vector<Attribute> attrs);
+    RC getContentInRecord(void *data, void *content, int index, int &recordSize, std::vector<Attribute> attrs);
 
     RecordBasedFileManager *rbfm;
     bool processWithTypeInt(int left, CompOp compOp, int right);
@@ -48,7 +57,8 @@ public:
     RC appendString(std::string &s, const void *record, int start_pos, int len);
 };
 
-class TableScan : public Iterator {
+class TableScan : public Iterator
+{
     // A wrapper inheriting Iterator over RM_ScanIterator
 public:
     RelationManager &rm;
@@ -58,7 +68,8 @@ public:
     std::vector<std::string> attrNames;
     RID rid{};
 
-    TableScan(RelationManager &rm, const std::string &tableName, const char *alias = NULL) : rm(rm) {
+    TableScan(RelationManager &rm, const std::string &tableName, const char *alias = NULL) : rm(rm)
+    {
         //Set members
         this->tableName = tableName;
 
@@ -66,7 +77,8 @@ public:
         rm.getAttributes(tableName, attrs);
 
         // Get Attribute Names from RM
-        for (Attribute &attr : attrs) {
+        for (Attribute &attr : attrs)
+        {
             // convert to char *
             attrNames.push_back(attr.name);
         }
@@ -76,27 +88,32 @@ public:
         rm.scan(tableName, "", NO_OP, NULL, attrNames, *iter);
 
         // Set alias
-        if (alias) this->tableName = alias;
+        if (alias)
+            this->tableName = alias;
     };
 
     // Start a new iterator given the new compOp and value
-    void setIterator() {
+    void setIterator()
+    {
         iter->close();
         delete iter;
         iter = new RM_ScanIterator();
         rm.scan(tableName, "", NO_OP, NULL, attrNames, *iter);
     };
 
-    RC getNextTuple(void *data) override {
+    RC getNextTuple(void *data) override
+    {
         return iter->getNextTuple(rid, data);
     };
 
-    void getAttributes(std::vector<Attribute> &attributes) const override {
+    void getAttributes(std::vector<Attribute> &attributes) const override
+    {
         attributes.clear();
         attributes = this->attrs;
 
         // For attribute in std::vector<Attribute>, name it as rel.attr
-        for (Attribute &attribute : attributes) {
+        for (Attribute &attribute : attributes)
+        {
             std::string tmp = tableName;
             tmp += ".";
             tmp += attribute.name;
@@ -104,12 +121,14 @@ public:
         }
     };
 
-    ~TableScan() override {
+    ~TableScan() override
+    {
         iter->close();
     };
 };
 
-class IndexScan : public Iterator {
+class IndexScan : public Iterator
+{
     // A wrapper inheriting Iterator over IX_IndexScan
 public:
     RelationManager &rm;
@@ -121,11 +140,11 @@ public:
     RID rid{};
 
     IndexScan(RelationManager &rm, const std::string &tableName, const std::string &attrName, const char *alias = NULL)
-            : rm(rm) {
+        : rm(rm)
+    {
         // Set members
         this->tableName = tableName;
         this->attrName = attrName;
-
 
         // Get Attributes from RM
         rm.getAttributes(tableName, attrs);
@@ -134,32 +153,37 @@ public:
         iter = new RM_IndexScanIterator();
         rm.indexScan(tableName, attrName, NULL, NULL, true, true, *iter);
         // Set alias
-        if (alias) this->tableName = alias;
+        if (alias)
+            this->tableName = alias;
     };
 
     // Start a new iterator given the new key range
-    void setIterator(void *lowKey, void *highKey, bool lowKeyInclusive, bool highKeyInclusive) {
+    void setIterator(void *lowKey, void *highKey, bool lowKeyInclusive, bool highKeyInclusive)
+    {
         iter->close();
         delete iter;
         iter = new RM_IndexScanIterator();
         rm.indexScan(tableName, attrName, lowKey, highKey, lowKeyInclusive, highKeyInclusive, *iter);
     };
 
-    RC getNextTuple(void *data) override {
+    RC getNextTuple(void *data) override
+    {
         int rc = iter->getNextEntry(rid, key);
-        if (rc == 0) {
+        if (rc == 0)
+        {
             rc = rm.readTuple(tableName.c_str(), rid, data);
         }
         return rc;
     };
 
-    void getAttributes(std::vector<Attribute> &attributes) const override {
+    void getAttributes(std::vector<Attribute> &attributes) const override
+    {
         attributes.clear();
         attributes = this->attrs;
 
-
         // For attribute in std::vector<Attribute>, name it as rel.attr
-        for (Attribute &attribute : attributes) {
+        for (Attribute &attribute : attributes)
+        {
             std::string tmp = tableName;
             tmp += ".";
             tmp += attribute.name;
@@ -167,58 +191,62 @@ public:
         }
     };
 
-    ~IndexScan() override {
+    ~IndexScan() override
+    {
         iter->close();
     };
 };
 
-class Filter : public Iterator {
+class Filter : public Iterator
+{
     // Filter operator
 public:
-    Filter(Iterator *input,               // Iterator of input R
-           const Condition &condition     // Selection condition
+    Filter(Iterator *input,           // Iterator of input R
+           const Condition &condition // Selection condition
     );
 
     Iterator *input;
     Condition cond;
     std::vector<Attribute> attrs;
 
-    ~Filter() override {};
+    ~Filter() override{};
 
-//    RC getNextTuple(void *data) override { return QE_EOF; };
-    RC getNextTuple(void *data) override ;
+    //    RC getNextTuple(void *data) override { return QE_EOF; };
+    RC getNextTuple(void *data) override;
 
     // For attribute in std::vector<Attribute>, name it as rel.attr
-//    void getAttributes(std::vector<Attribute> &attrs) const override {};
-    void getAttributes(std::vector<Attribute> &attrs) const override ;
+    //    void getAttributes(std::vector<Attribute> &attrs) const override {};
+    void getAttributes(std::vector<Attribute> &attrs) const override;
 };
 
-class Project : public Iterator {
+class Project : public Iterator
+{
     // Projection operator
 public:
     Iterator *input;
     std::vector<Attribute> allAttributes;
     std::vector<Attribute> requiredAttributes;
     std::vector<std::string> attrNames;
-    Project(Iterator *input,                    // Iterator of input R
-            const std::vector<std::string> &attrNames);   // std::vector containing attribute names
+    Project(Iterator *input,                            // Iterator of input R
+            const std::vector<std::string> &attrNames); // std::vector containing attribute names
     ~Project() override = default;
 
     RC getNextTuple(void *data) override;
 
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override ;
+    void getAttributes(std::vector<Attribute> &attrs) const override;
 };
 
-class BNLJoin : public Iterator {
+class BNLJoin : public Iterator
+{
     // Block nested-loop join operator
 public:
-    BNLJoin(Iterator *leftIn,            // Iterator of input R
-            TableScan *rightIn,           // TableScan Iterator of input S
-            const Condition &condition,   // Join condition
-            const unsigned numPages       // # of pages that can be loaded into memory,
-            //   i.e., memory block size (decided by the optimizer)
-    ) ;
+    BNLJoin(Iterator *leftIn,           // Iterator of input R
+            TableScan *rightIn,         // TableScan Iterator of input S
+            const Condition &condition, // Join condition
+            const unsigned numPages     // # of pages that can be loaded into memory,
+                                        //   i.e., memory block size (decided by the optimizer)
+    );
 
     Iterator *leftIn;
     TableScan *rightIn;
@@ -246,21 +274,23 @@ public:
 
     void combine(void *leftData, void *rightData, void *data);
 
-    ~BNLJoin() override = default;;
+    ~BNLJoin() override = default;
+    ;
 
     RC getNextTuple(void *data) override;
 
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override ;
+    void getAttributes(std::vector<Attribute> &attrs) const override;
 };
 
-class INLJoin : public Iterator {
+class INLJoin : public Iterator
+{
     // Index nested-loop join operator
 public:
-    INLJoin(Iterator *leftIn,           // Iterator of input R
-            IndexScan *rightIn,          // IndexScan Iterator of input S
-            const Condition &condition   // Join condition
-    ) ;
+    INLJoin(Iterator *leftIn,          // Iterator of input R
+            IndexScan *rightIn,        // IndexScan Iterator of input S
+            const Condition &condition // Join condition
+    );
 
     Iterator *leftIn;
     IndexScan *rightIn;
@@ -270,53 +300,55 @@ public:
     std::vector<Attribute> attrs;
     int left_attr_index;
     int right_attr_index;
-    void * left_data_buffer;
+    void *left_data_buffer;
 
     ~INLJoin() override = default;
 
     void setAttrIndex();
-    RC getNextTuple(void *data) override ;
-    RC match(void * right_data);
+    RC getNextTuple(void *data) override;
+    RC match(void *right_data);
     void combine(void *leftData, void *rightData, void *data);
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override ;
+    void getAttributes(std::vector<Attribute> &attrs) const override;
 };
 
 // Optional for everyone. 10 extra-credit points
-class GHJoin : public Iterator {
+class GHJoin : public Iterator
+{
     // Grace hash join operator
 public:
-    GHJoin(Iterator *leftIn,               // Iterator of input R
-           Iterator *rightIn,               // Iterator of input S
-           const Condition &condition,      // Join condition (CompOp is always EQ)
-           const unsigned numPartitions     // # of partitions for each relation (decided by the optimizer)
-    ) {};
+    GHJoin(Iterator *leftIn,            // Iterator of input R
+           Iterator *rightIn,           // Iterator of input S
+           const Condition &condition,  // Join condition (CompOp is always EQ)
+           const unsigned numPartitions // # of partitions for each relation (decided by the optimizer)
+    ){};
 
     ~GHJoin() override = default;
 
     RC getNextTuple(void *data) override { return QE_EOF; };
 
     // For attribute in std::vector<Attribute>, name it as rel.attr
-    void getAttributes(std::vector<Attribute> &attrs) const override {};
+    void getAttributes(std::vector<Attribute> &attrs) const override{};
 };
 
-class Aggregate : public Iterator {
+class Aggregate : public Iterator
+{
     // Aggregation operator
 public:
     // Mandatory
     // Basic aggregation
     Aggregate(Iterator *input,          // Iterator of input R
-              const Attribute &aggAttr,        // The attribute over which we are computing an aggregate
+              const Attribute &aggAttr, // The attribute over which we are computing an aggregate
               AggregateOp op            // Aggregate operation
-    ) {};
+    ){};
 
     // Optional for everyone: 5 extra-credit points
     // Group-based hash aggregation
-    Aggregate(Iterator *input,             // Iterator of input R
-              const Attribute &aggAttr,           // The attribute over which we are computing an aggregate
-              const Attribute &groupAttr,         // The attribute over which we are grouping the tuples
+    Aggregate(Iterator *input,            // Iterator of input R
+              const Attribute &aggAttr,   // The attribute over which we are computing an aggregate
+              const Attribute &groupAttr, // The attribute over which we are grouping the tuples
               AggregateOp op              // Aggregate operation
-    ) {};
+    ){};
 
     ~Aggregate() = default;
 
@@ -325,7 +357,7 @@ public:
     // Please name the output attribute as aggregateOp(aggAttr)
     // E.g. Relation=rel, attribute=attr, aggregateOp=MAX
     // output attrname = "MAX(rel.attr)"
-    void getAttributes(std::vector<Attribute> &attrs) const override {};
+    void getAttributes(std::vector<Attribute> &attrs) const override{};
 };
 
 #endif
