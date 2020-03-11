@@ -837,7 +837,7 @@ RC RecordBasedFileManager::scan(FileHandle &fileHandle, const std::vector<Attrib
         std::vector<std::string>::iterator it = std::find(attributeNameVec.begin(), attributeNameVec.end(), attributeName);
         if (it == attributeNameVec.end())
         {
-            std::cout << "This attribute is not part of the attribute" << std::endl;
+            // std::cout << "This attribute is not part of the attribute" << std::endl;
         }
         int index = std::distance(attributeNameVec.begin(), it);
         rbfm_ScanIterator.attributeTypes.push_back(recordDescriptor[index].type);
