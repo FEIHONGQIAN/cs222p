@@ -700,12 +700,13 @@ RC RelationManager::getContentInRecord(std::vector<Attribute> descriptor, const 
         end = *(short *)((char *)buffer + sizeof(short) + (index) * sizeof(short));
     }
 
-    if (end != start)
+    if (start != -1 && end != -1 && end != start)
     {
         memcpy((char *)content, (char *)buffer + start, end - start);
+        recordSize = end - start;
     }
     free(buffer);
-    recordSize = end - start;
+    return success;
 }
 
 RC RelationManager::scan(const std::string &tableName,

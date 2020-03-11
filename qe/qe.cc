@@ -152,10 +152,12 @@ RC Iterator::getContentInRecord(void *data, void *content, int index, int &recor
         end = *(short *)((char *)buffer + sizeof(short) + (index) * sizeof(short));
     }
 
-    memcpy((char *)content, (char *)buffer + start, end - start);
-
+    if (start != -1 && end != -1 && end != start)
+    {
+        memcpy((char *)content, (char *)buffer + start, end - start);
+        recordSize = end - start;
+    }
     free(buffer);
-    recordSize = end - start;
     return success;
 }
 
