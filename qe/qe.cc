@@ -148,8 +148,16 @@ RC Iterator::getContentInRecord(void *data, void *content, int index, int &recor
     }
     else
     {
-        start = *(short *)((char *)buffer + sizeof(short) + (index - 1) * sizeof(short));
         end = *(short *)((char *)buffer + sizeof(short) + (index) * sizeof(short));
+        if(end != -1){
+            while(index >= 1 && start == -1){
+                start = *(short *)((char *)buffer + sizeof(short) + (index - 1) * sizeof(short));
+                index--;
+            }
+            if(index == 0 && start == -1){
+                start = sizeof(short) + fieldCount * sizeof(short);
+            }
+        }
     }
 
     if (start != -1 && end != -1 && end != start)
