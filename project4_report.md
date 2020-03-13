@@ -19,7 +19,7 @@ When the catalog table is created, the catalog table "Tables" and "Columns" will
 
 ##### Describe how your block nested loop join works (especially, how you manage the given buffers.)
 
-For BNL Join, we use numOfPages \* PAGE_SIZE / bufSize to get how many records we need to put in one block. We get the value for the record and use a map (whose key is the value, value is a vector of pointer pointing to the record position) to store it. Then for a certain block, traverse the right table and find matching from the map. After one iteration, clear the map and read next block. Eeset the iterator for right table and repeat until all left table records used.
+For BNL Join, we use numOfPages * PAGE_SIZE / bufSize to get how many records we need to put in one block. We get the value for the record and use a map (whose key is the value, value is a vector of pointer pointing to the record position) to store it. Then for a certain block, traverse the right table and find matching from the map. After one iteration, clear the map and read next block. Reset the iterator for right table and repeat until all left table records are used.
 
 ## 4. Index Nested Loop Join (If you have implemented this feature)
 
@@ -53,7 +53,11 @@ No.
 No.
 
 ##### Other implementation details:
-
+For RM part, we modify the insertTuple, deleteTuple, updateTuple by add insertEntries, deleteEntries and updateEntries
+functions respectively. In insertEntries function called by insertTuple function, we simply open the index file and add
+the retrieved entry(key, RID) into it. In deleteEntries function called by deleteTuple function, we open the index file(if it exists)
+and delete the given entry(key, RID). In updateEntries function called by updateTuple function, we first open the index
+file, then delete the old entry and finally add the new entry into the index file.
 ## 6. Other (optional)
 
 ##### Freely use this section to tell us about things that are related to the project 4, but not related to the other sections (optional)
